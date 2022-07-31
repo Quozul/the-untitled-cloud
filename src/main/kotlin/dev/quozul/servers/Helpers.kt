@@ -9,11 +9,12 @@ import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
 import dev.quozul.authentication.User
+import dev.quozul.dockerClient
+import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 
-
-fun createContainer(user: User, payment: String, image: String, tag: String = "latest") {
+fun getDockerClient(): DockerClient {
 	val config: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build()
 
 	val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
@@ -23,14 +24,17 @@ fun createContainer(user: User, payment: String, image: String, tag: String = "l
 		.connectionTimeout(Duration.ofSeconds(30))
 		.responseTimeout(Duration.ofSeconds(45))
 		.build()
-	val client: DockerClient = DockerClientImpl.getInstance(config, httpClient)
 
-	client.pullImageCmd(image)
+	return DockerClientImpl.getInstance(config, httpClient)
+}
+
+fun createContainer(user: User, payment: String, image: String, tag: String = "latest") {
+	dockerClient.pullImageCmd(image)
 		.withTag(tag)
 		.exec(PullImageResultCallback())
 		.awaitCompletion()
 
-	val container = client.createContainerCmd("$image:$tag")
+	val container = dockerClient.createContainerCmd("$image:$tag")
 		.withExposedPorts(ExposedPort.tcp(80))
 		.exec()
 

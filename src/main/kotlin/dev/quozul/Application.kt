@@ -2,6 +2,10 @@ package dev.quozul
 
 import io.ktor.server.application.*
 import dev.quozul.plugins.*
+import dev.quozul.servers.getDockerClient
+
+
+val dockerClient = getDockerClient()
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
