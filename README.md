@@ -11,4 +11,6 @@ build -t -x test -i
 ```
 
 ## Environment variables
-`STRIPE_API_KEY` : Private Stripe API key
+* `STRIPE_API_KEY`: Private Stripe API key  
+* `STRIPE_API_ENDPOINT_SECRET`: Webhook secret  
+* `DOCKER_HOST`: For Docker Desktop `unix:///~/.docker/desktop/docker.sock`  

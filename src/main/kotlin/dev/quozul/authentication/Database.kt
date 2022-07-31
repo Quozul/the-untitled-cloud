@@ -13,7 +13,6 @@ import java.util.*
  */
 
 object Users: UUIDTable() {
-    val username = varchar("username", 32).uniqueIndex().nullable()
     val email = varchar("email", 256).uniqueIndex()
     val password = char("password", 64)
     val stripeId = varchar("stripe_id", 255).uniqueIndex().nullable() // External foreign key to Stripe
@@ -23,7 +22,6 @@ object Users: UUIDTable() {
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<User>(Users)
 
-    var username by Users.username
     var password by Users.password
     var email by Users.email
     var stripeId by Users.stripeId

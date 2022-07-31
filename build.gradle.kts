@@ -4,7 +4,7 @@ val logback_version: String by project
 val exposed_version: String by project
 val postgres_version: String by project
 val stripe_version: String by project
-val kubernetes_version: String by project
+val docker_java_version: String by project
 
 plugins {
     application
@@ -43,7 +43,8 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgres_version") // Exposed driver
 
     implementation("com.stripe:stripe-java:$stripe_version")
-    implementation("io.kubernetes:client-java:$kubernetes_version")
+    implementation("com.github.docker-java:docker-java-core:$docker_java_version")
+    implementation("com.github.docker-java:docker-java-transport-httpclient5:$docker_java_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

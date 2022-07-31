@@ -1,6 +1,7 @@
 package dev.quozul.plugins
 
 import dev.quozul.authentication.Users
+import dev.quozul.servers.Servers
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -17,5 +18,6 @@ fun Application.configureDatabase() {
 
     transaction {
         SchemaUtils.create(Users)
+        SchemaUtils.create(Servers)
     }
 }
