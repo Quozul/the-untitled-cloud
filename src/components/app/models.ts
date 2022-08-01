@@ -45,3 +45,13 @@ export type DetailedServer = {
 	state: ServerState,
 	parameters: ServerParameters,
 }
+
+export enum VersionType {
+	RELEASE = "RELEASE",
+	SNAPSHOT = "SNAPSHOT",
+}
+
+export type Version = {
+	id: string,
+	type: VersionType,
+}
