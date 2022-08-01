@@ -5,6 +5,7 @@ import dev.quozul.payments.provider.stripe.routes.configureStripeWebhook
 import dev.quozul.payments.provider.stripe.routes.configureSubscriptionRoutes
 import dev.quozul.servers.configureServerRoutes
 import dev.quozul.user.configureUserRoutes
+import dev.quozul.versions.configureVersionRoutes
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -39,6 +40,10 @@ fun Application.configureRouting() {
 			authenticate {
 				configureServerRoutes()
 			}
+		}
+
+		route("/versions") {
+			configureVersionRoutes()
 		}
 	}
 }
