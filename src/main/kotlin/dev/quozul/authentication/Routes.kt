@@ -40,6 +40,17 @@ fun Route.configureAuthenticationRoutes() {
         // TODO: Find a better way to hash password
         val hash = hashString("SHA-256", credentials.password)
 
+        val previousUser = transaction {
+            User.find {
+                Users.email eq credentials.email
+            }.firstOrNull()
+        }
+
+        if (previousUser != null) {
+            call.response.status(HttpStatusCode.Conflict)
+            return@post;
+        }
+
         try {
             // "By signing you acknowledge to have read and accepted the TOS" -> set tosAcceptDate to now
             val user = transaction {
@@ -58,7 +69,6 @@ fun Route.configureAuthenticationRoutes() {
         } catch (e: ExposedSQLException) {
             when (e.cause) {
                 else -> {
-                    println(e.cause)
                     call.response.status(HttpStatusCode.InternalServerError)
                 }
             }

@@ -27,8 +27,8 @@ fun Route.configureUserRoutes() {
 			val principal = call.principal<JWTPrincipal>()
 			val id = principal!!.payload.getClaim("id").asString()
 
-			getStripeUser(UUID.fromString(id))?.let {
-				call.respond(Address.fromStripeCustomer(it))
+			Address.fromUserId(UUID.fromString(id))?.let {
+				call.respond(it)
 			} ?: run {
 				call.response.status(HttpStatusCode.NoContent)
 			}

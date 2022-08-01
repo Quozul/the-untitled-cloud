@@ -3,6 +3,7 @@ package dev.quozul.payments.provider.stripe
 import com.stripe.model.Customer
 import com.stripe.param.CustomerCreateParams
 import dev.quozul.authentication.User
+import dev.quozul.authentication.Users
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -28,5 +29,17 @@ fun getOrCreateStripeCustomer(user: User): Customer {
 		}
 
 		customer
+	}
+}
+
+/*
+ * The user should never be null at this point.
+ * But it could happen.
+ */
+fun getUserFromStripeId(id: String): User {
+	return transaction {
+		User.find {
+			Users.stripeId eq id
+		}.first()
 	}
 }

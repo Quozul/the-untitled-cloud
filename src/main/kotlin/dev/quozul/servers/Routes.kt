@@ -1,6 +1,6 @@
 package dev.quozul.servers
 
-import dev.quozul.authentication.models.UserCredentials
+import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.dockerClient
 import dev.quozul.servers.models.*
 import dev.quozul.servers.models.Action.*
@@ -12,8 +12,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
+
 
 fun Route.configureServerRoutes() {
 	get("") {
@@ -25,12 +27,17 @@ fun Route.configureServerRoutes() {
 
 		val servers = transaction {
 			Server.find {
-				Servers.owner eq uuid
+				(Servers.owner eq uuid) and (Servers.containerId neq null)
 			}
 				.limit(size, (page * size).toLong())
 				.map {
-					val container = dockerClient.inspectContainerCmd(it.containerId).exec()
-					ApiServer(it.id.toString(), container.state.toString(), container.name)
+					val name = try {
+						dockerClient.inspectContainerCmd(it.containerId!!).exec().name
+					} catch (_: NullPointerException) {
+						null
+					}
+
+					ApiServer(it.id.toString(), name, it.status)
 				}
 		}
 
@@ -54,45 +61,67 @@ fun Route.configureServerRoutes() {
 	route("{serverId}") {
 		get {
 			val serverId = try {
-				call.parameters["serverId"]!!
+				UUID.fromString(call.parameters["serverId"]!!)
 			} catch (e: NullPointerException) {
 				call.response.status(HttpStatusCode.BadRequest)
 				return@get
 			}
 
-			val container = transaction {
-				Server.findById(UUID.fromString(serverId))
-			}?.let {
-				dockerClient.inspectContainerCmd(it.containerId).exec()
+			val containerId = try {
+				transaction {
+					Server.findById(serverId)?.containerId!!
+				}
+			} catch (e: NullPointerException) {
+				call.response.status(HttpStatusCode.NotFound)
+				return@get
 			}
+
+			// FIXME: The following line might throw an error sometimes
+			val container = dockerClient.inspectContainerCmd(containerId).exec()
 
 			if (container == null) {
 				call.response.status(HttpStatusCode.NotFound)
 				return@get
 			}
 
-			val response = ServerStatusApi(container.state?.status ?: "Unknown")
+			val parameters = transaction {
+				Parameter.find {
+					Parameters.server eq serverId
+				}.first()
+			}
+
+			val exposedPort = ExposedPort.tcp(25565)
+			val port = container.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
+
+			val response = DetailedApiServer(
+				serverId.toString(),
+				container.name,
+				port,
+				ServerState.fromContainerState(container.state),
+				ServerParameters.fromParameterEntity(parameters),
+			)
+
 			call.respond(response)
 		}
 
-		post {
+		patch {
 			val action = try {
 				call.receive<ServerActionRequest>().action
 			} catch (e: SerializationException) {
 				call.response.status(HttpStatusCode.BadRequest)
-				return@post;
+				return@patch;
 			}
 
 			val serverId = call.parameters["serverId"] ?: run {
 				call.response.status(HttpStatusCode.NotFound)
-				return@post
+				return@patch
 			}
 
 			val containerId = transaction {
 				Server.findById(UUID.fromString(serverId))?.containerId
 			} ?: run {
 				call.response.status(HttpStatusCode.NotFound)
-				return@post
+				return@patch
 			}
 
 			when (action) {
@@ -107,6 +136,45 @@ fun Route.configureServerRoutes() {
 				RECREATE -> {
 					call.response.status(HttpStatusCode.NotImplemented)
 				}
+			}
+		}
+
+		put("/parameters") {
+			val serverId = try {
+				UUID.fromString(call.parameters["serverId"]!!)
+			} catch (e: NullPointerException) {
+				call.response.status(HttpStatusCode.BadRequest)
+				return@put
+			}
+
+			val parameters = try {
+				call.receive<ServerParameters>()
+			} catch (e: SerializationException) {
+				call.response.status(HttpStatusCode.BadRequest)
+				return@put;
+			}
+
+			transaction {
+				val parameter = Parameter.find {
+					Parameters.server eq serverId
+				}.first()
+
+				parameter.version = parameters.version
+				parameter.eula = parameters.eula
+				parameter.serverType = parameters.serverType
+				parameter.forgeVersion = parameters.forgeVersion
+				parameter.fabricLauncherVersion = parameters.fabricLauncherVersion
+				parameter.fabricLoaderVersion = parameters.fabricLoaderVersion
+				parameter.quiltLauncherVersion = parameters.quiltLauncherVersion
+				parameter.quiltLoaderVersion = parameters.quiltLoaderVersion
+				parameter.ftbModpackId = parameters.ftbModpackId
+				parameter.ftbModpackVersionId = parameters.ftbModpackVersionId
+			}
+
+			if (recreateServer(serverId)) {
+				call.response.status(HttpStatusCode.OK)
+			} else {
+				call.response.status(HttpStatusCode.InternalServerError)
 			}
 		}
 	}

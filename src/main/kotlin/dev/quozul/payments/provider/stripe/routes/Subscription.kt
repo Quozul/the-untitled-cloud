@@ -5,16 +5,13 @@ import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.User
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
-import dev.quozul.payments.provider.stripe.models.SubscriptionCancelRequest
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.SerializationException
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
