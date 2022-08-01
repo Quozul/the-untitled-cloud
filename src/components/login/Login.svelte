@@ -1,8 +1,7 @@
 <script>
-	import { token } from "../store.js";
+	import { token } from "../../store/store.ts";
 
-	let email;
-	let password;
+	let email, password;
 	let error = false;
 
 	async function submit() {
@@ -23,23 +22,27 @@
 	}
 </script>
 
+<style lang="scss">
+	form {
+		max-width: 330px;
+		margin: auto;
+	}
+</style>
+
 <form on:submit|preventDefault={submit}>
 	{#if error}
 		error
 	{/if}
+	<h4>Connexion</h4>
 	<div class="mb-3">
-		<label class="form-label">Email address</label>
-		<input type="email" name="email" class="form-control" bind:value={email}>
+		<label class="form-label">Adresse email</label>
+		<input type="email" name="email" class="form-control" placeholder="example@example.com" bind:value={email}>
 	</div>
 
 	<div class="mb-3">
-		<label class="form-label">Password</label>
-		<input type="password" name="password" class="form-control" bind:value={password}>
+		<label class="form-label">Mot de passe</label>
+		<input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
 	</div>
 
 	<button type="submit" class="btn btn-primary">Submit</button>
-
-	<small>
-		Vous n'avez pas encore de compte? S'inscrire.
-	</small>
 </form>
