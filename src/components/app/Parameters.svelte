@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { ServerParameters, Version } from "./models";
 	import { ServerType } from "./constants.js";
-	import { selectedServer, token } from "../../store/store";
 	import { onMount } from "svelte";
 	import { VersionType } from "./models.js";
+	import { putParameters } from "../../shared/helpers";
+	import { selectedServer } from "../../store/store";
+	import Button from "../shared/Button.svelte";
 
 	export let parameters: ServerParameters;
 	let versions: Version[] = [];
@@ -17,17 +19,9 @@
             });
     })
 
-	function submit() {
-		// TODO: Make a method to simplify requests
-        // TODO: Refresh page when parameters successfully updated
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${$selectedServer}/parameters`, {
-			method: "PUT",
-			headers: new Headers({
-				"content-type": "application/json",
-				"authorization": `Bearer ${$token}`,
-			}),
-			body: JSON.stringify(parameters),
-		});
+	async function submit() {
+		await putParameters($selectedServer.id, parameters);
+		// TODO: Refresh page when parameters successfully updated
 	}
 </script>
 
@@ -100,5 +94,7 @@
 
     <!-- OVERRIDE_SERVER_PROPERTIES=false -->
 
-    <button class="btn btn-primary" on:click|preventDefault={submit}>Sauvegarder</button>
+    <Button className="btn btn-primary" onClick={submit}>
+        Sauvegarder
+    </Button>
 </form>

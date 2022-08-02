@@ -1,5 +1,6 @@
 import type { Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
+import type { ServerParameters } from "../components/app/models";
 import type { Token } from "../components/login/Token";
 import { token } from "../store/store";
 import { get } from "svelte/store";
@@ -102,4 +103,9 @@ export async function getServerInfo(selectedServer: string): Promise<DetailedSer
 export async function patchServer(selectedServer: string, action: string): Promise<null> {
 	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${selectedServer}`, getOptions("PATCH", { action }))
 	return await handleResponse(response) as null;
+}
+
+export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${selectedServer}/parameters`, getOptions("PUT", parameters));
+	return await handleResponse(response) as ServerParameters;
 }

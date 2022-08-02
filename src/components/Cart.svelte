@@ -1,9 +1,22 @@
 <script lang="ts">
+	import type { Unsubscriber } from "svelte/store";
 	import { cart } from "../store/store";
 	import { formatPrice } from "../shared/helpers";
 	import Icon from "./icons/Icon.svelte";
+	import { onDestroy, onMount } from "svelte";
 
-	let total = $cart?.price ?? 0;
+	let unsubscribe: Unsubscriber = null;
+	let total: number = $cart?.price ?? 0;
+
+	onMount(() => {
+		unsubscribe = cart.subscribe(value => {
+			total = value?.price ?? 0;
+        });
+    });
+
+	onDestroy(() => {
+		unsubscribe?.();
+    });
 
 	function removeFromCart() {
 		$cart = null;

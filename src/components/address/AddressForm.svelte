@@ -37,7 +37,6 @@
 				res.json()
 					.then(json => {
 						address = json;
-						console.log(json);
 					});
 			});
 	});

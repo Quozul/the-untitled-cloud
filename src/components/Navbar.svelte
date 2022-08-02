@@ -24,7 +24,7 @@
             </a>
         {:else}
             <a href="/login/?redirect=/app" class="btn btn-outline-primary me-2">
-                Me connecter
+                Se connecter
             </a>
         {/if}
     </div>

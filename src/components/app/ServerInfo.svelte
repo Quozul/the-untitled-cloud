@@ -10,6 +10,7 @@
 	import Parameters from "../../components/app/Parameters.svelte";
 	import { getServerInfo, patchServer } from "../../shared/helpers";
 	import type { Unsubscriber } from "svelte/store";
+	import Button from "../shared/Button.svelte";
 
 	let server: DetailedServer = null;
 	let started: ZonedDateTime = null;
@@ -55,16 +56,24 @@
 		unsubscribe?.();
 	});
 
-	function startServer() {
-		patchServer($selectedServer.id, "START");
+	async function startServer() {
+		await patchServer($selectedServer.id, "START");
+		await fetchInfo();
 	}
 
-	function stopServer() {
-		patchServer($selectedServer.id, "STOP");
+	async function stopServer() {
+		await patchServer($selectedServer.id, "STOP");
+		await fetchInfo();
 	}
 
-	function restartServer() {
-		patchServer($selectedServer.id, "RESTART");
+	async function restartServer() {
+		await patchServer($selectedServer.id, "RESTART");
+		await fetchInfo();
+	}
+
+	async function recreate() {
+		await patchServer($selectedServer.id, "RECREATE");
+		await fetchInfo();
 	}
 
 	function toggleDebug() {
@@ -109,23 +118,23 @@
     <div class="row gx-3">
         <div class="col-auto">
             {#if !server.state.running}
-                <button class="btn btn-primary d-flex align-items-center" on:click|preventDefault={startServer}>
+                <Button className="btn btn-primary d-flex align-items-center" onClick={startServer}>
                     <Icon key="play" className="me-2"/>
                     Démarrer
-                </button>
+                </Button>
             {:else}
-                <button class="col btn btn-primary d-flex align-items-center" on:click|preventDefault={stopServer}>
+                <Button className="btn btn-primary d-flex align-items-center" onClick={stopServer}>
                     <Icon key="stop" className="me-2"/>
                     Arrêter
-                </button>
+                </Button>
             {/if}
         </div>
 
         <div class="col-auto">
-            <button class="col btn btn-primary d-flex align-items-center" on:click|preventDefault={restartServer}>
+            <Button className="col btn btn-primary d-flex align-items-center" onClick={restartServer}>
                 <Icon key="arrow-clockwise" className="me-2"/>
                 Redémarrer
-            </button>
+            </Button>
         </div>
     </div>
 
@@ -138,8 +147,17 @@
 {/if}
 
 {#if error}
-    <h2>Erreur</h2>
-    {error}
+    <div class="p-5 d-flex justify-content-center align-items-center flex-column gap-3">
+        <p class="text-center fs-4">
+            Nous n'avons pas réussi à trouver votre serveur.
+            <br/>
+            Essayez de le recréer.
+        </p>
+
+        <Button className="btn btn-danger btn-lg" onClick={recreate}>
+            Recréer
+        </Button>
+    </div>
 {/if}
 
 <hr>

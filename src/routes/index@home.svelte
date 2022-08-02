@@ -1,3 +1,8 @@
+<script>
+	import { token } from "../store/store";
+	import Product from "../components/cart/Product.svelte";
+</script>
+
 <div class="px-4 py-5">
     <div class="row flex-lg-row align-items-center g-5 py-5">
         <div class="col-lg-6">
@@ -9,39 +14,22 @@
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="/rent/products/" class="btn btn-primary btn-lg px-4 me-md-2">Louer un serveur</a>
-                <a href="/app/" class="btn btn-outline-secondary btn-lg px-4">Mes serveurs</a>
+
+                {#if $token}
+                    <a href="/app/" class="btn btn-outline-secondary btn-lg px-4">
+                        Mes serveurs
+                    </a>
+                {:else}
+                    <a href="/login/?redirect=/app" class="btn btn-outline-secondary btn-lg px-4">
+                        Se connecter
+                    </a>
+                {/if}
             </div>
         </div>
 
         <div class="col-md-10 mx-auto col-lg-5">
             <div class="p-4 p-md-5">
-
-                <div class="card">
-                    <div class="card-header py-3">
-                        <h4 class="my-0 fw-normal">Illimité<sup>*</sup></h4>
-                    </div>
-
-                    <div class="card-body">
-                        <p class="mb-0 text-muted fw-light">à partir de</p>
-                        <h1 class="card-title pricing-card-title">2€<small class="text-muted fw-light">/mois</small>
-                        </h1>
-
-                        <ul class="list-unstyled mt-3">
-                            <li>Mémoire illimité<sup>*</sup></li>
-                            <li>Stockage NVME illimité<sup>*</sup></li>
-                            <li>Bande passante illimité<sup>*</sup></li>
-                            <li>Support 7j/7</li>
-                        </ul>
-
-                        <div class="mt-3 mb-4">
-                            <small>*Voir les <a href="#">CGU</a></small>
-                        </div>
-
-                        <a href="/rent/products/" class="w-100 btn btn-lg btn-outline-primary">
-                            Louer
-                        </a>
-                    </div>
-                </div>
+                <Product/>
             </div>
         </div>
     </div>
