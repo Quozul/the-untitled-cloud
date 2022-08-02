@@ -3,6 +3,7 @@
 	import { checkoutStep, token } from "../../store/store.ts";
 	import type { Address } from "./Address";
 	import { CheckoutSteps } from "../checkout/constants";
+	import Icon from "../icons/Icon.svelte";
 
 	let address: Address = {
 		city: null,
@@ -26,7 +27,7 @@
 		})
 			.then(res => {
 				if (res.status === 401) {
-					$token = null; // Disconnect user
+					$token = ""; // Disconnect user
 					$checkoutStep = CheckoutSteps.LOGIN;
 				} else if (res.status === 204) {
 					addAddress = true;
@@ -111,5 +112,8 @@
     </div>
 
     <button class="btn btn-primary mt-3">Ajouter l'adresse</button>
-    <button class="btn btn-secondary mt-3" type="button" on:click|preventDefault={() => $checkoutStep = CheckoutSteps.CHECKOUT}>Passer >></button>
+    <button class="btn btn-secondary mt-3 d-inline-flex align-items-center" type="button" on:click|preventDefault={() => $checkoutStep = CheckoutSteps.CHECKOUT}>
+        Passer
+        <Icon key="chevron-double-right" className="ms-2"/>
+    </button>
 </form>

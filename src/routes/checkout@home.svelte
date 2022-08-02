@@ -12,7 +12,7 @@
 		const decoded = jwtDecode($token);
 		if (Date.now() / 1000 > decoded.exp) {
 			// Token is expired
-			$token = null;
+			$token = "";
 			$checkoutStep = CheckoutSteps.LOGIN; // Ask for logging
 		} else {
 			$checkoutStep = CheckoutSteps.PROFILE;
@@ -29,7 +29,7 @@
         class="nav-link"
         on:click={() => setStep(CheckoutSteps.LOGIN)}
         class:active={$checkoutStep === CheckoutSteps.LOGIN}
-        disabled="{$checkoutStep === CheckoutSteps.COMPLETE}"
+        disabled="{$checkoutStep === CheckoutSteps.COMPLETE || !!$token}"
     >
         Se connecter
     </button>

@@ -1,10 +1,13 @@
 import { createStoreEntry } from "./helpers";
 import { CheckoutSteps } from "../components/checkout/constants";
 import { browser } from "$app/env";
+import type { Writable } from "svelte/store";
+import type { Server } from "../components/app/models";
 
-export const token = createStoreEntry("token");
+// Persistent store
+export const token: Writable<string> = createStoreEntry("token");
 
-export const checkoutStep = createStoreEntry("checkoutStep", CheckoutSteps.LOGIN, browser && sessionStorage);
-export const clientSecret = createStoreEntry("clientSecret", null, browser && sessionStorage);
-export const selectedServer = createStoreEntry("selectedServer", null, browser && sessionStorage);
-export const fetchedServers = createStoreEntry("fetchedServers", false, browser && sessionStorage);
+// Session store
+export const checkoutStep: Writable<CheckoutSteps> = createStoreEntry("checkoutStep", CheckoutSteps.LOGIN, browser && sessionStorage);
+export const clientSecret: Writable<string> = createStoreEntry("clientSecret", null, browser && sessionStorage);
+export const selectedServer: Writable<Server> = createStoreEntry("selectedServer", null, browser && sessionStorage);

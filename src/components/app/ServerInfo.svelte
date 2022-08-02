@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { fetchedServers, selectedServer } from "../../store/store";
+	import { selectedServer } from "../../store/store";
 	import Icon from "../../components/icons/Icon.svelte";
-	import type { DetailedServer } from "./models";
+	import type { DetailedServer, Server } from "./models";
 	import { onDestroy, onMount } from "svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import "@js-joda/timezone";
@@ -16,21 +16,35 @@
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
 	let unsubscribe: Unsubscriber;
+	let debug: boolean = false;
+	let error: string | null = null;
+	let fetching: boolean = false;
 
 	const formatter = DateTimeFormatter
 		.ofPattern("eeee d MMMM yyyy")
 		.withLocale(Locale.FRANCE);
 
-	async function fetchInfo(value = $selectedServer) {
-		if (!$fetchedServers) return;
-		server = await getServerInfo(value);
+	async function fetchInfo(value: Server = $selectedServer) {
+		if (!value) return;
+		try {
+			fetching = true;
+			server = await getServerInfo(value.id);
 
-		started = ZonedDateTime.parse(server.state.startedAt);
-		stopped = ZonedDateTime.parse(server.state.finishedAt);
-		if (stopped.year() === 1) {
-			stopped = ZonedDateTime.now();
+			// Parse dates
+			started = ZonedDateTime.parse(server.state.startedAt);
+			stopped = ZonedDateTime.parse(server.state.finishedAt);
+			if (stopped.year() === 1) {
+				stopped = ZonedDateTime.now();
+			}
+			duration = Duration.between(started, stopped);
+
+			error = null;
+        } catch (err) {
+            server = null;
+			error = err;
+		} finally {
+			fetching = false;
 		}
-		duration = Duration.between(started, stopped);
 	}
 
 	onMount(() => {
@@ -42,32 +56,23 @@
 	});
 
 	function startServer() {
-		patchServer($selectedServer, "START");
+		patchServer($selectedServer.id, "START");
 	}
 
 	function stopServer() {
-		patchServer($selectedServer, "STOP");
+		patchServer($selectedServer.id, "STOP");
 	}
 
 	function restartServer() {
-		patchServer($selectedServer, "RESTART");
+		patchServer($selectedServer.id, "RESTART");
+	}
+
+	function toggleDebug() {
+        debug = !debug;
 	}
 </script>
 
-{#if server !== null}
-    <h1
-            class="d-flex align-items-center"
-            class:text-success={server.state.status === ServerStatus.RUNNING}
-            class:text-danger={server.state.status !== ServerStatus.RUNNING}
-    >
-        {#if server.state.status === ServerStatus.RUNNING}
-            <Icon key="play" width="48" height="48"/>
-        {:else}
-            <Icon key="stop" width="48" height="48"/>
-        {/if}
-        {server.name}
-    </h1>
-
+{#if !fetching && server}
     <dl>
         <dt>Dernier démarrage</dt>
         <dd>
@@ -125,12 +130,18 @@
     </div>
 
     <Parameters parameters={server.parameters}/>
-
-    <h5>Debug</h5>
-    <pre>{JSON.stringify(server, " ", 4)}</pre>
-{:else}
+{:else if fetching}
     <div class="d-flex align-items-center">
         <div class="spinner-border me-3" role="status" aria-hidden="true"></div>
         <strong>Chargement...</strong>
     </div>
 {/if}
+
+{#if error}
+    <h2>Erreur</h2>
+    {error}
+{/if}
+
+<hr>
+<button type="button" class="btn btn-sm btn-light" on:click|preventDefault={toggleDebug}>Debug</button>
+<pre class="collapse" class:show={debug}>{JSON.stringify(server, " ", 4)}</pre>

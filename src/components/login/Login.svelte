@@ -1,24 +1,18 @@
-<script>
-	import { token } from "../../store/store.ts";
+<script lang="ts">
+	import { token } from "../../store/store";
+	import { redirect, signIn } from "../../shared/helpers";
 
 	let email, password;
 	let error = false;
+	let submitting = false;
 
 	async function submit() {
-		fetch(`${ import.meta.env.VITE_API_BASE_URL }/authentication/signIn`, {
-			method: "POST",
-			headers: new Headers({ "content-type": "application/json" }),
-			body: JSON.stringify({
-				email, password,
-			}),
-		})
-			.then(res => {
-				error = !res.ok;
-				return res.json();
-			})
-			.then(json => {
-				$token = json.token;
-			});
+		submitting = true;
+		const res = await signIn(email, password);
+		$token = res.token;
+
+		await redirect();
+		submitting = false;
 	}
 </script>
 
@@ -44,5 +38,10 @@
 		<input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
 	</div>
 
-	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-primary" class:disabled={submitting}>
+		{#if submitting}
+			<span class="spinner-border spinner-border-sm"></span>
+		{/if}
+		Se connecter
+	</button>
 </form>

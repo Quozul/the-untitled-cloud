@@ -1,7 +1,9 @@
 import type { Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
-import { token } from "../store/store";
+import type { Token } from "../components/login/Token";
+import { clientSecret, token } from "../store/store";
 import { get } from "svelte/store";
+import { goto } from "$app/navigation";
 
 /**
  * Build request's options
@@ -59,6 +61,28 @@ export function containId(paginate: Paginate<Id>, id: string): boolean {
 		}
 	}
 	return false;
+}
+
+export async function redirect() {
+	const search = new URLSearchParams(location.search);
+	const redirect = search.get("redirect") ?? "/";
+	await goto(redirect);
+}
+
+export async function signUp(email: string, password: string): Promise<Token> {
+	const response = await fetch(
+		`${import.meta.env.VITE_API_BASE_URL}/authentication/signUp`,
+		getOptions("POST", { email, password, }),
+	)
+	return await handleResponse(response) as Token;
+}
+
+export async function signIn(email: string, password: string): Promise<Token> {
+	const response = await fetch(
+		`${import.meta.env.VITE_API_BASE_URL}/authentication/signIn`,
+		getOptions("POST", { email, password, }),
+	);
+	return await handleResponse(response) as Token;
 }
 
 export async function getAllServers(page: number = 0): Promise<Paginate<Server>> {

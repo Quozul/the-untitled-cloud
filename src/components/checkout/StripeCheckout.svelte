@@ -21,10 +21,9 @@
 
 	onMount(async () => {
 		window.addEventListener("beforeunload", alertUnload);
-
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		if ($clientSecret === "null") {
+		if (!!$clientSecret) {
 			fetch(`${import.meta.env.VITE_API_BASE_URL}/payment/stripe/subscription`, {
 				method: "POST",
 				headers: new Headers({"authorization": `Bearer ${$token}`}),
@@ -60,13 +59,13 @@
 		} else {
 			// payment succeeded, redirect to "thank you" page
 			$checkoutStep = CheckoutSteps.LOGIN;
-			$clientSecret = null;
+			$clientSecret = "";
 			await goto("/app");
 		}
 	}
 </script>
 
-{#if stripe && $clientSecret !== "null"}
+{#if stripe && !!$clientSecret}
 	<form on:submit|preventDefault={submit}>
 		<Elements {stripe} clientSecret={$clientSecret} bind:elements>
 			<PaymentElement />

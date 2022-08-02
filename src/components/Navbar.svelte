@@ -1,15 +1,31 @@
+<script>
+	import Icon from "./icons/Icon.svelte";
+	import { token } from "../store/store";
+</script>
+
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+    <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+        <Icon key="box" width="40" height="40"/>
     </a>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/login" class="nav-link px-2 link-secondary">Login</a></li>
-        <li><a href="/checkout" class="nav-link px-2 link-dark">Buy</a></li>
-    </ul>
+    <nav class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0" role="navigation">
+        <li>
+            <a href="/" class="nav-link px-2 link-secondary" aria-current="page">Accueil</a>
+        </li>
+        <li>
+            <a href="/checkout/" class="nav-link px-2 link-dark">Produits</a>
+        </li>
+    </nav>
 
-    <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+    <div class="text-end">
+        {#if $token}
+            <a href="/app/" class="btn btn-outline-primary me-2">
+                Mes serveurs
+            </a>
+        {:else}
+            <a href="/login/?redirect=/app" class="btn btn-outline-primary me-2">
+                Me connecter
+            </a>
+        {/if}
     </div>
 </header>

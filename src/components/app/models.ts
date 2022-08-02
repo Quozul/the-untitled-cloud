@@ -1,4 +1,5 @@
 import type { Id } from "../../shared/models";
+import type { ServerStatus } from "./constants";
 
 export type Paginate<T extends Id> = {
 	data: T[],
@@ -10,6 +11,8 @@ export type Paginate<T extends Id> = {
 
 export type Server = Id & {
 	name: string,
+	subscriptionStatus: string,
+	serverStatus: ServerStatus | null,
 }
 
 export type ServerState = {
