@@ -1,4 +1,6 @@
-export type Paginate<T> = {
+import type { Id } from "../../shared/models";
+
+export type Paginate<T extends Id> = {
 	data: T[],
 	firstPage: boolean,
 	lastPage: boolean,
@@ -6,8 +8,7 @@ export type Paginate<T> = {
 	totalElements: number,
 }
 
-export type Server = {
-	id: string,
+export type Server = Id & {
 	name: string,
 }
 
@@ -38,8 +39,7 @@ export type ServerParameters = {
 	ftbModpackVersionId: number | null,
 }
 
-export type DetailedServer = {
-	id: string,
+export type DetailedServer = Id & {
 	name: string,
 	port: string | null,
 	state: ServerState,
@@ -51,7 +51,6 @@ export enum VersionType {
 	SNAPSHOT = "SNAPSHOT",
 }
 
-export type Version = {
-	id: string,
+export type Version = Id & {
 	type: VersionType,
 }

@@ -24,7 +24,7 @@
 
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		if (!$clientSecret) {
+		if ($clientSecret === "null") {
 			fetch(`${import.meta.env.VITE_API_BASE_URL}/payment/stripe/subscription`, {
 				method: "POST",
 				headers: new Headers({"authorization": `Bearer ${$token}`}),
@@ -66,7 +66,7 @@
 	}
 </script>
 
-{#if stripe && !!$clientSecret}
+{#if stripe && $clientSecret !== "null"}
 	<form on:submit|preventDefault={submit}>
 		<Elements {stripe} clientSecret={$clientSecret} bind:elements>
 			<PaymentElement />

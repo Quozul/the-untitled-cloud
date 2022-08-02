@@ -9,6 +9,7 @@
 	let versions: Version[] = [];
 
 	onMount(() => {
+		// TODO: This will be called everytime a change to serverType or jdkVersion is made
 		fetch(`${import.meta.env.VITE_API_BASE_URL}/versions`, { method: "GET" })
             .then(res => res.json())
             .then((json: Version[]) => {
@@ -17,6 +18,8 @@
     })
 
 	function submit() {
+		// TODO: Make a method to simplify requests
+        // TODO: Refresh page when parameters successfully updated
 		fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${$selectedServer}/parameters`, {
 			method: "PUT",
 			headers: new Headers({

@@ -1,29 +1,22 @@
 <script lang="ts">
-	import { token } from "../../store/store.ts";
 	import { onMount } from "svelte";
-	import { selectedServer } from "../../store/store.js";
+	import { fetchedServers, selectedServer } from "../../store/store.js";
 	import type { Paginate, Server } from "./models";
 	import Icon from "../icons/Icon.svelte";
+	import { containId, getAllServers } from "../../shared/helpers";
 
 	let servers: Paginate<Server>;
-	let error = false;
 	let currentPage = 0;
 
 	onMount(async () => {
-		fetch(`${ import.meta.env.VITE_API_BASE_URL }/server?page=${ currentPage }`, {
-			method: "GET",
-			headers: new Headers({ "authorization": `Bearer ${ $token }` }),
-		})
-			.then(res => {
-				error = !res.ok;
-				return res.json();
-			})
-			.then(json => {
-				servers = json;
-				if (!!$selectedServer) {
-					$selectedServer = servers.data[0]?.id ?? null;
-                }
-			});
+		$fetchedServers = false;
+		servers = await getAllServers(currentPage);
+
+		if (!!$selectedServer || !containId(servers, $selectedServer)) {
+			$selectedServer = servers.data[0]?.id ?? null;
+		}
+
+		$fetchedServers = true;
 	});
 </script>
 
@@ -36,16 +29,21 @@
     </a>
     <hr>
 
-    <ul class="nav nav-pills flex-column mb-auto">
+    <ul class="nav nav-pills flex-column mb-auto gap-3">
         {#if servers}
             {#each servers.data as server}
                 <li class="nav-item">
-                    <button class="nav-link d-flex align-items-center" class:active={$selectedServer === server.id} on:click={() => $selectedServer = server.id}>
+                    <button class="nav-link d-flex align-items-center w-100" class:active={$selectedServer === server.id} on:click={() => $selectedServer = server.id}>
                         <Icon key="box" className="me-2"/>
                         {server.name}
                     </button>
                 </li>
             {/each}
         {/if}
+        <li class="nav-item">
+            <a href="/checkout" class="btn btn-outline-primary w-100">
+                <Icon key="plus" className="me-2"/>
+            </a>
+        </li>
     </ul>
 </div>
