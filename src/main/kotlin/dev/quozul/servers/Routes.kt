@@ -1,5 +1,6 @@
 package dev.quozul.servers
 
+import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
 import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.dockerClient
@@ -34,6 +35,8 @@ fun Route.configureServerRoutes() {
 				.map {
 					val name = try {
 						dockerClient.inspectContainerCmd(it.containerId!!).exec().name
+					} catch (_: NotFoundException) {
+						null
 					} catch (_: NullPointerException) {
 						null
 					}

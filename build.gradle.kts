@@ -10,12 +10,13 @@ plugins {
 	application
 	kotlin("jvm") version "1.7.10"
 	id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
+	id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "quozul.dev"
 version = "0.0.1"
 application {
-	mainClass.set("quozul.dev.ApplicationKt")
+	mainClass.set("io.ktor.server.netty.EngineMain")
 
 	val isDevelopment: Boolean = project.ext.has("development")
 	applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
