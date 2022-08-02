@@ -1,10 +1,11 @@
-<script>
-    export let key;
-    export let className = "me-2";
-    export let width = "16";
-    export let height = "16";
+<script lang="ts">
+    export let key: string;
+    export let className: string = "me-2";
+    export let width: string = "16";
+    export let height: string = "16";
+    export let onClick: VoidFunction | null = null;
 </script>
 
-<svg class={className} {width} {height}>
+<svg class={className} {width} {height} on:click|preventDefault={onClick}>
     <use xlink:href="#{key}"></use>
 </svg>

@@ -58,7 +58,7 @@
             {/if}
         </ul>
         <hr/>
-        <a href="/checkout/" class="btn text-start btn-outline-secondary d-flex align-items-center w-100">
+        <a href="/rent/products/" class="btn text-start btn-outline-secondary d-flex align-items-center w-100">
             <Icon key="plus" className="me-2"/>
             Louer un serveur
         </a>

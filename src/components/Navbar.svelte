@@ -13,7 +13,7 @@
             <a href="/" class="nav-link px-2 link-secondary" aria-current="page">Accueil</a>
         </li>
         <li>
-            <a href="/checkout/" class="nav-link px-2 link-dark">Produits</a>
+            <a href="/rent/products/" class="nav-link px-2 link-dark">Produits</a>
         </li>
     </nav>
 

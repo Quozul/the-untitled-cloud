@@ -1,7 +1,7 @@
 import type { Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
 import type { Token } from "../components/login/Token";
-import { clientSecret, token } from "../store/store";
+import { token } from "../store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
 
@@ -63,9 +63,13 @@ export function containId(paginate: Paginate<Id>, id: string): boolean {
 	return false;
 }
 
-export async function redirect() {
+export function formatPrice(price: number): string {
+	return (price / 100).toFixed(2) + "€";
+}
+
+export async function redirect(fallback: string = "/") {
 	const search = new URLSearchParams(location.search);
-	const redirect = search.get("redirect") ?? "/";
+	const redirect = search.get("redirect") ?? fallback;
 	await goto(redirect);
 }
 

@@ -2,6 +2,7 @@
 	import { token } from "../../store/store";
 	import { redirect, signIn } from "../../shared/helpers";
 
+	export let redirectTo: string;
 	let email, password, confirmPassword;
 	let error = false;
 	let submitting = false;
@@ -16,7 +17,7 @@
 		const res = await signIn(email, password);
 		$token = res.token;
 
-		await redirect();
+		await redirect(redirectTo);
 		submitting = false;
 	}
 </script>

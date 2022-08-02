@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { checkoutStep, token } from "../../store/store.ts";
+	import { token } from "../../store/store.ts";
 	import type { Address } from "./Address";
 	import { CheckoutSteps } from "../checkout/constants";
 	import Icon from "../icons/Icon.svelte";
+	import { setStep } from "../checkout/helpers";
 
 	let address: Address = {
 		city: null,
@@ -27,8 +28,8 @@
 		})
 			.then(res => {
 				if (res.status === 401) {
-					$token = ""; // Disconnect user
-					$checkoutStep = CheckoutSteps.LOGIN;
+					$token = null; // Disconnect user
+					setStep(CheckoutSteps.LOGIN);
 				} else if (res.status === 204) {
 					addAddress = true;
 					return;
@@ -52,9 +53,13 @@
 		})
             .then(res => {
 				if (res.ok) {
-					$checkoutStep = CheckoutSteps.CHECKOUT;
+					setStep(CheckoutSteps.CHECKOUT);
                 }
             });
+	}
+
+	function skip() {
+        setStep(CheckoutSteps.CHECKOUT);
 	}
 </script>
 
@@ -112,7 +117,7 @@
     </div>
 
     <button class="btn btn-primary mt-3">Ajouter l'adresse</button>
-    <button class="btn btn-secondary mt-3 d-inline-flex align-items-center" type="button" on:click|preventDefault={() => $checkoutStep = CheckoutSteps.CHECKOUT}>
+    <button class="btn btn-secondary mt-3 d-inline-flex align-items-center" type="button" on:click|preventDefault={skip}>
         Passer
         <Icon key="chevron-double-right" className="ms-2"/>
     </button>

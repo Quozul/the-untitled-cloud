@@ -2,7 +2,7 @@
 	import Icon from "./icons/Icon.svelte";
 </script>
 
-<footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
+<footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 border-top mt-4">
     <div class="flex-grow-1 col mb-3">
         <a href="/" class="d-flex align-items-center mb-3 link-dark text-decoration-none">
             <Icon key="box" width="40" height="40"/>

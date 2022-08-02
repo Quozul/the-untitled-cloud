@@ -1,0 +1,9 @@
+<script>
+	import LoginForm from "/src/components/login/LoginForm.svelte";
+	import { token, checkoutStep } from "/src/store/store";
+	import { CheckoutSteps } from "/src/components/checkout/constants";
+
+	$checkoutStep = CheckoutSteps.LOGIN;
+</script>
+
+<LoginForm redirectTo="/rent/profile/"/>

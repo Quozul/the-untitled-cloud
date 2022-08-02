@@ -2,7 +2,7 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { checkoutStep, token, clientSecret } from "../../store/store.ts";
+	import { cart, checkoutStep, token, clientSecret } from "../../store/store.ts";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 
@@ -23,7 +23,7 @@
 		window.addEventListener("beforeunload", alertUnload);
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		if (!!$clientSecret) {
+		if (!$clientSecret) {
 			fetch(`${import.meta.env.VITE_API_BASE_URL}/payment/stripe/subscription`, {
 				method: "POST",
 				headers: new Headers({"authorization": `Bearer ${$token}`}),
@@ -57,9 +57,10 @@
 			error = result.error;
 			processing = false;
 		} else {
-			// payment succeeded, redirect to "thank you" page
-			$checkoutStep = CheckoutSteps.LOGIN;
-			$clientSecret = "";
+			// Clear everything and redirect to app
+			$checkoutStep = CheckoutSteps.PRODUCTS;
+			$clientSecret = null;
+			$cart = null;
 			await goto("/app");
 		}
 	}

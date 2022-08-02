@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import StripeCheckout from "./StripeCheckout.svelte";
 
-	let paymentMethod = null;
+	let paymentMethod: string | null = null;
 </script>
 
 <h4 class="mb-3">Paiement</h4>

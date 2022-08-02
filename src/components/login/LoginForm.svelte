@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 	import Login from "./Login.svelte";
 	import Signup from "./Signup.svelte";
 
+	export let redirectTo: string = "/";
 	let mode = true;
 
 	function toggleMode() {
@@ -18,9 +19,9 @@
 
 <div>
     {#if mode}
-        <Login/>
+        <Login {redirectTo}/>
     {:else}
-        <Signup/>
+        <Signup {redirectTo}/>
     {/if}
 
     <button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0">
