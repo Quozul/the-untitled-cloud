@@ -46,6 +46,7 @@ fun Route.configureStripeWebhook() {
 				// TODO: Support other products and options
 				createContainer(user, stripeObject.subscription)
 				// TODO: Send notification email
+				call.response.status(HttpStatusCode.OK)
 			}
 
 			"invoice.payment_failed" -> {
@@ -54,6 +55,7 @@ fun Route.configureStripeWebhook() {
 
 				suspendContainer(user, stripeObject.subscription)
 				// TODO: Send notification email
+				call.response.status(HttpStatusCode.OK)
 			}
 
 			"customer.subscription.deleted" -> {
@@ -62,9 +64,12 @@ fun Route.configureStripeWebhook() {
 
 				deleteContainer(user, stripeObject.id)
 				// TODO: Send notification email
+				call.response.status(HttpStatusCode.OK)
+			}
+
+			else -> {
+				call.response.status(HttpStatusCode.NotImplemented)
 			}
 		}
-
-		call.response.status(HttpStatusCode.NotImplemented)
 	}
 }

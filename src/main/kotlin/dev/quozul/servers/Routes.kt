@@ -1,5 +1,6 @@
 package dev.quozul.servers
 
+import com.github.dockerjava.api.exception.NotModifiedException
 import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.dockerClient
 import dev.quozul.servers.models.*
@@ -126,15 +127,24 @@ fun Route.configureServerRoutes() {
 
 			when (action) {
 				START -> {
-						dockerClient.startContainerCmd(containerId).exec()
-						call.response.status(HttpStatusCode.NoContent)
+					dockerClient.startContainerCmd(containerId).exec()
+					call.response.status(HttpStatusCode.NoContent)
 				}
+
 				STOP -> {
+					try {
 						dockerClient.stopContainerCmd(containerId).exec()
-						call.response.status(HttpStatusCode.NoContent)
+					} catch (_: NotModifiedException) {
+					}
+					call.response.status(HttpStatusCode.NoContent)
 				}
-				RECREATE -> {
-					call.response.status(HttpStatusCode.NotImplemented)
+
+				RESTART -> {
+					try {
+						dockerClient.restartContainerCmd(containerId).exec()
+					} catch (_: NotModifiedException) {
+					}
+					call.response.status(HttpStatusCode.NoContent)
 				}
 			}
 		}

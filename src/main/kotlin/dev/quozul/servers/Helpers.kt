@@ -4,9 +4,7 @@ import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.command.PullImageResultCallback
 import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
-import com.github.dockerjava.api.model.ExposedPort
-import com.github.dockerjava.api.model.HostConfig
-import com.github.dockerjava.api.model.Ports
+import com.github.dockerjava.api.model.*
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
@@ -14,6 +12,8 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
 import dev.quozul.authentication.User
 import dev.quozul.dockerClient
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
 import java.time.LocalDateTime
@@ -33,16 +33,18 @@ fun getDockerClient(): DockerClient {
 	return DockerClientImpl.getInstance(config, httpClient)
 }
 
-fun findContainerFromSubscription(subscriptionId: String): String? {
-	return transaction {
+fun findContainerFromSubscription(subscriptionId: String): String? =
+	findServerFromSubscription(subscriptionId).containerId
+
+fun findServerFromSubscription(subscriptionId: String): Server =
+	transaction {
 		Server.find {
 			Servers.subscriptionId eq subscriptionId
-		}.first().containerId
+		}.first()
 	}
-}
 
-fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStatus, containerId: String?) {
-	transaction {
+fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStatus, containerId: String? = null): Server {
+	return transaction {
 		Server.find {
 			Servers.subscriptionId eq subscriptionId
 		}.firstOrNull()?.let {
@@ -52,6 +54,8 @@ fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStat
 			if (status == ServerStatus.ENDED || status == ServerStatus.SUSPENDED) {
 				it.deletionDate = LocalDateTime.now()
 			}
+
+			it
 		} ?: run {
 			val server = Server.new {
 				this.owner = owner
@@ -63,28 +67,26 @@ fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStat
 			Parameter.new {
 				this.server = server
 			}
+
+			server
 		}
 	}
 }
 
-fun createContainer(
+/**
+ * This should only be called when a subscription is created.
+ */
+suspend fun createContainer(
 	user: User,
 	subscriptionId: String,
-	image: String = "itzg/minecraft-server",
-	tag: String = "latest"
 ) {
-	dockerClient.pullImageCmd(image)
-		.withTag(tag)
-		.exec(PullImageResultCallback())
-		.awaitCompletion()
-
-	val container = dockerClient.createContainerCmd("$image:$tag")
-		.withExposedPorts(ExposedPort.tcp(80))
-		.exec()
-
-	createOrUpdateServer(user, subscriptionId, ServerStatus.ACTIVE, container.id)
+	val server = createOrUpdateServer(user, subscriptionId, ServerStatus.ACTIVE)
+	createContainer(server)
 }
 
+/**
+ * This should only be called when a payment has failed.
+ */
 fun suspendContainer(user: User, subscriptionId: String) {
 	findContainerFromSubscription(subscriptionId)?.let {
 		try {
@@ -96,6 +98,9 @@ fun suspendContainer(user: User, subscriptionId: String) {
 	}
 }
 
+/**
+ * This should only be called when a subscription is cancelled.
+ */
 fun deleteContainer(user: User, subscriptionId: String) {
 	findContainerFromSubscription(subscriptionId)?.let {
 		try {
@@ -109,7 +114,57 @@ fun deleteContainer(user: User, subscriptionId: String) {
 	}
 }
 
-fun recreateServer(serverId: UUID): Boolean {
+/**
+ * Create a new container for the given Server and update it.
+ */
+suspend fun createContainer(
+	server: Server,
+	image: String = "itzg/minecraft-server",
+	tag: String = "latest",
+) = coroutineScope {
+	val parameters = transaction {
+		Parameter.find {
+			Parameters.server eq server.id
+		}.firstOrNull()?.toEnvironmentVariables()
+	} ?: listOf()
+
+	val exposedPort = ExposedPort.tcp(25565)
+	val portBindings = Ports()
+	portBindings.bind(exposedPort, Ports.Binding.empty())
+
+	val volume = Volume("/data")
+	val bind = transaction {
+		Bind("/home/mchost/${server.owner.id.value}/${server.id}", volume)
+	}
+
+	launch {
+		// TODO: Get previous used image:tag
+		// TODO: Make this asynchronous
+		// TODO: With (custom/previous) name from database, feels weird to have a random name each time
+		dockerClient.pullImageCmd(image)
+			.withTag(tag)
+			.exec(PullImageResultCallback())
+
+		val container = dockerClient.createContainerCmd("$image:$tag")
+			.withVolumes(volume)
+			.withEnv(parameters)
+			.withHostConfig(
+				HostConfig
+					.newHostConfig()
+					.withPortBindings(portBindings)
+					.withBinds(bind)
+			)
+			.exec()
+
+		transaction {
+			server.containerId = container.id
+		}
+
+		// TODO: If the server was already running, rerun it after the recreation
+	}
+}
+
+suspend fun recreateServer(serverId: UUID): Boolean {
 	val server = try {
 		transaction {
 			Server.findById(serverId)!!
@@ -132,35 +187,7 @@ fun recreateServer(serverId: UUID): Boolean {
 		}
 	}
 
-	// TODO: Get previous used image
-	// TODO: Make this asynchronous
-	dockerClient.pullImageCmd("itzg/minecraft-server")
-		.withTag("latest")
-		.exec(PullImageResultCallback())
-		.awaitCompletion()
-
-	val parameters = transaction {
-		Parameter.find {
-			Parameters.server eq serverId
-		}.firstOrNull()?.toEnvironmentVariables()
-	} ?: listOf()
-
-	val exposedPort = ExposedPort.tcp(25565)
-	val portBindings = Ports()
-	portBindings.bind(exposedPort, Ports.Binding.empty())
-
-	val container = dockerClient.createContainerCmd("itzg/minecraft-server:latest")
-		.withHostConfig(
-			HostConfig
-				.newHostConfig()
-				.withPortBindings(portBindings)
-		)
-		.withEnv(parameters)
-		.exec()
-
-	transaction {
-		server.containerId = container.id
-	}
+	createContainer(server)
 
 	return true
 }

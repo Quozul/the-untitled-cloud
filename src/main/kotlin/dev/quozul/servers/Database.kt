@@ -42,6 +42,8 @@ class Server(id: EntityID<UUID>) : UUIDEntity(id) {
 	var status by Servers.status
 	val creationDate by Servers.creationDate
 	var deletionDate by Servers.deletionDate
+	// TODO: Add tag column for JDK version
+	// TODO: Add server name column, with a default random one (generated like Docker does)
 }
 
 /*

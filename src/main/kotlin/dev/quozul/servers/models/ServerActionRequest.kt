@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 enum class Action {
 	START,
 	STOP,
-	RECREATE,
+	RESTART,
 }
 
 

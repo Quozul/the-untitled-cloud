@@ -26,6 +26,9 @@ fun Route.configureVersionRoutes() {
 	}.filterNotNull()
 
 	get("") {
+		// TODO: Add a query param with ServerType
+		// TODO: Check JDK compatibility with ServerType
+		// TODO: Add an endpoint to retrieve JDK versions
 		call.respond(versions)
 	}
 }
