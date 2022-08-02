@@ -1,0 +1,9 @@
+[submodule "mc-host-front"]
+	path = mc-host-front
+	url = git@github.com:Quozul/mc-host-front.git
+[submodule "mc-host-ftp"]
+	path = mc-host-ftp
+	url = git@github.com:Quozul/mc-host-ftp.git
+[submodule "mc-host-api"]
+	path = mc-host-api
+	url = git@github.com:Quozul/mc-host-api.git
