@@ -7,6 +7,7 @@ enum class Action {
 	START,
 	STOP,
 	RESTART,
+	RECREATE,
 }
 
 

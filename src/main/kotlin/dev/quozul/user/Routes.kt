@@ -21,6 +21,19 @@ fun Route.configureUserRoutes() {
 	// Authenticated requests
 	authenticate {
 		// TODO: Add renew token
+		// TODO: Add password change
+
+		post("") {
+			val principal = call.principal<JWTPrincipal>()
+			val id = principal!!.payload.getClaim("id").asString()
+
+			val email = transaction {
+				User.findById(UUID.fromString(id))!!.email
+			}
+
+			sendEmail(email, "subject", "content")
+			call.response.status(HttpStatusCode.NoContent)
+		}
 
 		// Get user billing address
 		get("/address") {

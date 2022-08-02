@@ -29,19 +29,19 @@ fun Route.configureServerRoutes() {
 
 		val servers = transaction {
 			Server.find {
-				(Servers.owner eq uuid) and (Servers.containerId neq null)
+				(Servers.owner eq uuid) and (Servers.deletionDate eq null)
 			}
 				.limit(size, (page * size).toLong())
 				.map {
-					val name = try {
-						dockerClient.inspectContainerCmd(it.containerId!!).exec().name
+					val container = try {
+						dockerClient.inspectContainerCmd(it.containerId!!).exec()
 					} catch (_: NotFoundException) {
 						null
 					} catch (_: NullPointerException) {
 						null
 					}
 
-					ApiServer(it.id.toString(), name, it.status)
+					ApiServer(it.id.toString(), it.status, container?.name, container?.state?.status)
 				}
 		}
 
@@ -80,10 +80,10 @@ fun Route.configureServerRoutes() {
 				return@get
 			}
 
-			// FIXME: The following line might throw an error sometimes
-			val container = dockerClient.inspectContainerCmd(containerId).exec()
-
-			if (container == null) {
+			// The following line might throw an error sometimes
+			val container = try {
+				dockerClient.inspectContainerCmd(containerId).exec()
+			} catch (_: NotFoundException) {
 				call.response.status(HttpStatusCode.NotFound)
 				return@get
 			}
@@ -147,6 +147,11 @@ fun Route.configureServerRoutes() {
 						dockerClient.restartContainerCmd(containerId).exec()
 					} catch (_: NotModifiedException) {
 					}
+					call.response.status(HttpStatusCode.NoContent)
+				}
+
+				RECREATE -> {
+					recreateServer(UUID.fromString(serverId))
 					call.response.status(HttpStatusCode.NoContent)
 				}
 			}

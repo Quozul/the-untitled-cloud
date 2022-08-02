@@ -111,6 +111,7 @@ fun deleteContainer(user: User, subscriptionId: String) {
 		dockerClient.removeContainerCmd(it).exec()
 
 		createOrUpdateServer(user, subscriptionId, ServerStatus.ENDED, null)
+		// TODO: Delete volume of container
 	}
 }
 
@@ -121,6 +122,7 @@ suspend fun createContainer(
 	server: Server,
 	image: String = "itzg/minecraft-server",
 	tag: String = "latest",
+	start: Boolean = false,
 ) = coroutineScope {
 	val parameters = transaction {
 		Parameter.find {
@@ -138,8 +140,6 @@ suspend fun createContainer(
 	}
 
 	launch {
-		// TODO: Get previous used image:tag
-		// TODO: Make this asynchronous
 		// TODO: With (custom/previous) name from database, feels weird to have a random name each time
 		dockerClient.pullImageCmd(image)
 			.withTag(tag)
@@ -153,6 +153,8 @@ suspend fun createContainer(
 					.newHostConfig()
 					.withPortBindings(portBindings)
 					.withBinds(bind)
+					.withMemory(2147483648)
+					.withCpuCount(1)
 			)
 			.exec()
 
@@ -160,7 +162,13 @@ suspend fun createContainer(
 			server.containerId = container.id
 		}
 
-		// TODO: If the server was already running, rerun it after the recreation
+		// If the server was already running, rerun it after the recreation
+		if (start) {
+			try {
+				dockerClient.startContainerCmd(container.id).exec()
+			} catch (_: NotFoundException) {
+			}
+		}
 	}
 }
 
@@ -174,7 +182,13 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 	}
 
 	// Try stopping then removing the previous container
-	server.containerId?.let {
+	val wasRunning: Boolean = server.containerId?.let {
+		val wasRunning = try {
+			dockerClient.inspectContainerCmd(it).exec().state.running
+		} catch (_: NotFoundException) {
+			false
+		}
+
 		try {
 			dockerClient.stopContainerCmd(it).exec()
 		} catch (_: NotModifiedException) {
@@ -185,9 +199,11 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 			dockerClient.removeContainerCmd(it).exec()
 		} catch (_: NotFoundException) {
 		}
-	}
 
-	createContainer(server)
+		wasRunning
+	} ?: false
+
+	createContainer(server, start = wasRunning)
 
 	return true
 }

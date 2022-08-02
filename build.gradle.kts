@@ -47,6 +47,7 @@ dependencies {
 	implementation("com.github.docker-java:docker-java-core:$docker_java_version")
 	implementation("com.github.docker-java:docker-java-transport-httpclient5:$docker_java_version")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+	implementation("com.sun.mail:javax.mail:1.6.2")
 
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

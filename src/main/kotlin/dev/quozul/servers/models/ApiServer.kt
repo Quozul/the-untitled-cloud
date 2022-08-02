@@ -6,8 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiServer(
 	val id: String,
+	val subscriptionStatus: ServerStatus,
 	val name: String?,
-	val status: ServerStatus,
+	val serverStatus: String?,
 )
 
 @Serializable
