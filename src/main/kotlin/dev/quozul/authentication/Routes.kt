@@ -25,6 +25,8 @@ fun Route.configureAuthenticationRoutes() {
 	val salt = environment!!.config.property("passwords.salt").getString()
 	val pepper = environment!!.config.property("passwords.pepper").getString()
 
+	val isDevelopmentMode = (environment!!.config.propertyOrNull("ktor.development")?.getString() ?: "false").toBooleanStrict()
+
 	fun generateJWT(id: UUID): String {
 		return JWT.create()
 			.withAudience(audience)
@@ -78,7 +80,13 @@ fun Route.configureAuthenticationRoutes() {
 
 			// TODO: Send verification email according language
 			// TODO: Use template for email
-//			sendEmail(credentials.email, "Votre code de vérification", "Voici votre code de vérification : '${user.verificationCode}'. Valable 1 heure.")
+			if (!isDevelopmentMode) {
+				sendEmail(
+					credentials.email,
+					"Votre code de vérification",
+					"Voici votre code de vérification : '${user.verificationCode}'. Valable 1 heure."
+				)
+			}
 
 			call.respond(AuthenticationErrors.VERIFY_ACCOUNT.toHashMap())
 			call.response.status(HttpStatusCode.Created)
