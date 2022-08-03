@@ -7,4 +7,5 @@ export enum AuthenticationErrors {
 
 	// Form validation codes
 	PASSWORDS_DIFFER = "PASSWORDS_DIFFER",
+	EMPTY = "EMPTY",
 }

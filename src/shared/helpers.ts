@@ -1,7 +1,6 @@
 import type { ApiError, Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
 import type { ServerParameters } from "../components/app/models";
-import type { Token } from "../components/login/models/Token";
 import type { Address } from "../components/address/Address";
 
 import { token } from "../store/store";
@@ -39,10 +38,8 @@ export function getOptions(method: string = "POST", raw: Object | null = null): 
  * @returns {Promise<{data: Object | null, message: string}>}
  * @throws {message: string, message: number}
  */
-export function handleResponse(response: Response): Promise<Object | null> {
+export async function handleResponse(response: Response): Promise<Object> {
 	return new Promise((resolve, reject) => {
-		const contentLength = parseInt(response.headers.get("content-length") ?? "0");
-
 		if (!response.ok) {
 			 response.json()
 				.then(reject)
@@ -57,12 +54,16 @@ export function handleResponse(response: Response): Promise<Object | null> {
 					reject(error);
 				});
 		} else {
-			if (contentLength > 0) {
+			if (response.body !== null) {
 				response.json()
 					.then(resolve)
 					.catch(reject);
 			} else {
-				resolve(null);
+				resolve({
+					code: response.status,
+					isError: true,
+					message: response.statusText,
+				});
 			}
 		}
 	});
@@ -107,9 +108,9 @@ export async function getServerInfo(selectedServer: string): Promise<DetailedSer
 	return await handleResponse(response) as DetailedServer;
 }
 
-export async function patchServer(selectedServer: string, action: string): Promise<null> {
+export async function patchServer(selectedServer: string, action: string): Promise<void> {
 	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
-	return await handleResponse(response) as null;
+	await handleResponse(response);
 }
 
 export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
