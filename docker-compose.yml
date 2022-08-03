@@ -18,8 +18,10 @@ services:
       SMTP_PORT: ${SMTP_PORT}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      JWT_SECRET: ${JWT_SECRET}
       SALT: ${SALT}
       PEPPER: ${PEPPER}
+      CONTAINER_DIRECTORY: ${CONTAINER_DIRECTORY}
     volumes:
       - "${DOCKER_SOCK}:${DOCKER_HOST}"
     networks:
@@ -34,6 +36,8 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASS}
       POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - "${DATABASE_VOLUME}:/var/lib/postgresql/data"
     expose:
       - 5432
     networks:
@@ -66,22 +70,14 @@ services:
         VITE_STRIPE_PUBLIC_KEY: ${STRIPE_PK}
         VITE_API_BASE_URL: ${API_ENDPOINT}
     hostname: front
-    expose:
-      - 80
-    networks:
-      mc_host_network:
-
-  mc_host_proxy:
-    image: nginx:1.23-alpine
     volumes:
       - "./nginx:/etc/nginx:ro"
     ports:
-      - "80:${PORT}"
+      - "${PORT}:80"
     networks:
       mc_host_network:
     depends_on:
       - mc_host_api
-      - mc_host_front
 
 networks:
   mc_host_network:
