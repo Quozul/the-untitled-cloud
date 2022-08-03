@@ -7,4 +7,9 @@ FROM eclipse-temurin:17-jre-alpine
 EXPOSE 8080:8080
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*-all.jar /app/api-all.jar
+
+RUN addgroup --system --gid 1001 mc_host
+RUN adduser --system --uid 1001 mc_host
+USER 1001
+
 ENTRYPOINT ["java", "-jar", "/app/api-all.jar"]
