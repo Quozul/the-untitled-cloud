@@ -63,7 +63,7 @@ fun Application.configureSmtp(): Session {
 
 	val auth: Authenticator = object : Authenticator() {
 		override fun getPasswordAuthentication(): PasswordAuthentication {
-			return PasswordAuthentication(user, pass);
+			return PasswordAuthentication(user, pass)
 		}
 	}
 

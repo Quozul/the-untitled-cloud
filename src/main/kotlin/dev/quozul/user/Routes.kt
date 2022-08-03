@@ -4,7 +4,6 @@ import dev.quozul.payments.provider.stripe.models.Address
 import com.stripe.param.CustomerUpdateParams
 import dev.quozul.authentication.User
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
-import dev.quozul.payments.provider.stripe.getStripeUser
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -53,7 +52,7 @@ fun Route.configureUserRoutes() {
 				call.receive<Address>()
 			} catch (e: SerializationException) {
 				call.response.status(HttpStatusCode.BadRequest)
-				return@post;
+				return@post
 			}
 
 			val principal = call.principal<JWTPrincipal>()

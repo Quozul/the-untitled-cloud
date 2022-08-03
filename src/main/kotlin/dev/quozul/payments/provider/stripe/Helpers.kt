@@ -1,5 +1,6 @@
 package dev.quozul.payments.provider.stripe
 
+import com.stripe.exception.InvalidRequestException
 import com.stripe.model.Customer
 import com.stripe.param.CustomerCreateParams
 import dev.quozul.authentication.User
@@ -11,7 +12,12 @@ fun getStripeUser(uuid: UUID): Customer? {
 	val stripeId = transaction {
 		User.findById(uuid)?.stripeId
 	}
-	return Customer.retrieve(stripeId)
+
+	return try {
+		Customer.retrieve(stripeId)
+	} catch (_: InvalidRequestException) {
+		null
+	}
 }
 
 fun getOrCreateStripeCustomer(user: User): Customer {

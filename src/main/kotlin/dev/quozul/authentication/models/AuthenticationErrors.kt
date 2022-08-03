@@ -1,4 +1,4 @@
-package dev.quozul.authentication
+package dev.quozul.authentication.models
 
 import kotlinx.serialization.Serializable
 

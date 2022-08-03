@@ -49,7 +49,7 @@ fun Route.configureServerRoutes() {
 			Server.count()
 		}
 
-		val lastPage = count <= (page + 1) * size;
+		val lastPage = count <= (page + 1) * size
 
 		val response = Paginate(
 			servers,
@@ -113,7 +113,7 @@ fun Route.configureServerRoutes() {
 				call.receive<ServerActionRequest>().action
 			} catch (e: SerializationException) {
 				call.response.status(HttpStatusCode.BadRequest)
-				return@patch;
+				return@patch
 			}
 
 			val serverId = call.parameters["serverId"] ?: run {
@@ -169,7 +169,7 @@ fun Route.configureServerRoutes() {
 				call.receive<ServerParameters>()
 			} catch (e: SerializationException) {
 				call.response.status(HttpStatusCode.BadRequest)
-				return@put;
+				return@put
 			}
 
 			transaction {

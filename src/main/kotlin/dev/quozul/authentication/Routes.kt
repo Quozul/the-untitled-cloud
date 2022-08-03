@@ -2,6 +2,7 @@ package dev.quozul.authentication
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.authentication.models.SignInCredentials
 import dev.quozul.authentication.models.SignUpCredentials
 import dev.quozul.user.sendEmail
@@ -25,15 +26,17 @@ fun Route.configureAuthenticationRoutes() {
 	val salt = environment!!.config.property("passwords.salt").getString()
 	val pepper = environment!!.config.property("passwords.pepper").getString()
 
-	val isDevelopmentMode = (environment!!.config.propertyOrNull("ktor.development")?.getString() ?: "false").toBooleanStrict()
+	val isDevelopmentMode =
+		(environment!!.config.propertyOrNull("ktor.development")?.getString() ?: "false").toBooleanStrict()
 
-	fun generateJWT(id: UUID): String {
+	fun generateJWT(user: User): String {
 		return JWT.create()
 			.withAudience(audience)
 			.withIssuer(issuer)
-			.withClaim("id", id.toString())
+			.withClaim("id", user.id.value.toString())
+			.withClaim("email", user.email)
 			.withExpiresAt(Date(System.currentTimeMillis() + 86400000 /* One day */))
-			.sign(Algorithm.HMAC256(secret));
+			.sign(Algorithm.HMAC256(secret))
 	}
 
 	post("signUp") {
@@ -41,7 +44,7 @@ fun Route.configureAuthenticationRoutes() {
 			call.receive<SignUpCredentials>()
 		} catch (e: SerializationException) {
 			call.response.status(HttpStatusCode.BadRequest)
-			return@post;
+			return@post
 		}
 
 		// TODO: Find a better way to hash password
@@ -56,14 +59,14 @@ fun Route.configureAuthenticationRoutes() {
 
 		if (previousUser != null) {
 			call.response.status(HttpStatusCode.Conflict)
-			return@post;
+			return@post
 		}
 
 		// Verify user has accepted the TOS
 		if (!credentials.acceptTos) {
 			call.response.status(HttpStatusCode.BadRequest)
 			call.respond(AuthenticationErrors.ACCEPT_TOS.toHashMap())
-			return@post;
+			return@post
 		}
 
 		try {
@@ -99,12 +102,95 @@ fun Route.configureAuthenticationRoutes() {
 		}
 	}
 
+	post("/code/{email}") {
+		val email = try {
+			call.parameters["email"]!!
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@post
+		}
+
+		// "By signing you acknowledge to have read and accepted the TOS" -> set tosAcceptDate to now
+		val user = try {
+			transaction {
+				val user = User.find { Users.email eq email }.first()
+
+				user.verificationCode = generateValidationCode()
+				user.verificationCodeValidDate = LocalDateTime.now().plusHours(1)
+
+				user
+			}
+		} catch (e: NoSuchElementException) {
+			call.response.status(HttpStatusCode.NotFound)
+			return@post
+		}
+
+		// TODO: Same as above
+		if (!isDevelopmentMode) {
+			sendEmail(
+				email,
+				"Votre code de vérification",
+				"Voici votre code de vérification : '${user.verificationCode}'. Valable 1 heure."
+			)
+		} else {
+			println("Email send with code ${user.verificationCode}")
+		}
+
+		call.response.status(HttpStatusCode.NoContent)
+	}
+
+	post("/password") {
+		val credentials = try {
+			call.receive<SignInCredentials>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@post
+		}
+
+		if (credentials.code == null) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@post
+		}
+
+		val user = try {
+			transaction {
+				User.find { Users.email eq credentials.email }.first()
+			}
+		} catch (e: NoSuchElementException) {
+			call.response.status(HttpStatusCode.NotFound)
+			return@post
+		}
+
+		// If a code is provided, verify it
+		if (credentials.code != user.verificationCode) {
+			// If the code is not valid, unauthorized
+			call.response.status(HttpStatusCode.Unauthorized)
+			call.respond(AuthenticationErrors.INVALID_CODE.toHashMap(true))
+			return@post
+		} else if (user.verificationCodeValidDate < LocalDateTime.now()) {
+			// If the code is not valid, unauthorized
+			call.response.status(HttpStatusCode.Unauthorized)
+			call.respond(AuthenticationErrors.EXPIRED_CODE.toHashMap(true))
+			return@post
+		} else {
+			// At this point, the code is valid
+			val hash = hashString("SHA-256", salt + credentials.password + pepper)
+			transaction {
+				user.password = hash // Reset password
+				user.verificationCodeValidDate = LocalDateTime.now() // Invalidate the code
+			}
+		}
+
+		val token = generateJWT(user)
+		call.respond(hashMapOf("token" to token))
+	}
+
 	post("/signIn") {
 		val credentials = try {
 			call.receive<SignInCredentials>()
 		} catch (e: SerializationException) {
 			call.response.status(HttpStatusCode.BadRequest)
-			return@post;
+			return@post
 		}
 
 		// TODO: Find a better way to hash password
@@ -119,20 +205,22 @@ fun Route.configureAuthenticationRoutes() {
 		user?.let {
 			credentials.code?.let { code ->
 				// If a code is provided, verify it
-				if (user.verificationCodeValidDate < LocalDateTime.now()) {
-					// If the code is not valid, unauthorized
-					call.response.status(HttpStatusCode.Unauthorized)
-					call.respond(AuthenticationErrors.EXPIRED_CODE.toHashMap(true))
-					return@post
-				} else if (code == user.verificationCode) {
-					transaction {
-						user.emailVerified = true
-					}
-				} else {
+				if (code != user.verificationCode) {
 					// If the code is not valid, unauthorized
 					call.response.status(HttpStatusCode.Unauthorized)
 					call.respond(AuthenticationErrors.INVALID_CODE.toHashMap(true))
 					return@post
+				} else if (user.verificationCodeValidDate < LocalDateTime.now()) {
+					// If the code is not valid, unauthorized
+					call.response.status(HttpStatusCode.Unauthorized)
+					call.respond(AuthenticationErrors.EXPIRED_CODE.toHashMap(true))
+					return@post
+				} else {
+					// At this point, the code is valid
+					transaction {
+						user.emailVerified = true
+						user.verificationCodeValidDate = LocalDateTime.MIN // Invalidate the code
+					}
 				}
 			} ?: run {
 				if (!it.emailVerified) {
@@ -142,7 +230,7 @@ fun Route.configureAuthenticationRoutes() {
 				}
 			}
 
-			val token = generateJWT(it.id.value)
+			val token = generateJWT(user)
 			call.respond(hashMapOf("token" to token))
 		} ?: run {
 			call.response.status(HttpStatusCode.BadRequest)

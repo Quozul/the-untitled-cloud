@@ -14,4 +14,4 @@ enum class Action {
 @Serializable
 data class ServerActionRequest(
 	val action: Action,
-);
+)

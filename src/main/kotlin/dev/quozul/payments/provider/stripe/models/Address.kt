@@ -1,10 +1,6 @@
 package dev.quozul.payments.provider.stripe.models
 
-import com.stripe.model.Customer
 import dev.quozul.payments.provider.stripe.getStripeUser
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
@@ -42,19 +38,6 @@ data class Address(
 	var state: String? = null,
 ) {
 	companion object {
-		fun fromStripeCustomer(customer: Customer): Address? {
-			val address = customer.address ?: return null
-			return Address(
-				customer.name,
-				address.city,
-				address.country,
-				address.line1,
-				address.line2,
-				address.postalCode,
-				address.state,
-			)
-		}
-
 		fun fromUserId(id: UUID): Address? {
 			getStripeUser(id)?.let {
 				val address = it.address ?: return null
