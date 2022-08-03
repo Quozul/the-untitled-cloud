@@ -41,30 +41,33 @@ fun Route.configureStripeWebhook() {
 		when (event.type) {
 			"invoice.paid" -> {
 				stripeObject as Invoice
-				val user = getUserFromStripeId(stripeObject.customer)
 
-				// TODO: Support other products and options
-				createContainer(user, stripeObject.subscription)
-				// TODO: Send notification email
-				call.response.status(HttpStatusCode.OK)
+				getUserFromStripeId(stripeObject.customer)?.let {
+					// TODO: Support other products and options
+					createContainer(it, stripeObject.subscription)
+					// TODO: Send notification email
+					call.response.status(HttpStatusCode.OK)
+				} ?: call.response.status(HttpStatusCode.NotFound)
 			}
 
 			"invoice.payment_failed" -> {
 				stripeObject as Invoice
-				val user = getUserFromStripeId(stripeObject.customer)
 
-				suspendContainer(user, stripeObject.subscription)
-				// TODO: Send notification email
-				call.response.status(HttpStatusCode.OK)
+				getUserFromStripeId(stripeObject.customer)?.let {
+					suspendContainer(it, stripeObject.subscription)
+					// TODO: Send notification email
+					call.response.status(HttpStatusCode.OK)
+				} ?: call.response.status(HttpStatusCode.NotFound)
 			}
 
 			"customer.subscription.deleted" -> {
 				stripeObject as Subscription
-				val user = getUserFromStripeId(stripeObject.customer)
 
-				deleteContainer(user, stripeObject.id)
-				// TODO: Send notification email
-				call.response.status(HttpStatusCode.OK)
+				getUserFromStripeId(stripeObject.customer)?.let {
+					deleteContainer(it, stripeObject.id)
+					// TODO: Send notification email
+					call.response.status(HttpStatusCode.OK)
+				} ?: call.response.status(HttpStatusCode.NotFound)
 			}
 
 			else -> {
