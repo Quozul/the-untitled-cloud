@@ -11,6 +11,7 @@ import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
 import dev.quozul.authentication.User
+import dev.quozul.containerDirectory
 import dev.quozul.dockerClient
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -136,7 +137,7 @@ suspend fun createContainer(
 
 	val volume = Volume("/data")
 	val bind = transaction {
-		Bind("/home/mchost/${server.owner.id.value}/${server.id}", volume)
+		Bind("${containerDirectory}${server.owner.id.value}/${server.id}", volume)
 	}
 
 	launch {
