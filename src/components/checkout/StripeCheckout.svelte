@@ -24,7 +24,7 @@
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 		if (!$clientSecret) {
-			fetch(`${import.meta.env.VITE_API_BASE_URL}/payment/stripe/subscription`, {
+			fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, {
 				method: "POST",
 				headers: new Headers({"authorization": `Bearer ${$token}`}),
 			})

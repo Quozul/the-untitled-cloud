@@ -19,7 +19,7 @@
 
 	onMount(() => {
 		// Get address
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/user/address`, {
+		fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, {
 			method: "GET",
 			headers: new Headers({
 				"content-type": "application/json",
@@ -42,7 +42,7 @@
 	});
 
 	function submit() {
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/user/address`, {
+		fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, {
 			method: "POST",
 			headers: new Headers({
 				"content-type": "application/json",

@@ -11,6 +11,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG VITE_API_BASE_URL
+ARG VITE_STRIPE_PUBLIC_KEY
 RUN npm run build
 
 # Production image, copy all the files and run next

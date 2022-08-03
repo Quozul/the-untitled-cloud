@@ -12,7 +12,7 @@
 
 	onMount(() => {
 		// TODO: This will be called everytime a change to serverType or jdkVersion is made
-		fetch(`${import.meta.env.VITE_API_BASE_URL}/versions`, { method: "GET" })
+		fetch(`${import.meta.env.VITE_API_BASE_URL}versions`, { method: "GET" })
             .then(res => res.json())
             .then((json: Version[]) => {
 				versions = json;

@@ -87,7 +87,7 @@ export async function redirect(fallback: string = "/") {
 
 export async function signUp(email: string, password: string, language: string, acceptTos: boolean): Promise<ApiError> {
 	const response = await fetch(
-		`${import.meta.env.VITE_API_BASE_URL}/authentication/signUp`,
+		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
 		getOptions("POST", { email, password, language, acceptTos }),
 	)
 	return await handleResponse(response) as ApiError;
@@ -95,28 +95,28 @@ export async function signUp(email: string, password: string, language: string, 
 
 export async function signIn(email: string, password: string, code: string | null = null): Promise<Token> {
 	const response = await fetch(
-		`${import.meta.env.VITE_API_BASE_URL}/authentication/signIn`,
+		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
 		getOptions("POST", { email, password, code }),
 	);
 	return await handleResponse(response) as Token;
 }
 
 export async function getAllServers(page: number = 0): Promise<Paginate<Server>> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server?page=${ page }`, getOptions("GET"))
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server?page=${ page }`, getOptions("GET"))
 	return await handleResponse(response) as Paginate<Server>;
 }
 
 export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${selectedServer}`, getOptions("GET"))
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
 	return await handleResponse(response) as DetailedServer;
 }
 
 export async function patchServer(selectedServer: string, action: string): Promise<null> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${selectedServer}`, getOptions("PATCH", { action }))
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
 	return await handleResponse(response) as null;
 }
 
 export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/server/${selectedServer}/parameters`, getOptions("PUT", parameters));
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
 	return await handleResponse(response) as ServerParameters;
 }
