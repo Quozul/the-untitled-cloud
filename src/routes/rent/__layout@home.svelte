@@ -16,7 +16,7 @@
     <Step step={CheckoutSteps.PROFILE} disabled="{!$token}">
         Compléter son profil
     </Step>
-    <Step step={CheckoutSteps.CHECKOUT} disabled="{!$cart}">
+    <Step step={CheckoutSteps.CHECKOUT} disabled="{!$token || !$cart}">
         Paiement
     </Step>
 </nav>

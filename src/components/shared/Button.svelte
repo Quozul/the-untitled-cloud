@@ -1,6 +1,7 @@
 <script lang="ts">
     export let className: string = "btn btn-primary";
 	export let disabled: boolean = false;
+	export let type: string = "button";
 	export let onClick: VoidFunction;
 
 	let processing = false;
@@ -15,7 +16,7 @@
 	}
 </script>
 
-<button class="{className}" disabled="{disabled || processing}" on:click|preventDefault={handleClick}>
+<button {type} class="{className}" disabled="{disabled || processing}" on:click|preventDefault={handleClick}>
     {#if processing}
         <span class="spinner-border spinner-border-sm"></span>
     {/if}

@@ -6,4 +6,8 @@
 	$checkoutStep = CheckoutSteps.PROFILE;
 </script>
 
+<svelte:head>
+    <title>Profil</title>
+</svelte:head>
+
 <AddressForm/>

@@ -1,21 +1,26 @@
 <script lang="ts">
 	import type { ApiError } from "../../shared/models";
 	import { credentials, loginMode, token } from "../../store/store";
-	import { redirect, signIn } from "../../shared/helpers";
+	import { redirect } from "../../shared/helpers";
 	import Button from "../shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { LoginMode } from "./models/LoginMode";
+	import { signIn } from "./helpers";
 
 	// Props
 	export let redirectTo: string;
 
-	let email = null, password = null;
-	let error = false;
-	let errorMessage = null;
+	// Input fields
+	let email = null;
+	let password = null;
+
+	// States
+	let error: AuthenticationErrors | null = null;
+	let errorMessage: string | null = null;
 
 	async function submit() {
 		try {
-			error = false;
+			error = null;
 			const res = await signIn(email, password);
 			$token = res.token;
 			await redirect(redirectTo);
@@ -24,37 +29,43 @@
 				$credentials = {email, password};
 				$loginMode = LoginMode.VERIFICATION;
 			} else {
-				error = true;
+				error = e.code;
 				errorMessage = e.message;
 			}
 		}
 	}
+
+	async function forgotPassword() {
+		$credentials = {
+			email,
+			password: null,
+		};
+
+		$loginMode = LoginMode.CHANGE_PASSWORD;
+	}
 </script>
 
-<style lang="scss">
-	form {
-		max-width: 330px;
-		margin: auto;
-	}
-</style>
-
-<form on:submit|preventDefault={submit}>
+<form>
 	<h4>Connexion</h4>
 	<div class="mb-3">
 		<label class="form-label">Adresse email</label>
 		<input type="email" name="email" class="form-control" placeholder="example@example.com" bind:value={email}>
 	</div>
 
-	<div class="mb-3">
+	<div>
 		<label class="form-label">Mot de passe</label>
 		<input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
 	</div>
+
+	<button type="button" on:click={forgotPassword} class="d-block btn btn-sm btn-link p-0 mb-3">
+		Mot de passer perdu ?
+	</button>
 
 	<div class:visually-hidden={!error} class="text-danger mb-3">
 		Erreur : {errorMessage}
 	</div>
 
-	<Button className="btn btn-primary" onClick={submit}>
+	<Button type="submit" className="btn btn-primary" onClick={submit}>
 		Se connecter
 	</Button>
 </form>

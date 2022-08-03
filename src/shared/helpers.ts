@@ -2,6 +2,8 @@ import type { ApiError, Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
 import type { ServerParameters } from "../components/app/models";
 import type { Token } from "../components/login/models/Token";
+import type { Address } from "../components/address/Address";
+
 import { token } from "../store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
@@ -13,7 +15,7 @@ import { goto } from "$app/navigation";
  * @param {string?} raw
  * @returns {Promise<RequestInit>}
  */
-function getOptions(method: string = "POST", raw: Object | null = null): RequestInit {
+export function getOptions(method: string = "POST", raw: Object | null = null): RequestInit {
 	const jwt = get(token) || "";
 
 	const headers = new Headers();
@@ -37,7 +39,7 @@ function getOptions(method: string = "POST", raw: Object | null = null): Request
  * @returns {Promise<{data: Object | null, message: string}>}
  * @throws {message: string, message: number}
  */
-function handleResponse(response: Response): Promise<Object | null> {
+export function handleResponse(response: Response): Promise<Object | null> {
 	return new Promise((resolve, reject) => {
 		const contentLength = parseInt(response.headers.get("content-length") ?? "0");
 
@@ -47,21 +49,21 @@ function handleResponse(response: Response): Promise<Object | null> {
 				.catch(() => {
 					// The json does not exist, just return the HTTP error
 					const error: ApiError = {
-						code: response.status.toString(),
+						// @ts-ignore FIXME
+						code: response.status,
 						isError: true,
 						message: response.statusText,
 					}
 					reject(error);
 				});
-			 return;
-		}
-
-		if (contentLength > 0) {
-			response.json()
-				.then(resolve)
-				.catch(reject);
 		} else {
-			resolve(null);
+			if (contentLength > 0) {
+				response.json()
+					.then(resolve)
+					.catch(reject);
+			} else {
+				resolve(null);
+			}
 		}
 	});
 }
@@ -85,20 +87,14 @@ export async function redirect(fallback: string = "/") {
 	await goto(redirect);
 }
 
-export async function signUp(email: string, password: string, language: string, acceptTos: boolean): Promise<ApiError> {
-	const response = await fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
-		getOptions("POST", { email, password, language, acceptTos }),
-	)
-	return await handleResponse(response) as ApiError;
+export async function getAddress(): Promise<Address> {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
+	return await handleResponse(response) as Address;
 }
 
-export async function signIn(email: string, password: string, code: string | null = null): Promise<Token> {
-	const response = await fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
-		getOptions("POST", { email, password, code }),
-	);
-	return await handleResponse(response) as Token;
+export async function setAddress(address: Address): Promise<void> {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("POST", address));
+	await handleResponse(response);
 }
 
 export async function getAllServers(page: number = 0): Promise<Paginate<Server>> {

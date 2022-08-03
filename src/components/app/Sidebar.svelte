@@ -33,7 +33,7 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
         <Icon key="box" width="32" height="32"/>
-        <span class="fs-4">Quozul.host</span>
+        <span class="fs-4">Quozul.cloud</span>
     </a>
 
     <hr>

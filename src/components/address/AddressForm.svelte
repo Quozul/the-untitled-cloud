@@ -1,10 +1,14 @@
 <script lang="ts">
+	import type { Address } from "./Address";
+	import type { ApiError } from "../../shared/models";
 	import { onMount } from "svelte";
 	import { token } from "../../store/store.ts";
-	import type { Address } from "./Address";
 	import { CheckoutSteps } from "../checkout/constants";
 	import Icon from "../icons/Icon.svelte";
 	import { setStep } from "../checkout/helpers";
+	import jwtDecode from "jwt-decode";
+	import { getAddress, setAddress } from "../../shared/helpers";
+	import Button from "../shared/Button.svelte";
 
 	let address: Address = {
 		city: null,
@@ -15,56 +19,50 @@
 		postal_code: null,
 		state: null,
 	};
-	let addAddress = false;
+	let email = "";
 
-	onMount(() => {
-		// Get address
-		fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, {
-			method: "GET",
-			headers: new Headers({
-				"content-type": "application/json",
-				"authorization": `Bearer ${$token}`,
-			}),
-		})
-			.then(res => {
-				if (res.status === 401) {
-					$token = null; // Disconnect user
-					setStep(CheckoutSteps.LOGIN);
-				} else if (res.status === 204) {
-					addAddress = true;
-					return;
-				}
-				res.json()
-					.then(json => {
-						address = json;
-					});
-			});
+	onMount(async () => {
+        const jwt = jwtDecode($token);
+		email = jwt.email;
+
+		try {
+			const response = await getAddress();
+
+			// If the user has an address
+			if (response) {
+				address = response;
+            }
+		} catch (e: ApiError) {
+			// TODO: Handle error
+            console.log(e);
+		}
 	});
 
-	function submit() {
-		fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, {
-			method: "POST",
-			headers: new Headers({
-				"content-type": "application/json",
-				"authorization": `Bearer ${$token}`,
-			}),
-            body: JSON.stringify(address),
-		})
-            .then(res => {
-				if (res.ok) {
-					setStep(CheckoutSteps.CHECKOUT);
-                }
-            });
+	async function submit() {
+		try {
+            await setAddress(address);
+			await setStep(CheckoutSteps.CHECKOUT);
+		} catch (e: ApiError) {
+			// TODO: Handle error
+			console.log(e);
+		}
 	}
 
-	function skip() {
-        setStep(CheckoutSteps.CHECKOUT);
+	async function skip() {
+        await setStep(CheckoutSteps.CHECKOUT);
 	}
 </script>
 
-<h4 class="mb-3">Adresse de facturation</h4>
+<h4 class="mb-1">Adresse de facturation</h4>
 
-<form class="needs-validation" novalidate="" on:submit|preventDefault={submit}>
+<div class="d-flex fs-6 mb-3">
+    Connecté en tant que&nbsp;
+    <div class="text-muted">
+        {email}
+    </div>.
+</div>
+
+<form>
     <div class="row g-3">
         <div class="col-sm-12">
             <label for="firstName" class="form-label">Nom complet</label>
@@ -115,7 +113,10 @@
         </div>
     </div>
 
-    <button class="btn btn-primary mt-3">Ajouter l'adresse</button>
+    <Button type="submit" className="btn btn-primary mt-3" onClick={submit}>
+        Ajouter l'adresse
+    </Button>
+
     <button class="btn btn-secondary mt-3 d-inline-flex align-items-center" type="button" on:click|preventDefault={skip}>
         Passer
         <Icon key="chevron-double-right" className="ms-2"/>

@@ -15,6 +15,10 @@
     })
 </script>
 
+<svelte:head>
+    <title>Mes serveurs</title>
+</svelte:head>
+
 <div class="d-flex vh-100">
     <Sidebar/>
 

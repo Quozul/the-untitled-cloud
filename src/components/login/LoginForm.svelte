@@ -5,6 +5,7 @@
 	import { LoginMode } from "./models/LoginMode";
 	import Verification from "./Verification.svelte";
 	import { onDestroy, onMount } from "svelte";
+	import ForgotPassword from "./Password.svelte";
 
 	export let redirectTo: string = "/";
 
@@ -38,11 +39,13 @@
         <Verification {redirectTo}/>
     {:else if $loginMode === LoginMode.SIGNUP}
         <Signup {redirectTo}/>
+    {:else if $loginMode === LoginMode.CHANGE_PASSWORD}
+        <ForgotPassword {redirectTo}/>
     {:else}
         <Login {redirectTo}/>
     {/if}
 
-    {#if $loginMode !== LoginMode.VERIFICATION}
+    {#if $loginMode !== LoginMode.VERIFICATION && $loginMode !== LoginMode.CHANGE_PASSWORD}
         <button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0">
             {#if $loginMode === LoginMode.LOGIN}
                 Vous n'avez pas encore de compte? S'inscrire.
