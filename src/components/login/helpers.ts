@@ -54,5 +54,5 @@ export async function changePassword(email: string, password: string, code: stri
 		`${import.meta.env.VITE_API_BASE_URL}authentication/password`,
 		getOptions("POST", { email, password, code }),
 	);
-	return await handleResponse(response) as ApiError;
+	return await handleResponse(response) as Token;
 }
