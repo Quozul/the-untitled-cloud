@@ -38,7 +38,7 @@ export function getOptions(method: string = "POST", raw: Object | null = null): 
  * @returns {Promise<{data: Object | null, message: string}>}
  * @throws {message: string, message: number}
  */
-export async function handleResponse(response: Response): Promise<Object> {
+export async function handleResponse(response: Response): Promise<Object | null> {
 	return new Promise((resolve, reject) => {
 		if (!response.ok) {
 			 response.json()
@@ -46,7 +46,7 @@ export async function handleResponse(response: Response): Promise<Object> {
 				.catch(() => {
 					// The json does not exist, just return the HTTP error
 					const error: ApiError = {
-						// @ts-ignore FIXME
+						// @ts-ignore
 						code: response.status,
 						isError: true,
 						message: response.statusText,
@@ -57,13 +57,7 @@ export async function handleResponse(response: Response): Promise<Object> {
 			response.json()
 				.then(resolve)
 				.catch(() => {
-					const error: ApiError = {
-						// @ts-ignore FIXME
-						code: response.status,
-						isError: false,
-						message: response.statusText,
-					}
-					resolve(error);
+					resolve(null);
 				});
 		}
 	});
