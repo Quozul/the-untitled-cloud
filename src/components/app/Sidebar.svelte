@@ -14,8 +14,10 @@
 		try {
 			servers = await getAllServers(currentPage);
 
-			if (!!$selectedServer || !containId(servers, $selectedServer.id)) {
-				$selectedServer = servers.data[0] ?? null;
+			if (servers.data.length > 0 && (!!$selectedServer || !containId(servers, $selectedServer.id))) {
+				$selectedServer = servers.data[0];
+			} else {
+				$selectedServer = null;
 			}
 		} finally {
 			fetching = false;
@@ -33,10 +35,16 @@
         <Icon key="box" width="32" height="32"/>
         <span class="fs-4">Quozul.host</span>
     </a>
+
     <hr>
+
     <div class="mb-auto">
-        <ul class="nav nav-pills flex-column gap-3">
-            {#if servers}
+        {#if fetching}
+            <button class="btn btn-secondary w-100 placeholder" disabled></button>
+        {/if}
+
+        {#if servers && servers.data.length > 0}
+            <ul class="nav nav-pills flex-column gap-3">
                 {#each servers.data as server}
                     <button
                             class="btn btn-outline-primary d-flex align-items-center w-100"
@@ -53,11 +61,11 @@
                         {server.name ?? "Serveur introuvable"}
                     </button>
                 {/each}
-            {:else if fetching}
-                <button class="btn btn-secondary w-100 placeholder" disabled></button>
-            {/if}
-        </ul>
-        <hr/>
+            </ul>
+
+            <hr/>
+        {/if}
+
         <a href="/rent/products/" class="btn text-start btn-outline-secondary d-flex align-items-center w-100">
             <Icon key="plus" className="me-2"/>
             Louer un serveur
@@ -65,6 +73,7 @@
     </div>
 
     <hr/>
+
     <ul class="nav flex-column gap-3">
         <a class="btn btn-outline-dark d-flex align-items-center w-100" href="/">
             <Icon key="chevron-left" className="me-2"/>

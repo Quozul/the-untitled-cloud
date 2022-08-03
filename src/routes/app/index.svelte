@@ -6,6 +6,7 @@
 	import { onMount } from "svelte";
 	import { ServerStatus } from "../../components/app/constants";
 	import Icon from "../../components/icons/Icon.svelte";
+	import NoServer from "../../components/app/NoServer.svelte";
 
 	onMount(async () => {
 		if (!$token) {
@@ -40,6 +41,8 @@
             </nav>
 
             <ServerInfo/>
+        {:else}
+            <NoServer/>
         {/if}
     </div>
 </div>
