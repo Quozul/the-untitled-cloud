@@ -54,17 +54,17 @@ export async function handleResponse(response: Response): Promise<Object> {
 					reject(error);
 				});
 		} else {
-			if (response.body !== null) {
-				response.json()
-					.then(resolve)
-					.catch(reject);
-			} else {
-				resolve({
-					code: response.status,
-					isError: true,
-					message: response.statusText,
+			response.json()
+				.then(resolve)
+				.catch(() => {
+					const error: ApiError = {
+						// @ts-ignore FIXME
+						code: response.status,
+						isError: false,
+						message: response.statusText,
+					}
+					resolve(error);
 				});
-			}
 		}
 	});
 }
