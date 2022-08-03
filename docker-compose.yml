@@ -12,23 +12,20 @@ services:
       DATABASE_URL: "jdbc:postgresql://database:5432/${DATABASE_NAME}"
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASS: ${DATABASE_PASS}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      SALT: ${SALT}
+      PEPPER: ${PEPPER}
     volumes:
       - "${DOCKER_SOCK}:${DOCKER_HOST}"
     networks:
       mc_host_network:
     depends_on:
       - mc_host_database
-
-  mc_host_front:
-    build: mc-host-front
-    hostname: front
-    expose:
-      - 80
-    environment:
-      VITE_STRIPE_PUBLIC_KEY: ${STRIPE_PK}
-      VITE_API_BASE_URL: ${API_ENDPOINT}/api
-    networks:
-      mc_host_network:
 
   mc_host_database:
     image: postgres:latest
@@ -51,6 +48,8 @@ services:
       PGDATABASE: ${DATABASE_NAME}
       PGPORT: 5432
       CONTAINER_DIRECTORY: ${CONTAINER_DIRECTORY}
+      SALT: ${SALT}
+      PEPPER: ${PEPPER}
     ports:
       - "2121:2121"
     networks:
@@ -58,12 +57,26 @@ services:
     depends_on:
       - mc_host_database
 
+  # TODO: Merge front and proxy containers
+  mc_host_front:
+    build:
+      context: mc-host-front
+      dockerfile: Dockerfile
+      args:
+        VITE_STRIPE_PUBLIC_KEY: ${STRIPE_PK}
+        VITE_API_BASE_URL: ${API_ENDPOINT}
+    hostname: front
+    expose:
+      - 80
+    networks:
+      mc_host_network:
+
   mc_host_proxy:
     image: nginx:1.23-alpine
     volumes:
       - "./nginx:/etc/nginx:ro"
     ports:
-      - "80:80"
+      - "80:${PORT}"
     networks:
       mc_host_network:
     depends_on:
