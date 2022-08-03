@@ -89,16 +89,16 @@ fun Route.configureAuthenticationRoutes() {
 					"Votre code de vérification",
 					"Voici votre code de vérification : '${user.verificationCode}'. Valable 1 heure."
 				)
+			} else {
+				println("Email send with code ${user.verificationCode}")
 			}
 
 			call.respond(AuthenticationErrors.VERIFY_ACCOUNT.toHashMap())
 			call.response.status(HttpStatusCode.Created)
+			return@post
 		} catch (e: ExposedSQLException) {
-			when (e.cause) {
-				else -> {
-					call.response.status(HttpStatusCode.InternalServerError)
-				}
-			}
+			call.response.status(HttpStatusCode.InternalServerError)
+			return@post
 		}
 	}
 
@@ -219,7 +219,7 @@ fun Route.configureAuthenticationRoutes() {
 					// At this point, the code is valid
 					transaction {
 						user.emailVerified = true
-						user.verificationCodeValidDate = LocalDateTime.MIN // Invalidate the code
+						user.verificationCodeValidDate = LocalDateTime.now() // Invalidate the code
 					}
 				}
 			} ?: run {
