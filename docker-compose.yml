@@ -61,7 +61,6 @@ services:
     depends_on:
       - mc_host_database
 
-  # TODO: Merge front and proxy containers
   mc_host_front:
     build:
       context: mc-host-front
