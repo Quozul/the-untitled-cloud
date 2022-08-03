@@ -100,13 +100,13 @@
             {#if !server.port}
                 Démarrez le serveur pour avoir une adresse de connexion.
             {:else}
-                localhost:{server.port}
+                quozul.com:{server.port}
             {/if}
         </dd>
 
         <dt>Accès aux fichiers du serveur</dt>
         <dd>
-            Adresse du serveur : <pre class="d-inline">localhost:2121</pre>.
+            Adresse du serveur : <pre class="d-inline">quozul.com:2121</pre>.
             <ol>
                 <li>Téléchargez un client FTP de votre choix.</li>
                 <li>Connectez-vous avec les mêmes identifiants que pour le site.</li>

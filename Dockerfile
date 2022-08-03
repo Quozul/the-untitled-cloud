@@ -21,5 +21,9 @@ WORKDIR /app
 
 COPY --from=builder /app/build /usr/share/nginx/html
 
+RUN addgroup --system --gid 1001 mc_host
+RUN adduser --system --uid 1001 mc_host
+USER 1001
+
 EXPOSE 80
 ENV PORT 80
