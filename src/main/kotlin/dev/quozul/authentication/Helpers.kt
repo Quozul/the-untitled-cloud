@@ -14,7 +14,7 @@ import java.security.MessageDigest
  * SHA-512
  */
 fun hashString(type: String, input: String): String {
-    val HEX_CHARS = "0123456789ABCDEF"
+    val HEX_CHARS = "0123456789abcdef"
     val bytes = MessageDigest
         .getInstance(type)
         .digest(input.toByteArray())
@@ -27,4 +27,10 @@ fun hashString(type: String, input: String): String {
     }
 
     return result.toString()
+}
+
+fun generateValidationCode(): String {
+    return (1..6)
+        .map { ('0'..'9').random() }
+        .joinToString("")
 }
