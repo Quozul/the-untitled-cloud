@@ -1,7 +1,7 @@
-import type { Id } from "./models";
+import type { ApiError, Id } from "./models";
 import type { DetailedServer, Paginate, Server } from "../components/app/models";
 import type { ServerParameters } from "../components/app/models";
-import type { Token } from "../components/login/Token";
+import type { Token } from "../components/login/models/Token";
 import { token } from "../store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
@@ -42,7 +42,18 @@ function handleResponse(response: Response): Promise<Object | null> {
 		const contentLength = parseInt(response.headers.get("content-length") ?? "0");
 
 		if (!response.ok) {
-			reject(`${ response.status } ${ response.statusText }`);
+			 response.json()
+				.then(reject)
+				.catch(() => {
+					// The json does not exist, just return the HTTP error
+					const error: ApiError = {
+						code: response.status.toString(),
+						isError: true,
+						message: response.statusText,
+					}
+					reject(error);
+				});
+			 return;
 		}
 
 		if (contentLength > 0) {
@@ -74,18 +85,18 @@ export async function redirect(fallback: string = "/") {
 	await goto(redirect);
 }
 
-export async function signUp(email: string, password: string): Promise<Token> {
+export async function signUp(email: string, password: string, language: string, acceptTos: boolean): Promise<ApiError> {
 	const response = await fetch(
 		`${import.meta.env.VITE_API_BASE_URL}/authentication/signUp`,
-		getOptions("POST", { email, password, }),
+		getOptions("POST", { email, password, language, acceptTos }),
 	)
-	return await handleResponse(response) as Token;
+	return await handleResponse(response) as ApiError;
 }
 
-export async function signIn(email: string, password: string): Promise<Token> {
+export async function signIn(email: string, password: string, code: string | null = null): Promise<Token> {
 	const response = await fetch(
 		`${import.meta.env.VITE_API_BASE_URL}/authentication/signIn`,
-		getOptions("POST", { email, password, }),
+		getOptions("POST", { email, password, code }),
 	);
 	return await handleResponse(response) as Token;
 }

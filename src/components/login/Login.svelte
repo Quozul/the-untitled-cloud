@@ -1,19 +1,33 @@
 <script lang="ts">
-	import { token } from "../../store/store";
+	import type { ApiError } from "../../shared/models";
+	import { credentials, loginMode, token } from "../../store/store";
 	import { redirect, signIn } from "../../shared/helpers";
+	import Button from "../shared/Button.svelte";
+	import { AuthenticationErrors } from "./models/AuthenticationErrors";
+	import { LoginMode } from "./models/LoginMode";
 
+	// Props
 	export let redirectTo: string;
-	let email, password;
+
+	let email = null, password = null;
 	let error = false;
-	let submitting = false;
+	let errorMessage = null;
 
 	async function submit() {
-		submitting = true;
-		const res = await signIn(email, password);
-		$token = res.token;
-
-		await redirect(redirectTo);
-		submitting = false;
+		try {
+			error = false;
+			const res = await signIn(email, password);
+			$token = res.token;
+			await redirect(redirectTo);
+		} catch (e: ApiError) {
+			if (e.code === AuthenticationErrors.VERIFY_ACCOUNT) {
+				$credentials = {email, password};
+				$loginMode = LoginMode.VERIFICATION;
+			} else {
+				error = true;
+				errorMessage = e.message;
+			}
+		}
 	}
 </script>
 
@@ -25,9 +39,6 @@
 </style>
 
 <form on:submit|preventDefault={submit}>
-	{#if error}
-		error
-	{/if}
 	<h4>Connexion</h4>
 	<div class="mb-3">
 		<label class="form-label">Adresse email</label>
@@ -39,10 +50,11 @@
 		<input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
 	</div>
 
-	<button type="submit" class="btn btn-primary" class:disabled={submitting}>
-		{#if submitting}
-			<span class="spinner-border spinner-border-sm"></span>
-		{/if}
+	<div class:visually-hidden={!error} class="text-danger mb-3">
+		Erreur : {errorMessage}
+	</div>
+
+	<Button className="btn btn-primary" onClick={submit}>
 		Se connecter
-	</button>
+	</Button>
 </form>
