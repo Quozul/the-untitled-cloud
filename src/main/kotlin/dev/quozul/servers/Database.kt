@@ -29,8 +29,8 @@ object Servers : UUIDTable("servers") {
 	val subscriptionId = varchar("subscription_id", 255).uniqueIndex() // External foreign key to Stripe
 	val containerId = char("container_id", 64).nullable() // External foreign key to Docker
 	val status = enumeration<ServerStatus>("status") // Status of the subscription
-	val containerTag = varchar("container_tag", 255).default("latest")
-	val containerName = varchar("container_name", 255)
+	val containerTag = varchar("container_tag", 255).default("latest") // Not used yet
+	val containerName = varchar("container_name", 255).nullable() // Not used yet
 	val creationDate = datetime("creationDate").defaultExpression(CurrentDateTime())
 	val deletionDate = datetime("deletionDate").nullable()
 }
