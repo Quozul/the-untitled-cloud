@@ -58,10 +58,11 @@
 			processing = false;
 		} else {
 			// Clear everything and redirect to app
+			window.removeEventListener("beforeunload", alertUnload);
+			await goto("/app");
 			$checkoutStep = CheckoutSteps.PRODUCTS;
 			$clientSecret = null;
 			$cart = null;
-			await goto("/app");
 		}
 	}
 </script>

@@ -14,7 +14,7 @@
 		try {
 			servers = await getAllServers(currentPage);
 
-			if (servers.data.length > 0 && (!!$selectedServer || !containId(servers, $selectedServer.id))) {
+			if (servers.data.length > 0 && (!!$selectedServer || !containId(servers, $selectedServer?.id))) {
 				$selectedServer = servers.data[0];
 			} else {
 				$selectedServer = null;
