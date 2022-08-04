@@ -142,43 +142,59 @@ fun Route.configureServerRoutes() {
 				return@patch
 			}
 
-			val serverId = call.parameters["serverId"] ?: run {
-				call.response.status(HttpStatusCode.NotFound)
-				return@patch
-			}
-
-			val containerId = transaction {
-				Server.findById(UUID.fromString(serverId))?.containerId
-			} ?: run {
-				call.response.status(HttpStatusCode.NotFound)
+			val server = try {
+				val serverId = UUID.fromString(call.parameters["serverId"]!!)
+				transaction {
+					Server.findById(serverId)!!
+				}
+			} catch (_: NullPointerException) {
+				call.response.status(HttpStatusCode.BadRequest)
 				return@patch
 			}
 
 			when (action) {
 				START -> {
-					dockerClient.startContainerCmd(containerId).exec()
+					try {
+						dockerClient.startContainerCmd(server.containerId!!).exec()
+					} catch (_: NullPointerException) {
+						call.response.status(HttpStatusCode.NotFound)
+						call.respond(AuthenticationErrors.NO_CONTAINER.toHashMap(true))
+						return@patch
+					}
 					call.response.status(HttpStatusCode.NoContent)
 				}
 
 				STOP -> {
 					try {
-						dockerClient.stopContainerCmd(containerId).exec()
+						dockerClient.stopContainerCmd(server.containerId!!).exec()
 					} catch (_: NotModifiedException) {
+					} catch (_: NullPointerException) {
+						call.response.status(HttpStatusCode.NotFound)
+						call.respond(AuthenticationErrors.NO_CONTAINER.toHashMap(true))
+						return@patch
 					}
 					call.response.status(HttpStatusCode.NoContent)
 				}
 
 				RESTART -> {
 					try {
-						dockerClient.restartContainerCmd(containerId).exec()
+						dockerClient.restartContainerCmd(server.containerId!!).exec()
 					} catch (_: NotModifiedException) {
+					} catch (_: NullPointerException) {
+						call.response.status(HttpStatusCode.NotFound)
+						call.respond(AuthenticationErrors.NO_CONTAINER.toHashMap(true))
+						return@patch
 					}
 					call.response.status(HttpStatusCode.NoContent)
 				}
 
 				RECREATE -> {
-					recreateServer(UUID.fromString(serverId))
+					recreateServer(server.id.value)
 					call.response.status(HttpStatusCode.NoContent)
+				}
+
+				RESET -> {
+					call.response.status(HttpStatusCode.NotImplemented)
 				}
 			}
 		}

@@ -15,6 +15,7 @@ enum class AuthenticationErrors(private val message: String) {
 	ACCEPT_TOS("You must accept the TOS"),
 	EXPIRED_CODE("Code expired"),
 	CANCEL_ERROR("Cancel error"),
+	NO_CONTAINER("Container not found"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {

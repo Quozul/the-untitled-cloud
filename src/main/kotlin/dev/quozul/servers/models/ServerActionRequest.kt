@@ -8,6 +8,7 @@ enum class Action {
 	STOP,
 	RESTART,
 	RECREATE,
+	RESET,
 }
 
 
