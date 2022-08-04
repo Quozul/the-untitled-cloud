@@ -1,7 +1,9 @@
+import type { ClientSecretResponse } from "./models";
 import { CheckoutSteps } from "./constants";
 import { cart, checkoutStep, token } from "../../store/store";
 import { goto } from "$app/navigation";
 import { get } from "svelte/store";
+import { getOptions, handleResponse } from "../../shared/helpers";
 
 export async function setStep(newStep: CheckoutSteps): Promise<void> {
 	const tok = get(token);
@@ -29,4 +31,14 @@ export async function setStep(newStep: CheckoutSteps): Promise<void> {
 
 	checkoutStep.update(() => newStep);
 	await goto(`/rent/${newStep}/`);
+}
+
+export async function getClientSecret(): Promise<ClientSecretResponse> {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("POST"))
+	return await handleResponse(response) as ClientSecretResponse;
+}
+
+export async function updatePaymentIntent(paymentIntentId: string): Promise<void> {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("PUT", { paymentIntentId }))
+	await handleResponse(response);
 }

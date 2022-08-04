@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { ServerParameters, Version } from "./models";
-	import { ServerType } from "./constants.js";
+	import type { ServerParameters, Version } from "../../models";
+	import { ServerType } from "../../constants.js";
 	import { onMount } from "svelte";
-	import { VersionType } from "./models.js";
-	import { putParameters } from "../../shared/helpers";
-	import { selectedServer } from "../../store/store";
-	import Button from "../shared/Button.svelte";
+	import { VersionType } from "../../models.js";
+	import { putParameters } from "../../../../shared/helpers";
+	import { selectedServer } from "../../../../store/store";
+	import Button from "../../../shared/Button.svelte";
 
 	export let parameters: ServerParameters;
 	let versions: Version[] = [];
@@ -25,7 +25,7 @@
 	}
 </script>
 
-<form>
+<form class="bg-light p-4 d-flex element flex-column">
     <h4>Paramètres</h4>
 
     <div class="form-check">

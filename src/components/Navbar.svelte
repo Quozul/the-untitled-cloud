@@ -1,6 +1,10 @@
-<script>
+<script lang="ts">
 	import Icon from "./icons/Icon.svelte";
 	import { token } from "../store/store";
+    import { page } from "$app/stores";
+
+    let selectedPage: string;
+    $: selectedPage = $page.url.pathname;
 </script>
 
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
@@ -8,14 +12,14 @@
         <Icon key="box" width="40" height="40"/>
     </a>
 
-    <nav class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0" role="navigation">
+    <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0">
         <li>
-            <a href="/" class="nav-link px-2 link-secondary" aria-current="page">Accueil</a>
+            <a href="/" class="nav-link px-2 {selectedPage === '/' ? 'link-secondary' : 'link-dark'}">Accueil</a>
         </li>
         <li>
-            <a href="/rent/products/" class="nav-link px-2 link-dark">Produits</a>
+            <a href="/rent/products/" class="nav-link px-2 {selectedPage.startsWith('/rent/') ? 'link-secondary' : 'link-dark'}">Produits</a>
         </li>
-    </nav>
+    </ul>
 
     <div class="text-end">
         {#if $token}

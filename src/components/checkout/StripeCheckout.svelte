@@ -1,12 +1,14 @@
-<script>
+<script lang="ts">
+	import type { PaymentIntentResult, Stripe } from "@stripe/stripe-js/types/stripe-js/stripe";
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
 	import { cart, checkoutStep, token, clientSecret } from "../../store/store.ts";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
+	import { getClientSecret, updatePaymentIntent } from "./helpers";
 
-	let stripe = null;
+	let stripe: Stripe | null = null;
 	let processing = false;
 	let error = null;
 	let elements;
@@ -24,20 +26,14 @@
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 		if (!$clientSecret) {
-			fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, {
-				method: "POST",
-				headers: new Headers({"authorization": `Bearer ${$token}`}),
-			})
-					.then(res => res.json())
-					.then(json => {
-						$clientSecret = json.clientSecret;
-					});
+			const response = await getClientSecret();
+			$clientSecret = response.clientSecret;
 		}
 	});
 
 	onDestroy(() => {
 		window.removeEventListener("beforeunload", alertUnload);
-	})
+	});
 
 	async function submit() {
 		// avoid processing duplicates
@@ -46,7 +42,7 @@
 		processing = true;
 
 		// confirm payment with stripe
-		const result = await stripe
+		const result: PaymentIntentResult = await stripe
 			.confirmPayment({
 				elements,
 				redirect: "if_required",
@@ -57,6 +53,9 @@
 			error = result.error;
 			processing = false;
 		} else {
+			// Tell the API the payment has been made
+			await updatePaymentIntent(result.paymentIntent.id);
+
 			// Clear everything and redirect to app
 			window.removeEventListener("beforeunload", alertUnload);
 			await goto("/app");

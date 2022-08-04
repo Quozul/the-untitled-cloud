@@ -9,14 +9,16 @@ import { browser } from "$app/env";
 import { LoginMode } from "../components/login/models/LoginMode";
 
 // Persistent store
-export const token: Writable<string> = createStoreEntry("token");
+export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
 
 // Session store
-export const checkoutStep: Writable<CheckoutSteps> = createStoreEntry("checkoutStep", null, browser && sessionStorage);
-export const clientSecret: Writable<string> = createStoreEntry("clientSecret", null, browser && sessionStorage);
 export const selectedServer: Writable<Server> = createStoreEntry("selectedServer", null, browser && sessionStorage);
 export const cart: Writable<Cart> = createStoreEntry("cart", null, browser && sessionStorage);
-export const loginMode: Writable<LoginMode> = createStoreEntry("verification", LoginMode.LOGIN, browser && sessionStorage);
+export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarCollapsed", false, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials> = createStoreEntry("credentials", LoginMode.LOGIN);
+export const refreshServer: Writable<boolean> = createStoreEntry("refreshServer", false);
+export const loginMode: Writable<LoginMode> = createStoreEntry("verification", LoginMode.LOGIN);
+export const checkoutStep: Writable<CheckoutSteps> = createStoreEntry("checkoutStep", null);
+export const clientSecret: Writable<string> = createStoreEntry("clientSecret", null);

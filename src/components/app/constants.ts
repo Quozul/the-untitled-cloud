@@ -7,6 +7,13 @@ export enum ServerStatus {
 	DEAD = "dead",
 }
 
+export enum ServerSubscriptionStatus {
+	PENDING = "PENDING",
+	ACTIVE = "ACTIVE",
+	SUSPENDED = "SUSPENDED",
+	ENDED = "ENDED",
+}
+
 export enum ServerType {
 	VANILLA = "VANILLA",
 	FORGE = "FORGE",
@@ -27,4 +34,10 @@ export enum ServerType {
 	CRUCIBLE = "CRUCIBLE",
 	FTBA = "FTBA",
 	CURSEFORGE = "CURSEFORGE",
+}
+
+export enum ServerTab {
+	INFO,
+	SUBSCRIPTION ,
+	CONSOLE,
 }
