@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { DetailedServer } from "./models";
 	import Icon from "../icons/Icon.svelte";
-	import { onMount } from "svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import { ServerStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
 	import { ServerSubscriptionStatus } from "./constants.js";
-	import { patchServer } from "../../shared/helpers";
-	import { refreshServer, selectedServer } from "../../store/store";
+	import { refreshServerInfo, selectedServer } from "../../store/store";
 	import Button from "../shared/Button.svelte";
+	import { patchServer, toggleRefreshServerInfo } from "./helpers";
+	import { ButtonVariant } from "../shared/constants.js";
 
 	// Props
 	export let server: DetailedServer;
@@ -24,8 +24,8 @@
 		.ofPattern("eeee d MMMM yyyy")
 		.withLocale(Locale.FRANCE);
 
-	onMount(async () => {
-		if (server.state) {
+	$: {
+		if (server && server.state) {
 			// Parse dates
 			started = ZonedDateTime.parse(server.state.startedAt);
 			stopped = ZonedDateTime.parse(server.state.finishedAt);
@@ -35,28 +35,29 @@
 			duration = Duration.between(started, stopped);
 			formattedStartDate = ZonedDateTime.parse(server.state.startedAt).format(formatter);
 		}
-	});
+	}
 
 	async function toggleServerState() {
-		console.log(server.state?.running);
 		if (server.state?.running) {
 			await patchServer($selectedServer.id, "STOP");
 		} else {
 			await patchServer($selectedServer.id, "START");
 		}
-		$refreshServer = true;
+		toggleRefreshServerInfo();
 	}
 </script>
 
+{#if server}
 <div class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
 	<Button
 			onClick={toggleServerState}
-			className="btn btn-light bg-white d-flex align-items-center"
-			disabled="{server.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+			className="d-flex align-items-center"
+			disabled="{server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+			variant={ButtonVariant.LIGHT}
 	>
-		{#if server.state?.running}
+		{#if server?.state?.running}
 			<Icon key="play-fill" width="28" height="28"/>
-		{:else if server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+		{:else if server?.subscriptionStatus === ServerSubscriptionStatus.PENDING}
 			<Icon key="hourglass" width="28" height="28"/>
 		{:else}
 			<Icon key="stop-fill" width="28" height="28"/>
@@ -77,7 +78,7 @@
 			</dd>
 		</div>
 
-		{#if server.serverCreated}
+		{#if server?.serverCreated}
 			<div>
 				<dt>Dernier démarrage</dt>
 				<dd class="m-0">
@@ -102,3 +103,8 @@
 		{/if}
 	</dl>
 </div>
+{:else}
+	<div class="placeholder-glow bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
+		<h3 class="placeholder btn btn-secondary disabled h-100 w-100"></h3>
+	</div>
+{/if}

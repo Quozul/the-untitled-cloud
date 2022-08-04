@@ -3,9 +3,9 @@
 	import { ServerType } from "../../constants.js";
 	import { onMount } from "svelte";
 	import { VersionType } from "../../models.js";
-	import { putParameters } from "../../../../shared/helpers";
-	import { selectedServer } from "../../../../store/store";
+    import { refreshServerInfo, selectedServer } from "../../../../store/store";
 	import Button from "../../../shared/Button.svelte";
+    import { putParameters, toggleRefreshServerInfo } from "../../helpers";
 
 	export let parameters: ServerParameters;
 	let versions: Version[] = [];
@@ -21,7 +21,7 @@
 
 	async function submit() {
 		await putParameters($selectedServer.id, parameters);
-		// TODO: Refresh page when parameters successfully updated
+        toggleRefreshServerInfo();
 	}
 </script>
 

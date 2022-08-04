@@ -60,3 +60,26 @@ export enum VersionType {
 export type Version = Id & {
 	type: VersionType,
 }
+
+export type SubscriptionInfo = {
+	startDate: string,
+	currentPeriodStart: string,
+	currentPeriodEnd: string,
+	canceledAt: string | null,
+	status: string,
+	cancelAtPeriodEnd: boolean,
+	paymentMethodType: string,
+	paymentMethodLast4: string | null,
+	latestInvoice: Invoice,
+}
+
+export type Invoice = {
+	periodStart: string,
+	periodEnd: string,
+	paid: boolean,
+	amountDue: number,
+	amountPaid: number,
+	amountRemaining: number,
+	total: number,
+	currency: string,
+}

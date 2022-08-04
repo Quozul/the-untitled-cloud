@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let key: string;
+    export let key: string = "void";
     export let className: string = "me-2";
     export let width: string = "16";
     export let height: string = "16";

@@ -11,8 +11,12 @@
 	let classes: string = "";
 
     if (server.subscriptionStatus === ServerSubscriptionStatus.PENDING) {
-		iconName = "hourglass";
-		text = "En attente";
+        iconName = "hourglass";
+        text = "En attente";
+        className = "btn-outline-info";
+    } else if (server.subscriptionStatus === ServerSubscriptionStatus.ENDED) {
+		iconName = "archive";
+		text = "Terminé";
 		className = "btn-outline-info";
     } else if (!server.serverStatus) {
 		iconName = "warning";

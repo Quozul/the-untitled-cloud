@@ -6,6 +6,7 @@ import type { Address } from "../components/address/Address";
 import { token } from "../store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
+import * as Url from "url";
 
 /**
  * Build request's options
@@ -72,8 +73,9 @@ export function containId(paginate: Paginate<Id>, id: string): boolean {
 	return false;
 }
 
-export function formatPrice(price: number): string {
-	return (price / 100).toFixed(2) + "€";
+
+export function formatPrice(amount: number, currency: string = "EUR"): string {
+	return new Intl.NumberFormat("fr-FR", { style: "currency", currency }).format(amount / 100);
 }
 
 export async function redirect(fallback: string = "/") {
@@ -90,24 +92,4 @@ export async function getAddress(): Promise<Address> {
 export async function setAddress(address: Address): Promise<void> {
 	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("POST", address));
 	await handleResponse(response);
-}
-
-export async function getAllServers(page: number = 0): Promise<Paginate<Server>> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server?page=${ page }`, getOptions("GET"))
-	return await handleResponse(response) as Paginate<Server>;
-}
-
-export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
-	return await handleResponse(response) as DetailedServer;
-}
-
-export async function patchServer(selectedServer: string, action: string): Promise<void> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
-	await handleResponse(response);
-}
-
-export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
-	return await handleResponse(response) as ServerParameters;
 }

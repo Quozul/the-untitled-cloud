@@ -6,6 +6,8 @@
 	import { credentials, loginMode, token } from "../../store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import { changePassword, sendVerificationCode } from "./helpers";
+    import { ButtonVariant } from "../shared/constants.js";
+    import Icon from "../icons/Icon.svelte";
 
 	// Props
 	export let redirectTo: string;
@@ -49,10 +51,19 @@
 			errorMessage = e.message;
 		}
     }
+
+    function back() {
+        $loginMode = LoginMode.LOGIN;
+    }
 </script>
 
 <form>
-    <h4>Changement de mot de passe</h4>
+    <h4 class="mb-0">Changement de mot de passe</h4>
+
+    <button type="button" on:click={back} class="d-block btn btn-sm btn-link p-0 mb-3">
+        <Icon key="chevron-left" height="12" width="12" className="me-1"/>
+        Retour
+    </button>
 
     <div class="mb-3">
         <label class="form-label">Adresse email</label>
@@ -73,7 +84,7 @@
         <label class="form-label">Code de vérification</label>
         <div class="input-group mb-3">
             <input type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
-            <Button className="btn btn-outline-secondary" onClick={getCode}>Obtenir le code</Button>
+            <Button variant={ButtonVariant.SECONDARY} onClick={getCode}>Obtenir le code</Button>
         </div>
     </div>
 

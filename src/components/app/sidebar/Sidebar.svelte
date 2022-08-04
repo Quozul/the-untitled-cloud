@@ -1,35 +1,52 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { selectedServer, sidebarCollapsed, token } from "../../../store/store.js";
+    import { onDestroy, onMount } from "svelte";
+    import { refreshServerList, selectedServer, sidebarCollapsed, token } from "../../../store/store.js";
 	import type { Paginate, Server } from "../models";
 	import Icon from "../../icons/Icon.svelte";
-	import { containId, getAllServers } from "../../../shared/helpers";
+	import { containId } from "../../../shared/helpers";
 	import { goto } from "$app/navigation";
 	import SidebarItem from "./SidebarItem.svelte";
 	import ServerItem from "./ServerItem.svelte";
+    import { getAllServers } from "../helpers";
+    import type { Unsubscriber } from "svelte/store";
 
 	// State
 	let servers: Paginate<Server>;
+	let endedServers: Paginate<Server>;
 	let currentPage: number = 0;
 	let fetching: boolean = true;
+    let unsubscribe: Unsubscriber = null;
 
-	onMount(async () => {
-		try {
-			servers = await getAllServers(currentPage);
+    async function fetchServerList() {
+        try {
+            servers = null;
+            servers = await getAllServers(currentPage);
 
-			const hasSelectedServer: boolean = !!$selectedServer;
-			const hasServers: boolean = servers.data.length > 0;
-			const contains: boolean = hasSelectedServer && hasServers && containId(servers, $selectedServer?.id);
+            const hasSelectedServer: boolean = !!$selectedServer;
+            const hasServers: boolean = servers.data.length > 0;
+            const contains: boolean = hasSelectedServer && hasServers && containId(servers, $selectedServer?.id);
 
-			if (!contains) {
-				$selectedServer = servers.data[0];
-			} else if (!hasServers) {
-				$selectedServer = null;
-			}
-		} finally {
-			fetching = false;
-		}
-	});
+            if (!contains) {
+                $selectedServer = servers.data[0];
+            } else if (!hasServers) {
+                $selectedServer = null;
+            }
+        } finally {
+            fetching = false;
+        }
+    }
+
+    onMount(() => {
+        unsubscribe = refreshServerList.subscribe(() => fetchServerList());
+    });
+
+    onDestroy(async () => {
+        unsubscribe?.();
+    });
+
+    async function loadEndedServers() {
+        endedServers = await getAllServers(currentPage, true);
+    }
 
 	async function logout() {
 		$token = null;
@@ -67,7 +84,7 @@
 </style>
 
 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light sidebar shadow-sm" class:collapsed={$sidebarCollapsed}>
-    <a href="/static" class="d-flex align-items-center me-md-auto link-dark text-decoration-none">
+    <a href="/" class="d-flex align-items-center me-md-auto link-dark text-decoration-none">
         <Icon key="box" width="42" height="38" className={!$sidebarCollapsed && "me-2"}/>
         {#if !$sidebarCollapsed}
             <span class="fs-4">Quozul.cloud</span>
@@ -94,18 +111,42 @@
         {/if}
 
         {#if servers && servers.data.length > 0}
-            <ul class="nav nav-pills flex-column gap-3">
+            <div class="d-flex flex-column gap-3">
                 {#each servers.data as server}
                     <ServerItem server={server}/>
                 {/each}
-            </ul>
+            </div>
 
             <hr/>
         {/if}
 
-        <SidebarItem href="/rent/products/" iconName="plus" className="btn-outline-secondary">
-            Louer un serveur
-        </SidebarItem>
+        <div class="d-flex flex-column gap-3">
+            <SidebarItem href="/rent/products/" iconName="plus" className="btn-outline-secondary">
+                Louer un serveur
+            </SidebarItem>
+
+            {#if !endedServers}
+                <SidebarItem className="btn-outline-secondary" onClick={loadEndedServers}>
+                    <Icon key="more"/>
+                    Charger les anciens serveurs
+                </SidebarItem>
+            {/if}
+        </div>
+
+        {#if endedServers && endedServers.data.length > 0}
+            <hr/>
+
+            <div class="d-flex flex-column gap-3">
+                <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+                    <Icon/>
+                    Anciens serveur
+                </h6>
+
+                {#each endedServers.data as server}
+                    <ServerItem server={server}/>
+                {/each}
+            </div>
+        {/if}
     </div>
 
     <hr/>
@@ -115,7 +156,7 @@
             Accueil
         </SidebarItem>
 
-        <SidebarItem href="/rent/products/" iconName="box-arrow-left" className="btn-outline-dark" onClick={logout}>
+        <SidebarItem iconName="box-arrow-left" className="btn-outline-dark" onClick={logout}>
             Se déconnecter
         </SidebarItem>
     </ul>

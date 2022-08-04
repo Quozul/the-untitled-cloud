@@ -57,10 +57,16 @@
             </dd>
         </div>
         <div class="separation">
-            <dt>Répertoire</dt>
-            <dd>
-                {server.id}
-            </dd>
+            {#if !server}
+                <p class="placeholder-glow w-100 m-0">
+                    <span class="placeholder h-100 col-12"></span>
+                </p>
+            {:else}
+                <dt>Répertoire</dt>
+                <dd>
+                    {server.id}
+                </dd>
+            {/if}
         </div>
     </dl>
 </div>

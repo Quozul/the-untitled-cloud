@@ -5,18 +5,20 @@
 <script lang="ts">
 	import ServerInfo from "../../components/app/tabs/info/ServerInfo.svelte";
 	import Sidebar from "../../components/app/sidebar/Sidebar.svelte";
-	import { token, selectedServer, refreshServer } from "../../store/store";
+	import { token, selectedServer, selectedTab, refreshServerInfo } from "../../store/store";
 	import { goto } from "$app/navigation";
 	import { onDestroy, onMount } from "svelte";
 	import NoServer from "../../components/app/tabs/info/NoServer.svelte";
 	import type { DetailedServer, Server } from "../../components/app/models.js";
-	import { getServerInfo } from "../../shared/helpers.js";
 	import ServerBar from "../../components/app/ServerBar.svelte";
 	import ServerFtp from "../../components/app/tabs/info/ServerFtp.svelte";
 	import Parameters from "../../components/app/tabs/info/Parameters.svelte";
 	import { ServerSubscriptionStatus, ServerTab } from "../../components/app/constants.js";
 	import Pending from "../../components/app/tabs/info/Pending.svelte";
 	import type { Unsubscriber } from "svelte/store";
+	import SubscriptionInfo from "../../components/app/tabs/sub/SubscriptionInfo.svelte";
+	import { getServerInfo } from "../../components/app/helpers";
+	import NotFound from "../../components/app/tabs/info/NotFound.svelte";
 
 	// State
 	let server: DetailedServer = null;
@@ -24,15 +26,15 @@
 	let debug: boolean = false;
 	let fetching: boolean = false;
 	let unsubscribe: Unsubscriber | null = null;
-	let tab: ServerTab = ServerTab.INFO;
 	let isPending: boolean = true;
+	let containerNotFound: boolean = false;
 
 	onMount(async () => {
 		if (!$token) {
 			await goto("/login?redirect=/app");
 		}
 
-		unsubscribe = refreshServer.subscribe(() => fetchInfo());
+		unsubscribe = refreshServerInfo.subscribe(() => fetchInfo());
 	});
 
 	onDestroy(async () => {
@@ -41,11 +43,14 @@
 
 	async function fetchInfo(value: Server = $selectedServer) {
 		if (!value) return;
+
 		try {
 			error = null;
 			fetching = true;
+			server = null;
 			server = await getServerInfo(value.id);
 			isPending = server.subscriptionStatus === ServerSubscriptionStatus.PENDING;
+			containerNotFound = server.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !server.serverCreated;
 		} catch (err) {
 			server = null;
 			error = err;
@@ -54,15 +59,15 @@
 		}
 	}
 
-	$: fetchInfo($selectedServer);
-
 	const toggleDebug = () => {
 		debug = !debug;
 	};
 
-	const changeTab = (newTab: ServerTab) => {
-		tab = newTab;
-	};
+	async function changeTab(newTab: ServerTab) {
+		$selectedTab = newTab;
+	}
+
+	$: fetchInfo($selectedServer);
 </script>
 
 <svelte:head>
@@ -81,49 +86,53 @@
 	<Sidebar/>
 
 	<div class="content overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3">
-		{#if $selectedServer && server}
+		{#if $selectedServer}
 			<ServerBar {server}/>
 
 			<nav class="nav nav-pills nav-fill flex-column flex-lg-row">
 				<button
 						class="nav-link"
-						class:active={tab === ServerTab.INFO}
+						class:active={$selectedTab === ServerTab.INFO}
 						on:click|preventDefault={() => changeTab(ServerTab.INFO)}
 				>
 					Informations
 				</button>
+
 				<button
 						class="nav-link"
-						class:active={tab === ServerTab.SUBSCRIPTION}
-						on:click|preventDefault={() => changeTab(ServerTab.SUBSCRIPTION)}
-				>
-					Abonnement
-				</button>
-				<button
-						class="nav-link"
-						class:active={tab === ServerTab.CONSOLE}
+						class:active={$selectedTab === ServerTab.CONSOLE}
 						on:click|preventDefault={() => changeTab(ServerTab.CONSOLE)}
 						disabled="{isPending}"
 				>
 					Console
 				</button>
+
+				<button
+						class="nav-link"
+						class:active={$selectedTab === ServerTab.SUBSCRIPTION}
+						on:click|preventDefault={() => changeTab(ServerTab.SUBSCRIPTION)}
+				>
+					Abonnement
+				</button>
 			</nav>
 
-			{#if tab === ServerTab.INFO}
+			{#if $selectedTab === ServerTab.INFO}
 				{#if isPending}
 					<Pending/>
+				{:else if containerNotFound}
+					<NotFound/>
 				{:else}
 					<div class="d-flex gap-3 flex-column flex-xl-row">
-						{#if server.serverCreated}
-							<ServerInfo {server}/>
-							<ServerFtp {server}/>
-						{/if}
+						<ServerInfo {server}/>
+						<ServerFtp {server}/>
 					</div>
 
-					<Parameters parameters={server.parameters}/>
+					{#if server}
+						<Parameters parameters={server.parameters}/>
+					{/if}
 				{/if}
-			{:else if tab === ServerTab.SUBSCRIPTION}
-				Sub
+			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
+				<SubscriptionInfo/>
 			{/if}
 		{:else}
 			<NoServer/>

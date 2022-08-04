@@ -55,11 +55,11 @@
 
 <h4 class="mb-1">Adresse de facturation</h4>
 
-<div class="d-flex fs-6 mb-3">
+<div class="fs-6 mb-3">
     Connecté en tant que&nbsp;
-    <div class="text-muted">
+    <div class="text-muted d-inline">
         {email}
-    </div>.
+    </div>
 </div>
 
 <form>

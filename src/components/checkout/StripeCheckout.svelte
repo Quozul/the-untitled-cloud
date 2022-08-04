@@ -3,14 +3,16 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, token, clientSecret } from "../../store/store.ts";
+	import { cart, checkoutStep, clientSecret } from "../../store/store.ts";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
+	import type { ApiError } from "../../shared/models";
+	import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
 
 	let stripe: Stripe | null = null;
 	let processing = false;
-	let error = null;
+	let error: ApiError = null;
 	let elements;
 	let cgv = false;
 	let eula = false;
@@ -50,7 +52,11 @@
 
 		if (result.error) {
 			// payment failed, notify user
-			error = result.error;
+			error = {
+				code: AuthenticationErrors.STRIPE_ERROR,
+				isError: true,
+				message: result.error.message,
+			};
 			processing = false;
 		} else {
 			// Tell the API the payment has been made
@@ -82,7 +88,7 @@
 		</small>
 
 		<small class="form-check">
-			<input class="form-check-input" type="checkbox" value="" id="eula"bind:checked={eula}>
+			<input class="form-check-input" type="checkbox" value="" id="eula" bind:checked={eula}>
 			<label class="form-check-label" for="eula">
 				J'ai pris connaissance et j'accepte le
 				<a href="https://www.minecraft.net/fr-fr/eula" target="_blank" rel="noreferrer noopener">contrat de licence utilisateur final</a>
@@ -90,12 +96,16 @@
 			</label>
 		</small>
 
-		<button class="w-100 btn btn-primary btn-lg mt-3" type="submit" disabled="{processing || !cgv || !eula}">
+		<button class="w-100 btn btn-primary btn-lg my-3" type="submit" disabled="{processing || !cgv || !eula}">
 			{#if processing}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 			{/if}
 			Procéder au paiement
 		</button>
+
+		<div class:visually-hidden={!error} class="text-danger mb-3">
+			Erreur : {error?.message}
+		</div>
 	</form>
 {:else}
 	<div class="d-flex align-items-center">

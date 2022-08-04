@@ -4,8 +4,12 @@ export enum AuthenticationErrors {
 	ACCEPT_TOS = "ACCEPT_TOS",
 	INVALID_CODE = "INVALID_CODE",
 	EXPIRED_CODE = "EXPIRED_CODE",
+	CANCEL_ERROR = "CANCEL_ERROR",
 
 	// Form validation codes
 	PASSWORDS_DIFFER = "PASSWORDS_DIFFER",
 	EMPTY = "EMPTY",
+
+	// Stripe errors
+	STRIPE_ERROR = "STRIPE_ERROR",
 }
