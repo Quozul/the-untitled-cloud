@@ -1,17 +1,26 @@
 package dev.quozul.payments.provider.stripe.routes
 
+import com.stripe.exception.StripeException
+import com.stripe.model.Invoice
+import com.stripe.model.PaymentIntent
 import com.stripe.model.Subscription
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.User
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
+import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
+import dev.quozul.servers.ServerStatus
+import dev.quozul.servers.createOrUpdateServer
+import dev.quozul.servers.findServerFromSubscription
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.SerializationException
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -51,7 +60,6 @@ fun Route.configureSubscriptionRoutes() {
 			val subscription = Subscription.create(subCreateParams)
 
 			val response = SubscriptionCreateResponse(
-				subscription.id,
 				subscription.latestInvoiceObject.paymentIntentObject.clientSecret,
 			)
 
@@ -60,7 +68,48 @@ fun Route.configureSubscriptionRoutes() {
 		}
 	}
 
+	put("") {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val user = transaction {
+			User.findById(UUID.fromString(id))
+		}
+
+		if (user == null) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val body = try {
+			call.receive<ApiPaymentIntentUpdate>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val invoice = try {
+			val paymentIntent = PaymentIntent.retrieve(body.paymentIntentId)
+			Invoice.retrieve(paymentIntent.invoice)
+		} catch (_: StripeException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		if (invoice.paid) {
+			val server = findServerFromSubscription(invoice.subscription)
+			if (server == null) {
+				createOrUpdateServer(user, invoice.subscription, ServerStatus.PENDING)
+				call.response.status(HttpStatusCode.Created)
+			} else {
+				call.response.status(HttpStatusCode.NoContent)
+			}
+		}
+
+	}
+
 	delete("{subscriptionId}") {
+		// TODO: Get subscription from serverId
 		val subscriptionId = call.parameters["subscriptionId"]
 		val subscription = Subscription.retrieve(subscriptionId)
 		subscription.cancel()

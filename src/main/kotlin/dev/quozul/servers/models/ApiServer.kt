@@ -23,8 +23,10 @@ data class Paginate<T>(
 @Serializable
 data class DetailedApiServer(
 	val id: String,
-	val name: String,
+	val subscriptionStatus: ServerStatus,
+	val serverCreated: Boolean,
+	val name: String?,
 	val port: String?,
-	val state: ServerState,
+	val state: ServerState?,
 	val parameters: ServerParameters,
 )

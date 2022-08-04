@@ -35,13 +35,13 @@ fun getDockerClient(): DockerClient {
 }
 
 fun findContainerFromSubscription(subscriptionId: String): String? =
-	findServerFromSubscription(subscriptionId).containerId
+	findServerFromSubscription(subscriptionId)?.containerId
 
-fun findServerFromSubscription(subscriptionId: String): Server =
+fun findServerFromSubscription(subscriptionId: String): Server? =
 	transaction {
 		Server.find {
 			Servers.subscriptionId eq subscriptionId
-		}.first()
+		}.firstOrNull()
 	}
 
 fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStatus, containerId: String? = null): Server {

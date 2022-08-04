@@ -71,21 +71,22 @@ fun Route.configureServerRoutes() {
 				return@get
 			}
 
-			val containerId = try {
+			val server = try {
 				transaction {
-					Server.findById(serverId)?.containerId!!
+					Server.findById(serverId)!!
 				}
-			} catch (e: NullPointerException) {
+			} catch (_: NullPointerException) {
 				call.response.status(HttpStatusCode.NotFound)
 				return@get
 			}
 
 			// The following line might throw an error sometimes
 			val container = try {
-				dockerClient.inspectContainerCmd(containerId).exec()
+				dockerClient.inspectContainerCmd(server.containerId!!).exec()
 			} catch (_: NotFoundException) {
-				call.response.status(HttpStatusCode.NotFound)
-				return@get
+				null
+			} catch (_: NullPointerException) {
+				null
 			}
 
 			val parameters = transaction {
@@ -95,13 +96,16 @@ fun Route.configureServerRoutes() {
 			}
 
 			val exposedPort = ExposedPort.tcp(25565)
-			val port = container.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
+			val port = container?.let { it.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
+			val state = container?.let { ServerState.fromContainerState(it.state) }
 
 			val response = DetailedApiServer(
 				serverId.toString(),
-				container.name,
+				server.status,
+				container != null,
+				container?.name,
 				port,
-				ServerState.fromContainerState(container.state),
+				state,
 				ServerParameters.fromParameterEntity(parameters),
 			)
 
