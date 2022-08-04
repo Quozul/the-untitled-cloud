@@ -96,7 +96,7 @@ fun Route.configureSubscriptionRoutes() {
 			return@put
 		}
 
-		if (invoice.paid) {
+		if (invoice.subscription != null) {
 			val server = findServerFromSubscription(invoice.subscription)
 			if (server == null) {
 				createOrUpdateServer(user, invoice.subscription, ServerStatus.PENDING)
@@ -104,16 +104,8 @@ fun Route.configureSubscriptionRoutes() {
 			} else {
 				call.response.status(HttpStatusCode.NoContent)
 			}
+		} else {
+			call.response.status(HttpStatusCode.NotFound)
 		}
-
-	}
-
-	delete("{subscriptionId}") {
-		// TODO: Get subscription from serverId
-		val subscriptionId = call.parameters["subscriptionId"]
-		val subscription = Subscription.retrieve(subscriptionId)
-		subscription.cancel()
-
-		call.response.status(HttpStatusCode.NoContent)
 	}
 }
