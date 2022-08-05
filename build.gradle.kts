@@ -47,13 +47,15 @@ dependencies {
 
 	// Stripe
 	implementation("com.stripe:stripe-java:$stripe_version")
+
+	// Docker
 	implementation("com.github.docker-java:docker-java-core:$docker_java_version")
+	implementation("com.github.docker-java:docker-java-transport-httpclient5:$docker_java_version")
 
 	// KotlinX
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 	implementation("org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.4.0")
 
-	// Other packages
-	implementation("com.github.docker-java:docker-java-transport-httpclient5:$docker_java_version")
+	// Mailing
 	implementation("com.sun.mail:javax.mail:1.6.2")
 }

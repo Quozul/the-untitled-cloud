@@ -8,8 +8,9 @@ import com.github.dockerjava.api.model.*
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
+import com.github.dockerjava.zerodep.ZerodepDockerHttpClient
+import com.sun.jna.LastErrorException
 import dev.quozul.authentication.User
 import dev.quozul.containerDirectory
 import dev.quozul.dockerClient
@@ -23,7 +24,7 @@ import java.util.*
 fun getDockerClient(): DockerClient {
 	val config: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build()
 
-	val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
+	val httpClient: DockerHttpClient = ZerodepDockerHttpClient.Builder()
 		.dockerHost(config.dockerHost)
 		.sslConfig(config.sslConfig)
 		.maxConnections(100)
@@ -31,7 +32,15 @@ fun getDockerClient(): DockerClient {
 		.responseTimeout(Duration.ofSeconds(45))
 		.build()
 
-	return DockerClientImpl.getInstance(config, httpClient)
+	val client = DockerClientImpl.getInstance(config, httpClient)
+
+	try {
+		println(client.listContainersCmd().exec().size)
+	} catch (e: LastErrorException) {
+		println("${e.errorCode} ${e.message}")
+	}
+
+	return client
 }
 
 fun findContainerFromSubscription(subscriptionId: String): String? =
