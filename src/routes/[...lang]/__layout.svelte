@@ -7,16 +7,18 @@
 	} from "svelte-intl-precompile";
 	import en from "$locales/en.json";
 	import fr from "$locales/fr.json";
+	import { lang } from "$store/store";
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({params}: any) {
-		console.log("called", params);
 		addMessages("en", en);
 		addMessages("fr", fr);
 
-		const initialLocale = getLocaleFromNavigator();
+		const paramLang = params.lang.match(/[a-z-A-Z]+/)?.[0];
+		lang.update(() => paramLang);
+		const initialLocale = paramLang || getLocaleFromNavigator();
 
 		init({
 			fallbackLocale: "en",
@@ -28,9 +30,10 @@
 </script>
 
 <script>
-	import Icons from "$components/Icons.svelte";
+	import Icons from "$components/icons/Icons.svelte";
 	import Navbar from "$components/Navbar.svelte";
 	import Footer from "$components/Footer.svelte";
+	import "$root/app.scss";
 </script>
 
 <div class="container min-vh-100 d-flex flex-column justify-content-between">

@@ -1,8 +1,8 @@
 <script>
     import { t } from "svelte-intl-precompile";
-	import CheckoutElement from "/src/components/checkout/CheckoutElement.svelte";
-	import { checkoutStep } from "/src/store/store";
-	import { CheckoutSteps } from "/src/components/checkout/constants";
+	import CheckoutElement from "$components/checkout/CheckoutElement.svelte";
+	import { checkoutStep } from "$store/store";
+	import { CheckoutSteps } from "$components/checkout/constants";
 
 	$checkoutStep = CheckoutSteps.CHECKOUT;
 </script>

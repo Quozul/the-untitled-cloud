@@ -1,5 +1,5 @@
 <script>
-    import Icons from "$components/Icons.svelte";
+    import Icons from "$components/icons/Icons.svelte";
 </script>
 
 <Icons/>

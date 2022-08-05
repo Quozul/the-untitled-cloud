@@ -1,12 +1,10 @@
 import type { ApiError, Id } from "./models";
-import type { DetailedServer, Paginate, Server } from "$components/app/models";
-import type { ServerParameters } from "$components/app/models";
+import type { Paginate } from "$components/app/models";
 import type { Address } from "$components/address/Address";
 
 import { token } from "$store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
-import * as Url from "url";
 
 /**
  * Build request's options
@@ -71,6 +69,18 @@ export function containId(paginate: Paginate<Id>, id: string): boolean {
 		}
 	}
 	return false;
+}
+
+export const href = (link: string = "", language: string = ""): string => {
+	if (link && language) {
+		return `/${language}/${link}/`;
+	} else if (language) {
+		return `/${language}/`;
+	} else if (link) {
+		return `/${link}/`;
+	} else {
+		return "/";
+	}
 }
 
 

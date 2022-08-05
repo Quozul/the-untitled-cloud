@@ -10,6 +10,7 @@
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
 	import type { ApiError } from "$shared/models";
 	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
+	import { href } from "$shared/helpers";
 
 	let stripe: Stripe | null = null;
 	let processing = false;
@@ -83,7 +84,7 @@
 			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv}>
 			<label class="form-check-label" for="cgv">
 				{$t("i_acknowledge_and_accept")}
-				<a href="/cgv">{$t("terms_of_sale")}</a>.
+				<a href={href("cgv")}>{$t("terms_of_sale")}</a>.
 			</label>
 		</small>
 

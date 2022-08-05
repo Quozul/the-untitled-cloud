@@ -9,6 +9,7 @@
 	import ServerItem from "./ServerItem.svelte";
     import { getAllServers } from "$components/app/helpers";
     import type { Unsubscriber } from "svelte/store";
+    import { href } from "$shared/helpers";
 
 	// State
 	let servers: Paginate<Server>;
@@ -84,7 +85,7 @@
 </style>
 
 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light sidebar shadow-sm" class:collapsed={$sidebarCollapsed}>
-    <a href="/" class="d-flex align-items-center me-md-auto link-dark text-decoration-none">
+    <a href={href("")} class="d-flex align-items-center me-md-auto link-dark text-decoration-none">
         <Icon key="box" width="42" height="38" className={!$sidebarCollapsed && "me-2"}/>
         {#if !$sidebarCollapsed}
             <span class="fs-4">Quozul.cloud</span>
@@ -121,7 +122,7 @@
         {/if}
 
         <div class="d-flex flex-column gap-3">
-            <SidebarItem href="/rent/products/" iconName="plus" className="btn-outline-secondary">
+            <SidebarItem href={href("rent/products")} iconName="plus" className="btn-outline-secondary">
                 Louer un serveur
             </SidebarItem>
 
@@ -152,7 +153,7 @@
     <hr/>
 
     <ul class="nav flex-column gap-3">
-        <SidebarItem href="/" iconName="chevron-left" className="btn-outline-dark">
+        <SidebarItem href={href("")} iconName="chevron-left" className="btn-outline-dark">
             Accueil
         </SidebarItem>
 
