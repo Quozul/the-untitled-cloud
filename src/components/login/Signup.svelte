@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { ApiError } from "../../shared/models";
-	import { redirect } from "../../shared/helpers";
+    import { t } from "svelte-intl-precompile";
+	import type { ApiError } from "../shared/models";
+	import { redirect } from "../shared/helpers";
 	import Button from "../shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { credentials, loginMode } from "../../store/store";
@@ -44,29 +45,26 @@
 </script>
 
 <form>
-    <h4>Inscription</h4>
+    <h4>{$t("signup")}</h4>
     <div class="mb-3">
-        <label class="form-label">Adresse email</label>
-        <input type="email" name="email" class="form-control" placeholder="example@example.com" bind:value={email}>
+        <label for="email" class="form-label">{$t("email_address")}</label>
+        <input id="email" type="email" name="email" class="form-control" placeholder={$t("email_address")} bind:value={email}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
+        <label for="password" class="form-label">{$t("password")}</label>
+        <input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Confirmer le mot de passe</label>
-        <input type="password" name="password" class="form-control" placeholder="Confirmation"
-               bind:value={confirmPassword}>
+        <label for="confirm" class="form-label">{$t("confirm_password")}</label>
+        <input id="confirm" type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
     </div>
 
     <small class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" value="" id="tos" bind:checked={tos}>
-        <label class="form-check-label" for="tos">
-            J'ai pris connaissance et j'accepte les
-            <a href="/tos/">conditions générales d'utilisations</a>
-            du site.
+        <input id="tos" class="form-check-input" type="checkbox" value="" bind:checked={tos}>
+        <label for="tos" class="form-check-label">
+            {$t("i_acknowledge_and_accept")} <a href="/tos/">{$t("terms_of_service")}</a>.
         </label>
     </small>
 
@@ -75,6 +73,6 @@
     </div>
 
     <Button type="submit" className="btn btn-primary" onClick={submit}>
-        S'inscrire
+        {$t("to_signup")}
     </Button>
 </form>

@@ -4,11 +4,11 @@
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import { ServerStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
-	import { ServerSubscriptionStatus } from "./constants.js";
+	import { ServerSubscriptionStatus } from "./constants";
 	import { refreshServerInfo, selectedServer } from "../../store/store";
 	import Button from "../shared/Button.svelte";
 	import { patchServer, toggleRefreshServerInfo } from "./helpers";
-	import { ButtonVariant } from "../shared/constants.js";
+	import { ButtonVariant } from "../shared/constants";
 
 	// Props
 	export let server: DetailedServer;

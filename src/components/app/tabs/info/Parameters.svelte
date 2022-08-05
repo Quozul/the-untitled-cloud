@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ServerParameters, Version } from "../../models";
-	import { ServerType } from "../../constants.js";
+	import { ServerType } from "../../constants";
 	import { onMount } from "svelte";
-	import { VersionType } from "../../models.js";
+	import { VersionType } from "../../models";
     import { refreshServerInfo, selectedServer } from "../../../../store/store";
 	import Button from "../../../shared/Button.svelte";
     import { putParameters, toggleRefreshServerInfo } from "../../helpers";

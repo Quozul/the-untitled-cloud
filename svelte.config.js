@@ -23,8 +23,19 @@ const config = {
 		}),
 		trailingSlash: "always",
 		prerender: {
+			concurrency: 10,
+			enabled: true,
 			// This can be false if you're using a fallback (i.e. SPA mode)
 			default: true,
+			crawl: true,
+			entries: ["*"],
+		},
+
+		alias: {
+			$components: "src/components",
+			$shared: "src/components/shared",
+			$store: "src/store",
+			$locales: "src/locales",
 		},
 	},
 };

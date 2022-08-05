@@ -6,6 +6,7 @@
 	import Verification from "./Verification.svelte";
 	import { onDestroy, onMount } from "svelte";
 	import ForgotPassword from "./Password.svelte";
+    import { t } from "svelte-intl-precompile";
 
 	export let redirectTo: string = "/";
 
@@ -48,9 +49,9 @@
     {#if $loginMode !== LoginMode.VERIFICATION && $loginMode !== LoginMode.CHANGE_PASSWORD}
         <button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0">
             {#if $loginMode === LoginMode.LOGIN}
-                Vous n'avez pas encore de compte? S'inscrire.
+                {$t("no_account_yet_question_mark")}
             {:else}
-                Vous avez déjà un compte? Se connecter.
+                {$t("already_have_account_question_mark")}
             {/if}
         </button>
     {/if}

@@ -1,12 +1,13 @@
 <script lang="ts">
-	import type { ApiError } from "../../shared/models";
-	import { redirect } from "../../shared/helpers";
+    import { t } from "svelte-intl-precompile";
+	import type { ApiError } from "../shared/models";
+	import { redirect } from "../shared/helpers";
 	import Button from "../shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { credentials, loginMode, token } from "../../store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import { changePassword, sendVerificationCode } from "./helpers";
-    import { ButtonVariant } from "../shared/constants.js";
+    import { ButtonVariant } from "../shared/constants";
     import Icon from "../icons/Icon.svelte";
 
 	// Props
@@ -58,38 +59,38 @@
 </script>
 
 <form>
-    <h4 class="mb-0">Changement de mot de passe</h4>
+    <h4 class="mb-0">{$t("password_change")}</h4>
 
     <button type="button" on:click={back} class="d-block btn btn-sm btn-link p-0 mb-3">
         <Icon key="chevron-left" height="12" width="12" className="me-1"/>
-        Retour
+        {$t("back")}
     </button>
 
     <div class="mb-3">
-        <label class="form-label">Adresse email</label>
-        <input type="email" name="email" class="form-control" placeholder="example@example.com" bind:value={email}>
+        <label class="form-label">{$t("email")}</label>
+        <input type="email" name="email" class="form-control" placeholder={$t("email")} bind:value={email}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
+        <label class="form-label">{$t("password")}</label>
+        <input type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Confirmer le mot de passe</label>
-        <input type="password" name="password" class="form-control" placeholder="Confirmation" bind:value={confirmPassword}>
+        <label class="form-label">{$t("confirm_password")}</label>
+        <input type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Code de vérification</label>
+        <label class="form-label">{$t("verification_code")}</label>
         <div class="input-group mb-3">
             <input type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
-            <Button variant={ButtonVariant.SECONDARY} onClick={getCode}>Obtenir le code</Button>
+            <Button variant={ButtonVariant.SECONDARY} onClick={getCode}>{$t("get_code")}</Button>
         </div>
     </div>
 
     <div class:visually-hidden={!codeSend} class="text-muted mb-3">
-        Code envoyé, vérifiez votre boite mail.
+        {$t("code_sent_check_mailbox")}
     </div>
 
     <div class:visually-hidden={!error} class="text-danger mb-3">
@@ -97,6 +98,6 @@
     </div>
 
     <Button type="submit" className="btn btn-primary" onClick={submit}>
-        Changer le mot de passe
+        {$t("update_password")}
     </Button>
 </form>

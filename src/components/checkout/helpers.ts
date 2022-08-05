@@ -3,7 +3,7 @@ import { CheckoutSteps } from "./constants";
 import { cart, checkoutStep, token } from "../../store/store";
 import { goto } from "$app/navigation";
 import { get } from "svelte/store";
-import { getOptions, handleResponse } from "../../shared/helpers";
+import { getOptions, handleResponse } from "../shared/helpers";
 
 export async function setStep(newStep: CheckoutSteps): Promise<void> {
 	const tok = get(token);

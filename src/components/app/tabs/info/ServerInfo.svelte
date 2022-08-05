@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { selectedServer, refreshServerInfo } from "../../../../store/store";
+	import { selectedServer } from "../../../../store/store";
 	import type { DetailedServer } from "../../models";
 	import { onMount } from "svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import "@js-joda/timezone";
 	import { Locale } from "@js-joda/locale_fr";
 	import Button from "../../../shared/Button.svelte";
-    import { patchServer, toggleRefreshServerInfo } from "../../helpers.js";
-    import { ButtonVariant } from "../../../shared/constants.js";
+    import { patchServer, toggleRefreshServerInfo } from "../../helpers";
+    import { ButtonVariant } from "../../../shared/constants";
 
 	export let server: DetailedServer;
 	let started: ZonedDateTime = null;

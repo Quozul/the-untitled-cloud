@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { t } from "svelte-intl-precompile";
 	import type { PaymentIntentResult, Stripe } from "@stripe/stripe-js/types/stripe-js/stripe";
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, clientSecret } from "../../store/store.ts";
+	import { cart, checkoutStep, clientSecret } from "../../store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
-	import type { ApiError } from "../../shared/models";
+	import type { ApiError } from "../shared/models";
 	import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
 
 	let stripe: Stripe | null = null;
@@ -81,12 +82,12 @@
 		<small class="form-check mt-3">
 			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv}>
 			<label class="form-check-label" for="cgv">
-				J'ai pris connaissance et j'accepte les
-				<a href="/cgv">conditions générales de vente</a>
-				du site.
+				{$t("i_acknowledge_and_accept")}
+				<a href="/cgv">{$t("terms_of_sale")}</a>.
 			</label>
 		</small>
 
+		<!-- TODO: Move this somewhere else -->
 		<small class="form-check">
 			<input class="form-check-input" type="checkbox" value="" id="eula" bind:checked={eula}>
 			<label class="form-check-label" for="eula">
@@ -100,7 +101,7 @@
 			{#if processing}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 			{/if}
-			Procéder au paiement
+			{$t("checkout.proceed")}
 		</button>
 
 		<div class:visually-hidden={!error} class="text-danger mb-3">
@@ -110,6 +111,6 @@
 {:else}
 	<div class="d-flex align-items-center">
 		<div class="spinner-border me-3" role="status" aria-hidden="true"></div>
-		<strong>Chargement...</strong>
+		<strong>{$t("loading")}...</strong>
 	</div>
 {/if}

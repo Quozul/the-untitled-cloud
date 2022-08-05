@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { checkoutStep } from "../../store/store";
-	import { CheckoutSteps } from "../../components/checkout/constants.js";
+	import { CheckoutSteps } from "../../components/checkout/constants";
 	import Product from "../../components/cart/Product.svelte";
 
 	$checkoutStep = CheckoutSteps.PRODUCTS;

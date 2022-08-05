@@ -1,4 +1,4 @@
-import type { Id } from "../../shared/models";
+import type { Id } from "../shared/models";
 
 export type Cart = Id & {
 	price: number,

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { DetailedServer } from "../../models";
 	import { patchServer, toggleRefreshServerInfo, toggleRefreshServerList } from "../../helpers";
-	import { refreshServerInfo, refreshServerList, selectedServer } from "../../../../store/store";
+	import { selectedServer } from "../../../../store/store";
 	import Button from "../../../shared/Button.svelte";
-	import { ButtonVariant } from "../../../shared/constants.js";
+	import { ButtonVariant } from "../../../shared/constants";
 
 	export let server: DetailedServer;
 

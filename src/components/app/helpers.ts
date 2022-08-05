@@ -1,6 +1,6 @@
 import { refreshServerInfo, refreshServerList } from "../../store/store";
 import type { DetailedServer, Paginate, Server, ServerParameters, SubscriptionInfo } from "./models";
-import { getOptions, handleResponse } from "../../shared/helpers";
+import { getOptions, handleResponse } from "../shared/helpers";
 
 export const toggleRefreshServerInfo = () => {
 	refreshServerInfo.update(v => !v);

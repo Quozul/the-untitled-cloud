@@ -9,11 +9,11 @@
 	import { goto } from "$app/navigation";
 	import { onDestroy, onMount } from "svelte";
 	import NoServer from "../../components/app/tabs/info/NoServer.svelte";
-	import type { DetailedServer, Server } from "../../components/app/models.js";
+	import type { DetailedServer, Server } from "../../components/app/models";
 	import ServerBar from "../../components/app/ServerBar.svelte";
 	import ServerFtp from "../../components/app/tabs/info/ServerFtp.svelte";
 	import Parameters from "../../components/app/tabs/info/Parameters.svelte";
-	import { ServerSubscriptionStatus, ServerTab } from "../../components/app/constants.js";
+	import { ServerSubscriptionStatus, ServerTab } from "../../components/app/constants";
 	import Pending from "../../components/app/tabs/info/Pending.svelte";
 	import type { Unsubscriber } from "svelte/store";
 	import SubscriptionInfo from "../../components/app/tabs/sub/SubscriptionInfo.svelte";

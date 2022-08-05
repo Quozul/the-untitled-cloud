@@ -1,7 +1,8 @@
 <script lang="ts">
-	import type { ApiError } from "../../shared/models";
+	import { t } from "svelte-intl-precompile";
+	import type { ApiError } from "../shared/models";
 	import { credentials, loginMode, token } from "../../store/store";
-	import { redirect } from "../../shared/helpers";
+	import { redirect } from "../shared/helpers";
 	import Button from "../shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { LoginMode } from "./models/LoginMode";
@@ -46,19 +47,19 @@
 </script>
 
 <form>
-	<h4>Connexion</h4>
+	<h4>{$t("login")}</h4>
 	<div class="mb-3">
-		<label class="form-label">Adresse email</label>
-		<input type="email" name="email" class="form-control" placeholder="example@example.com" bind:value={email}>
+		<label for="email" class="form-label">{$t("email_address")}</label>
+		<input id="email" type="email" name="email" class="form-control" placeholder={$t("email_address")} bind:value={email}>
 	</div>
 
 	<div>
-		<label class="form-label">Mot de passe</label>
-		<input type="password" name="password" class="form-control" placeholder="Mot de passe" bind:value={password}>
+		<label for="password" class="form-label">{$t("password")}</label>
+		<input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
 	</div>
 
 	<button type="button" on:click={forgotPassword} class="d-block btn btn-sm btn-link p-0 mb-3">
-		Mot de passer perdu ?
+		{$t("password_lost_question_mark")}
 	</button>
 
 	<div class:visually-hidden={!error} class="text-danger mb-3">
@@ -66,6 +67,6 @@
 	</div>
 
 	<Button type="submit" className="btn btn-primary" onClick={submit}>
-		Se connecter
+		{$t("to_login")}
 	</Button>
 </form>

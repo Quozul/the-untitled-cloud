@@ -3,24 +3,24 @@
 	import Step from "../../components/checkout/Step.svelte";
 	import Cart from "../../components/Cart.svelte";
 	import { cart } from "../../store/store";
-	import { token } from "../../store/store.js";
+	import { token } from "../../store/store";
+    import { t } from "svelte-intl-precompile";
 </script>
 
 <nav class="nav nav-pills nav-fill mb-3">
     <Step step={CheckoutSteps.PRODUCTS}>
-        Choisir le produit
+        {$t("choose_product")}
     </Step>
     <Step step={CheckoutSteps.LOGIN} disabled="{!!$token}">
-        Se connecter
+        {$t("to_login")}
     </Step>
     <Step step={CheckoutSteps.PROFILE} disabled="{!$token}">
-        Compléter son profil
+        {$t("complete_profile")}
     </Step>
     <Step step={CheckoutSteps.CHECKOUT} disabled="{!$token || !$cart}">
-        Paiement
+        {$t("checkout")}
     </Step>
 </nav>
-
 
 <div class="row g-5">
     <Cart/>

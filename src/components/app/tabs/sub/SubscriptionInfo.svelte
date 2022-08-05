@@ -9,9 +9,9 @@
 		toggleRefreshServerList
 	} from "../../helpers";
 	import { selectedServer } from "../../../../store/store";
-	import type { ApiError } from "../../../../shared/models";
-	import { ButtonVariant } from "../../../shared/constants.js";
-	import { formatter, shortDate } from "../../../../shared/constants";
+	import type { ApiError } from "../../../shared/models";
+	import { ButtonVariant } from "../../../shared/constants";
+	import { formatter, shortDate } from "../../../shared/constants";
 	import Invoices from "./Invoices.svelte";
 
 	// State

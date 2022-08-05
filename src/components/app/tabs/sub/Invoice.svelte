@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Invoice } from "../../models";
 	import { ZonedDateTime } from "@js-joda/core";
-	import { shortDate } from "../../../../shared/constants";
-	import { formatPrice } from "../../../../shared/helpers.js";
+	import { shortDate } from "../../../shared/constants";
+	import { formatPrice } from "../../../shared/helpers";
 	import Button from "../../../shared/Button.svelte";
 
 	// Props
