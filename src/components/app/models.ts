@@ -1,4 +1,4 @@
-import type { Id } from "../shared/models";
+import type { Id } from "$shared/models";
 import type { ServerStatus } from "./constants";
 import type { ServerSubscriptionStatus } from "./constants";
 

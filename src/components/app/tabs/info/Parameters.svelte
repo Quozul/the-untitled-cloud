@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { ServerParameters, Version } from "../../models";
-	import { ServerType } from "../../constants";
+	import type { ServerParameters, Version } from "$components/app/models";
+	import { ServerType } from "$components/app/constants";
 	import { onMount } from "svelte";
-	import { VersionType } from "../../models";
-    import { refreshServerInfo, selectedServer } from "../../../../store/store";
-	import Button from "../../../shared/Button.svelte";
-    import { putParameters, toggleRefreshServerInfo } from "../../helpers";
+	import { VersionType } from "$components/app/models";
+    import { refreshServerInfo, selectedServer } from "$store/store";
+	import Button from "$shared/Button.svelte";
+    import { putParameters, toggleRefreshServerInfo } from "$components/app/helpers";
 
 	export let parameters: ServerParameters;
 	let versions: Version[] = [];

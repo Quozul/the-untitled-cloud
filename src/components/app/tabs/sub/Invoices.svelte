@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SubscriptionInfo } from "../../models";
+	import type { SubscriptionInfo } from "$components/app/models";
 	import Invoice from "./Invoice.svelte";
 
 	export let subscription: SubscriptionInfo;

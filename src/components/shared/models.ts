@@ -1,4 +1,4 @@
-import type { AuthenticationErrors } from "../login/models/AuthenticationErrors";
+import type { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 
 export type Id = {
 	id: string,

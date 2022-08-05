@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Icon from "../../icons/Icon.svelte";
-	import { sidebarCollapsed } from "../../../store/store";
+	import Icon from "$components/icons/Icon.svelte";
+	import { sidebarCollapsed } from "$store/store";
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;

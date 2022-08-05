@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Unsubscriber } from "svelte/store";
-	import { cart } from "../store/store";
+	import { cart } from "$store/store";
 	import { formatPrice } from "./shared/helpers";
 	import Icon from "./icons/Icon.svelte";
 	import { onDestroy, onMount } from "svelte";

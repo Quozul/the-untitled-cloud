@@ -36,6 +36,7 @@ const config = {
 			$shared: "src/components/shared",
 			$store: "src/store",
 			$locales: "src/locales",
+			$root: "src",
 		},
 	},
 };

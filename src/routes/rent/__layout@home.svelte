@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { CheckoutSteps } from "../../components/checkout/constants";
-	import Step from "../../components/checkout/Step.svelte";
-	import Cart from "../../components/Cart.svelte";
-	import { cart } from "../../store/store";
-	import { token } from "../../store/store";
+	import { CheckoutSteps } from "$components/checkout/constants";
+	import Step from "$components/checkout/Step.svelte";
+	import Cart from "$components/Cart.svelte";
+	import { cart } from "$store/store";
+	import { token } from "$store/store";
     import { t } from "svelte-intl-precompile";
 </script>
 

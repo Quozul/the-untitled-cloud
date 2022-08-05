@@ -3,22 +3,22 @@
 </script>
 
 <script lang="ts">
-	import ServerInfo from "../../components/app/tabs/info/ServerInfo.svelte";
-	import Sidebar from "../../components/app/sidebar/Sidebar.svelte";
-	import { token, selectedServer, selectedTab, refreshServerInfo } from "../../store/store";
+	import ServerInfo from "$components/app/tabs/info/ServerInfo.svelte";
+	import Sidebar from "$components/app/sidebar/Sidebar.svelte";
+	import { token, selectedServer, selectedTab, refreshServerInfo } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onDestroy, onMount } from "svelte";
-	import NoServer from "../../components/app/tabs/info/NoServer.svelte";
-	import type { DetailedServer, Server } from "../../components/app/models";
-	import ServerBar from "../../components/app/ServerBar.svelte";
-	import ServerFtp from "../../components/app/tabs/info/ServerFtp.svelte";
-	import Parameters from "../../components/app/tabs/info/Parameters.svelte";
-	import { ServerSubscriptionStatus, ServerTab } from "../../components/app/constants";
-	import Pending from "../../components/app/tabs/info/Pending.svelte";
+	import NoServer from "$components/app/tabs/info/NoServer.svelte";
+	import type { DetailedServer, Server } from "$components/app/models";
+	import ServerBar from "$components/app/ServerBar.svelte";
+	import ServerFtp from "$components/app/tabs/info/ServerFtp.svelte";
+	import Parameters from "$components/app/tabs/info/Parameters.svelte";
+	import { ServerSubscriptionStatus, ServerTab } from "$components/app/constants";
+	import Pending from "$components/app/tabs/info/Pending.svelte";
 	import type { Unsubscriber } from "svelte/store";
-	import SubscriptionInfo from "../../components/app/tabs/sub/SubscriptionInfo.svelte";
-	import { getServerInfo } from "../../components/app/helpers";
-	import NotFound from "../../components/app/tabs/info/NotFound.svelte";
+	import SubscriptionInfo from "$components/app/tabs/sub/SubscriptionInfo.svelte";
+	import { getServerInfo } from "$components/app/helpers";
+	import NotFound from "$components/app/tabs/info/NotFound.svelte";
 
 	// State
 	let server: DetailedServer = null;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DetailedServer } from "../../models";
+	import type { DetailedServer } from "$components/app/models";
 
 	// Props
 	export let server: DetailedServer;

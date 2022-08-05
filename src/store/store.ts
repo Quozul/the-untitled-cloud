@@ -1,12 +1,12 @@
 import type { Writable } from "svelte/store";
-import type { Cart } from "../components/cart/models";
-import type { CheckoutSteps } from "../components/checkout/constants";
-import type { Server } from "../components/app/models";
-import type { Credentials } from "../components/login/models/Credentials";
+import type { Cart } from "$components/cart/models";
+import type { CheckoutSteps } from "$components/checkout/constants";
+import type { Server } from "$components/app/models";
+import type { Credentials } from "$components/login/models/Credentials";
 import { createStoreEntry } from "./helpers";
 import { browser } from "$app/env";
-import { LoginMode } from "../components/login/models/LoginMode";
-import { ServerTab } from "../components/app/constants";
+import { LoginMode } from "$components/login/models/LoginMode";
+import { ServerTab } from "$components/app/constants";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);

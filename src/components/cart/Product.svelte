@@ -1,8 +1,8 @@
 <script lang="ts">
     import { t } from "svelte-intl-precompile";
-	import { cart } from "../../store/store";
-	import { setStep } from "../checkout/helpers";
-	import { CheckoutSteps } from "../checkout/constants";
+	import { cart } from "$store/store";
+	import { setStep } from "$components/checkout/helpers";
+	import { CheckoutSteps } from "$components/checkout/constants";
 
 	function addToCart() {
 		$cart = {

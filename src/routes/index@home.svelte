@@ -1,6 +1,6 @@
 <script>
-	import Product from "../components/cart/Product.svelte";
-    import Hero from "../components/hero/Hero.svelte";
+	import Product from "$components/cart/Product.svelte";
+    import Hero from "$components/hero/Hero.svelte";
 </script>
 
 <svelte:head>

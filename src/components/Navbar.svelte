@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
 	import Icon from "./icons/Icon.svelte";
-	import { token } from "../store/store";
+	import { token } from "$store/store";
 	import { page } from "$app/stores";
 
 	let selectedPage: string;

@@ -1,9 +1,9 @@
 import type { ApiError, Id } from "./models";
-import type { DetailedServer, Paginate, Server } from "../app/models";
-import type { ServerParameters } from "../app/models";
-import type { Address } from "../address/Address";
+import type { DetailedServer, Paginate, Server } from "$components/app/models";
+import type { ServerParameters } from "$components/app/models";
+import type { Address } from "$components/address/Address";
 
-import { token } from "../../store/store";
+import { token } from "$store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
 import * as Url from "url";

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { ButtonVariant } from "./constants";
-    import Icon from "../icons/Icon.svelte";
+    import Icon from "$components/icons/Icon.svelte";
 
     export let variant: ButtonVariant = ButtonVariant.PRIMARY;
     export let className: string = "";

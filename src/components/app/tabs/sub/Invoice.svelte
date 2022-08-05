@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Invoice } from "../../models";
+	import type { Invoice } from "$components/app/models";
 	import { ZonedDateTime } from "@js-joda/core";
-	import { shortDate } from "../../../shared/constants";
-	import { formatPrice } from "../../../shared/helpers";
-	import Button from "../../../shared/Button.svelte";
+	import { shortDate } from "$shared/constants";
+	import { formatPrice } from "$shared/helpers";
+	import Button from "$shared/Button.svelte";
 
 	// Props
 	export let invoice: Invoice;

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Server } from "../models";
-	import { selectedServer } from "../../../store/store";
-	import { ServerSubscriptionStatus } from "../constants";
+	import type { Server } from "$components/app/models";
+	import { selectedServer } from "$store/store";
+	import { ServerSubscriptionStatus } from "$components/app/constants";
 	import SidebarItem from "./SidebarItem.svelte";
 
 	export let server: Server;

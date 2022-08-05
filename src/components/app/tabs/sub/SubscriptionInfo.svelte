@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { Server, SubscriptionInfo } from "../../models";
+	import type { Server, SubscriptionInfo } from "$components/app/models";
 	import { ZonedDateTime } from "@js-joda/core";
-	import Button from "../../../shared/Button.svelte";
+	import Button from "$shared/Button.svelte";
 	import {
 		cancelSubscription,
 		getSubscription,
 		toggleRefreshServerInfo,
 		toggleRefreshServerList
-	} from "../../helpers";
-	import { selectedServer } from "../../../../store/store";
-	import type { ApiError } from "../../../shared/models";
-	import { ButtonVariant } from "../../../shared/constants";
-	import { formatter, shortDate } from "../../../shared/constants";
+	} from "$components/app/helpers";
+	import { selectedServer } from "$store/store";
+	import type { ApiError } from "$shared/models";
+	import { ButtonVariant } from "$shared/constants";
+	import { formatter, shortDate } from "$shared/constants";
 	import Invoices from "./Invoices.svelte";
 
 	// State

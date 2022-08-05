@@ -1,15 +1,15 @@
 <script lang="ts">
     import { t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
-	import type { ApiError } from "../shared/models";
+	import type { ApiError } from "$shared/models";
 	import { onMount } from "svelte";
-	import { token } from "../../store/store";
-	import { CheckoutSteps } from "../checkout/constants";
-	import Icon from "../icons/Icon.svelte";
-	import { setStep } from "../checkout/helpers";
+	import { token } from "$store/store";
+	import { CheckoutSteps } from "$components/checkout/constants";
+	import Icon from "$components/icons/Icon.svelte";
+	import { setStep } from "$components/checkout/helpers";
 	import jwtDecode from "jwt-decode";
-	import { getAddress, setAddress } from "../shared/helpers";
-	import Button from "../shared/Button.svelte";
+	import { getAddress, setAddress } from "$shared/helpers";
+	import Button from "$shared/Button.svelte";
 
 	let address: Address = {
 		city: null,

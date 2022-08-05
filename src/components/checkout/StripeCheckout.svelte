@@ -4,12 +4,12 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, clientSecret } from "../../store/store";
+	import { cart, checkoutStep, clientSecret } from "$store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
-	import type { ApiError } from "../shared/models";
-	import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
+	import type { ApiError } from "$shared/models";
+	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 
 	let stripe: Stripe | null = null;
 	let processing = false;

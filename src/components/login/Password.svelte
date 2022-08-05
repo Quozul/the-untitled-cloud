@@ -1,14 +1,14 @@
 <script lang="ts">
     import { t } from "svelte-intl-precompile";
-	import type { ApiError } from "../shared/models";
-	import { redirect } from "../shared/helpers";
-	import Button from "../shared/Button.svelte";
+	import type { ApiError } from "$shared/models";
+	import { redirect } from "$shared/helpers";
+	import Button from "$shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
-	import { credentials, loginMode, token } from "../../store/store";
+	import { credentials, loginMode, token } from "$store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import { changePassword, sendVerificationCode } from "./helpers";
-    import { ButtonVariant } from "../shared/constants";
-    import Icon from "../icons/Icon.svelte";
+    import { ButtonVariant } from "$shared/constants";
+    import Icon from "$components/icons/Icon.svelte";
 
 	// Props
 	export let redirectTo: string;

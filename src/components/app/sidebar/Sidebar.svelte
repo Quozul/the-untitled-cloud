@@ -1,13 +1,13 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import { refreshServerList, selectedServer, sidebarCollapsed, token } from "../../../store/store";
-	import type { Paginate, Server } from "../models";
-	import Icon from "../../icons/Icon.svelte";
-	import { containId } from "../../shared/helpers";
+    import { refreshServerList, selectedServer, sidebarCollapsed, token } from "$store/store";
+	import type { Paginate, Server } from "$components/app/models";
+	import Icon from "$components/icons/Icon.svelte";
+	import { containId } from "$shared/helpers";
 	import { goto } from "$app/navigation";
 	import SidebarItem from "./SidebarItem.svelte";
 	import ServerItem from "./ServerItem.svelte";
-    import { getAllServers } from "../helpers";
+    import { getAllServers } from "$components/app/helpers";
     import type { Unsubscriber } from "svelte/store";
 
 	// State

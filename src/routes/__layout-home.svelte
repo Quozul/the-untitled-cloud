@@ -5,8 +5,8 @@
 		init,
 		waitLocale,
 	} from "svelte-intl-precompile";
-	import en from "../locales/en.json";
-	import fr from "../locales/fr.json";
+	import en from "$locales/en.json";
+	import fr from "$locales/fr.json";
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
@@ -28,9 +28,9 @@
 </script>
 
 <script>
-	import Icons from "../components/Icons.svelte";
-	import Navbar from "../components/Navbar.svelte";
-	import Footer from "../components/Footer.svelte";
+	import Icons from "$components/Icons.svelte";
+	import Navbar from "$components/Navbar.svelte";
+	import Footer from "$components/Footer.svelte";
 </script>
 
 <div class="container min-vh-100 d-flex flex-column justify-content-between">

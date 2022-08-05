@@ -1,9 +1,9 @@
 <script lang="ts">
     import { t } from "svelte-intl-precompile";
-	import type { ApiError } from "../shared/models";
-	import { credentials, loginMode, token } from "../../store/store";
-	import { redirect } from "../shared/helpers";
-	import Button from "../shared/Button.svelte";
+	import type { ApiError } from "$shared/models";
+	import { credentials, loginMode, token } from "$store/store";
+	import { redirect } from "$shared/helpers";
+	import Button from "$shared/Button.svelte";
 	import { LoginMode } from "./models/LoginMode";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { sendVerificationCode, signIn } from "./helpers";

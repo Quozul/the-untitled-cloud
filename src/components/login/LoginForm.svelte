@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Login from "./Login.svelte";
 	import Signup from "./Signup.svelte";
-	import { credentials, loginMode } from "../../store/store";
+	import { credentials, loginMode } from "$store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import Verification from "./Verification.svelte";
 	import { onDestroy, onMount } from "svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CheckoutSteps } from "./constants";
-	import { checkoutStep } from "../../store/store";
+	import { checkoutStep } from "$store/store";
 	import { setStep } from "./helpers";
 
 	export let step: CheckoutSteps;

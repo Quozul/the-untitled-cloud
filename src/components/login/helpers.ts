@@ -1,6 +1,6 @@
-import type { ApiError } from "../shared/models";
+import type { ApiError } from "$shared/models";
 import type { Token } from "./models/Token";
-import { getOptions, handleResponse } from "../shared/helpers";
+import { getOptions, handleResponse } from "$shared/helpers";
 
 /**
  * Registers a new user

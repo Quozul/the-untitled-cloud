@@ -1,6 +1,6 @@
 <script>
 	import { t } from "svelte-intl-precompile";
-	import { token } from "../../store/store";
+	import { token } from "$store/store";
 </script>
 
 <h1 class="display-5 fw-bold lh-1 mb-3">
