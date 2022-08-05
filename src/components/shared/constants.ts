@@ -12,6 +12,7 @@ export const shortDate = DateTimeFormatter
 	.withLocale(Locale.FRANCE);
 
 export enum ButtonVariant {
+	NONE = "",
 	PRIMARY = "primary",
 	SECONDARY = "secondary",
 	SUCCESS = "success",

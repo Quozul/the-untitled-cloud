@@ -1,20 +1,17 @@
 <script lang="ts">
-	import ServerInfo from "../../components/app/tabs/info/ServerInfo.svelte";
-	import Sidebar from "../../components/app/sidebar/Sidebar.svelte";
-	import { token, selectedServer, selectedTab, refreshServerInfo } from "../../store/store";
+	import Sidebar from "$components/app/sidebar/Sidebar.svelte";
+	import { token, selectedServer, selectedTab, refreshServerInfo } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onDestroy, onMount } from "svelte";
-	import NoServer from "../../components/app/tabs/info/NoServer.svelte";
-	import type { DetailedServer, Server } from "../../components/app/models";
-	import ServerBar from "../../components/app/ServerBar.svelte";
-	import ServerFtp from "../../components/app/tabs/info/ServerFtp.svelte";
-	import Parameters from "../../components/app/tabs/info/Parameters.svelte";
-	import { ServerSubscriptionStatus, ServerTab } from "../../components/app/constants";
-	import Pending from "../../components/app/tabs/info/Pending.svelte";
+	import NoServer from "../../components/app/tabs/info/errors/NoServer.svelte";
+	import type { DetailedServer, Server } from "$components/app/models";
+	import ServerBar from "$components/app/ServerBar.svelte";
+	import { ServerTab } from "$components/app/constants";
 	import type { Unsubscriber } from "svelte/store";
-	import SubscriptionInfo from "../../components/app/tabs/sub/SubscriptionInfo.svelte";
-	import { getServerInfo } from "../../components/app/helpers";
-	import NotFound from "../../components/app/tabs/info/NotFound.svelte";
+	import SubscriptionInfo from "$components/app/tabs/sub/SubscriptionInfo.svelte";
+	import { getServerInfo } from "$components/app/helpers";
+	import Tabs from "$components/app/Tabs.svelte";
+	import InfoTab from "$components/app/InfoTab.svelte";
 
 	// State
 	let server: DetailedServer = null;
@@ -22,8 +19,6 @@
 	let debug: boolean = false;
 	let fetching: boolean = false;
 	let unsubscribe: Unsubscriber | null = null;
-	let isPending: boolean = true;
-	let containerNotFound: boolean = false;
 
 	onMount(async () => {
 		if (!$token) {
@@ -45,8 +40,6 @@
 			fetching = true;
 			server = null;
 			server = await getServerInfo(value.id);
-			isPending = server.subscriptionStatus === ServerSubscriptionStatus.PENDING;
-			containerNotFound = server.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !server.serverCreated;
 		} catch (err) {
 			server = null;
 			error = err;
@@ -58,10 +51,6 @@
 	const toggleDebug = () => {
 		debug = !debug;
 	};
-
-	async function changeTab(newTab: ServerTab) {
-		$selectedTab = newTab;
-	}
 
 	$: fetchInfo($selectedServer);
 </script>
@@ -85,48 +74,10 @@
 		{#if $selectedServer}
 			<ServerBar {server}/>
 
-			<nav class="nav nav-pills nav-fill flex-column flex-lg-row">
-				<button
-						class="nav-link"
-						class:active={$selectedTab === ServerTab.INFO}
-						on:click|preventDefault={() => changeTab(ServerTab.INFO)}
-				>
-					Informations
-				</button>
-
-				<button
-						class="nav-link"
-						class:active={$selectedTab === ServerTab.CONSOLE}
-						on:click|preventDefault={() => changeTab(ServerTab.CONSOLE)}
-						disabled="{isPending}"
-				>
-					Console
-				</button>
-
-				<button
-						class="nav-link"
-						class:active={$selectedTab === ServerTab.SUBSCRIPTION}
-						on:click|preventDefault={() => changeTab(ServerTab.SUBSCRIPTION)}
-				>
-					Abonnement
-				</button>
-			</nav>
+			<Tabs {server}/>
 
 			{#if $selectedTab === ServerTab.INFO}
-				{#if isPending}
-					<Pending/>
-				{:else if containerNotFound}
-					<NotFound/>
-				{:else}
-					<div class="d-flex gap-3 flex-column flex-xl-row">
-						<ServerInfo {server}/>
-						<ServerFtp {server}/>
-					</div>
-
-					{#if server}
-						<Parameters parameters={server.parameters}/>
-					{/if}
-				{/if}
+				<InfoTab {server}/>
 			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
 				<SubscriptionInfo/>
 			{/if}

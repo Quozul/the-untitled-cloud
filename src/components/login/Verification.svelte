@@ -15,8 +15,7 @@
 	let code: string = "";
 
 	// States
-	let error: AuthenticationErrors | null = null;
-	let errorMessage: string | null = null;
+	let error: ApiError | null = null;
 
 	$: if (code.length === 6) {
 		submit();
@@ -36,8 +35,7 @@
 			$token = res.token;
 			await redirect(redirectTo);
 		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
+            error = e;
 		}
 	}
 
@@ -50,12 +48,9 @@
 
 		try {
             const {email} = $credentials;
-			const res = await sendVerificationCode(email);
-			error = res.code;
-			errorMessage = $t("code_sent_check_mailbox");
+            error = await sendVerificationCode(email);
 		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
+            error = e;
 		}
 	}
 </script>
@@ -73,14 +68,14 @@
     </div>
 
     <div class:visually-hidden={!error} class="text-danger mb-3">
-        {errorMessage}
+        {error?.translatedMessage}
     </div>
 
     <Button type="submit" onClick={submit}>
         {$t("to_login")}
     </Button>
 
-    {#if error === AuthenticationErrors.EXPIRED_CODE || error === AuthenticationErrors.INVALID_CODE}
+    {#if error.code === AuthenticationErrors.EXPIRED_CODE || error.code === AuthenticationErrors.INVALID_CODE}
         <Button className="btn btn-secondary" onClick={resendCode}>
             {$t("resend_code")}
         </Button>

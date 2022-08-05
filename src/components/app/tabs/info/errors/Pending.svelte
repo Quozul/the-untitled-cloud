@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { toggleRefreshServerInfo, toggleRefreshServerList } from "$components/app/helpers";
+	import { toggleRefreshServerInfo, toggleRefreshServerList } from "../../../helpers";
 
 	function refresh() {
 		toggleRefreshServerList();

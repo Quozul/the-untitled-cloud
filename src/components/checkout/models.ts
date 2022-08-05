@@ -2,6 +2,6 @@ export type ClientSecretResponse = {
 	clientSecret: string,
 }
 
-export type PaymentIntentRequest = {
-	paymentIntentId: string,
+export type SubscriptionCreated = {
+	serverId: string,
 }

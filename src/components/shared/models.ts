@@ -5,7 +5,8 @@ export type Id = {
 }
 
 export type ApiError = {
-	isError: boolean,
-	message: string,
+	isError?: boolean,
+	message?: string,
 	code: AuthenticationErrors,
+	translatedMessage?: string,
 }

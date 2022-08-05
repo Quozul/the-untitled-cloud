@@ -60,5 +60,15 @@
 	"choose_product": "Choisir le produit",
 	"complete_profile": "Compléter le profil",
 	"checkout.not_activated": "Le service n'étant pas encore activé, je vous invite à utiliser une des",
-	"checkout.test_cards": "cartes de tests"
+	"checkout.test_cards": "cartes de tests",
+	"error.verify_account": "Code envoyé, vérifiez votre boite mail.",
+	"error.invalid_credentials": "Identifiants invalides.",
+	"error.accept_tos": "Vous devez accepter les CGU.",
+	"error.invalid_code": "Code invalide.",
+	"error.expired_code": "Code expiré.",
+	"error.cancel_error": "Nous n'avons pas réussi à annuler votre abonnement.",
+	"error.stripe_error": "Une erreur est survenue lors du paiement.",
+	"error.fetch_failed": "Nous n'avons pas réussis à contacter notre service distant.",
+	"error.password_differ": "Les mots de passes doivent correspondrent.",
+	"error.empty": "Vide"
 }

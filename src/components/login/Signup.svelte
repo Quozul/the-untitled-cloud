@@ -19,12 +19,14 @@
 	let tos = false;
 
 	// States
-	let error: AuthenticationErrors | null = null;
-	let errorMessage: string | null = null;
+	let error: ApiError | null = null;
 
 	async function submit() {
 		if (password !== confirmPassword) {
-			error = AuthenticationErrors.PASSWORDS_DIFFER;
+			error = {
+                code: AuthenticationErrors.PASSWORDS_DIFFER,
+                translatedMessage: $t("error.password_differ"),
+            };
 			return;
 		}
 
@@ -39,8 +41,7 @@
 				await redirect(redirectTo);
 			}
 		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
+			error = e;
 		}
 	}
 </script>
@@ -70,7 +71,7 @@
     </small>
 
     <div class:visually-hidden={!error} class="text-danger mb-3">
-        Erreur : {errorMessage}
+        {error?.translatedMessage}
     </div>
 
     <Button type="submit" className="btn btn-primary" onClick={submit}>

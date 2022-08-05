@@ -16,8 +16,7 @@
 	let password = null;
 
 	// States
-	let error: AuthenticationErrors | null = null;
-	let errorMessage: string | null = null;
+	let error: ApiError | null = null;
 
 	async function submit() {
 		try {
@@ -30,8 +29,7 @@
 				$credentials = {email, password};
 				$loginMode = LoginMode.VERIFICATION;
 			} else {
-				error = e.code;
-				errorMessage = e.message;
+				error = e;
 			}
 		}
 	}
@@ -63,7 +61,7 @@
 	</button>
 
 	<div class:visually-hidden={!error} class="text-danger mb-3">
-		Erreur : {errorMessage}
+		{error?.translatedMessage}
 	</div>
 
 	<Button type="submit" className="btn btn-primary" onClick={submit}>

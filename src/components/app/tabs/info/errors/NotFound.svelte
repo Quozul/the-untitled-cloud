@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { patchServer, toggleRefreshServerInfo, toggleRefreshServerList } from "$components/app/helpers";
-	import { selectedServer } from "$store/store";
-	import Button from "$shared/Button.svelte";
-	import { ButtonVariant } from "$shared/constants";
+	import { patchServer, toggleRefreshServerInfo, toggleRefreshServerList } from "../../../helpers";
+	import { selectedServer } from "../../../../../store/store";
+	import Button from "../../../../shared/Button.svelte";
+	import { ButtonVariant } from "../../../../shared/constants";
 
 	async function recreate() {
 		await patchServer($selectedServer.id, "RECREATE");

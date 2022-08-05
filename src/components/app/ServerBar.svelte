@@ -2,10 +2,9 @@
 	import type { DetailedServer } from "./models";
 	import Icon from "$components/icons/Icon.svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
-	import { ServerStatus } from "./constants";
+	import { ServerStatus, ServerSubscriptionStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
-	import { ServerSubscriptionStatus } from "./constants";
-	import { refreshServerInfo, selectedServer } from "$store/store";
+	import { selectedServer } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, toggleRefreshServerInfo } from "./helpers";
 	import { ButtonVariant } from "$shared/constants";
@@ -18,6 +17,7 @@
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
 	let formattedStartDate: string = "Jamais";
+	let name: string = "Chargement";
 
 	// Constants
 	const formatter = DateTimeFormatter
@@ -25,15 +25,17 @@
 		.withLocale(Locale.FRANCE);
 
 	$: {
-		if (server && server.state) {
-			// Parse dates
-			started = ZonedDateTime.parse(server.state.startedAt);
-			stopped = ZonedDateTime.parse(server.state.finishedAt);
-			if (stopped.year() === 1) {
-				stopped = ZonedDateTime.now();
+		if (server) {
+			if (server.state) {
+				// Parse dates
+				started = ZonedDateTime.parse(server.state.startedAt);
+				stopped = ZonedDateTime.parse(server.state.finishedAt);
+				if (stopped.year() === 1) {
+					stopped = ZonedDateTime.now();
+				}
+				duration = Duration.between(started, stopped);
+				formattedStartDate = ZonedDateTime.parse(server.state.startedAt).format(formatter);
 			}
-			duration = Duration.between(started, stopped);
-			formattedStartDate = ZonedDateTime.parse(server.state.startedAt).format(formatter);
 		}
 	}
 
@@ -55,15 +57,27 @@
 			disabled="{server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
 			variant={ButtonVariant.LIGHT}
 	>
-		{#if server?.state?.running}
-			<Icon key="play-fill" width="28" height="28"/>
-		{:else if server?.subscriptionStatus === ServerSubscriptionStatus.PENDING}
-			<Icon key="hourglass" width="28" height="28"/>
-		{:else}
-			<Icon key="stop-fill" width="28" height="28"/>
-		{/if}
+		{#if server?.name}
+			{#if server.state?.running}
+				<Icon key="play-fill" width="28" height="28"/>
+			{:else}
+				<Icon key="stop-fill" width="28" height="28"/>
+			{/if}
 
-		<h3 class="m-0">{server?.name || "En attente"}</h3>
+			<h3 class="m-0">{server.name}</h3>
+		{:else if server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+			<Icon key="hourglass" width="28" height="28"/>
+
+			<h3 class="m-0">En attente</h3>
+		{:else if server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+			<Icon key="pause" width="28" height="28"/>
+
+			<h3 class="m-0">Suspendu</h3>
+		{:else if server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+			<Icon key="archive" width="28" height="28"/>
+
+			<h3 class="m-0">Terminé</h3>
+		{/if}
 	</Button>
 
 	<dl class="m-0 d-flex flex-column flex-xl-row gap-3 gap-lg-5">
@@ -74,6 +88,10 @@
 					{server.state.status}
 				{:else if server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
 					En attente
+				{:else if server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+					Suspendu
+				{:else if server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+					Terminé
 				{/if}
 			</dd>
 		</div>

@@ -18,6 +18,10 @@
 		iconName = "archive";
 		text = "Terminé";
 		className = "btn-outline-info";
+    } else if (server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED) {
+		iconName = "pause";
+		text = "Suspendu";
+		className = "btn-outline-info";
     } else if (!server.serverStatus) {
 		iconName = "warning";
 		text = "Serveur introuvable";

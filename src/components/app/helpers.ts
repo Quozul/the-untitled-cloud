@@ -17,31 +17,31 @@ export async function getAllServers(page: number = 0, ended: boolean = false): P
 		params.set("status", "ENDED");
 	}
 
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server?${params.toString()}`, getOptions("GET"))
-	return await handleResponse(response) as Paginate<Server>;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server?${params.toString()}`, getOptions("GET"))
+	return await handleResponse(request) as Paginate<Server>;
 }
 
 export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
-	return await handleResponse(response) as DetailedServer;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
+	return await handleResponse(request) as DetailedServer;
 }
 
 export async function patchServer(selectedServer: string, action: string): Promise<void> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
-	await handleResponse(response);
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
+	await handleResponse(request);
 }
 
 export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
-	return await handleResponse(response) as ServerParameters;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
+	return await handleResponse(request) as ServerParameters;
 }
 
 export async function getSubscription(selectedServer: string): Promise<SubscriptionInfo> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("GET"));
-	return await handleResponse(response) as SubscriptionInfo;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("GET"));
+	return await handleResponse(request) as SubscriptionInfo;
 }
 
 export async function cancelSubscription(selectedServer: string, now: boolean = true): Promise<SubscriptionInfo> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("DELETE", { now }));
-	return await handleResponse(response) as SubscriptionInfo;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("DELETE", { now }));
+	return await handleResponse(request) as SubscriptionInfo;
 }

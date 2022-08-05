@@ -10,11 +10,11 @@ import { getOptions, handleResponse } from "$shared/helpers";
  * @param acceptTos
  */
 export async function signUp(email: string, password: string, language: string, acceptTos: boolean): Promise<ApiError> {
-	const response = await fetch(
+	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
 		getOptions("POST", { email, password, language, acceptTos }),
 	)
-	return await handleResponse(response) as ApiError;
+	return await handleResponse(request) as ApiError;
 }
 
 /**
@@ -24,11 +24,11 @@ export async function signUp(email: string, password: string, language: string, 
  * @param code
  */
 export async function signIn(email: string, password: string, code: string | null = null): Promise<Token> {
-	const response = await fetch(
+	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
 		getOptions("POST", { email, password, code }),
 	);
-	return await handleResponse(response) as Token;
+	return await handleResponse(request) as Token;
 }
 
 /**
@@ -36,11 +36,11 @@ export async function signIn(email: string, password: string, code: string | nul
  * @param email
  */
 export async function sendVerificationCode(email: string): Promise<ApiError> {
-	const response = await fetch(
+	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/code/${email}`,
 		getOptions("POST"),
 	);
-	return await handleResponse(response) as ApiError;
+	return await handleResponse(request) as ApiError;
 }
 
 /**
@@ -50,9 +50,9 @@ export async function sendVerificationCode(email: string): Promise<ApiError> {
  * @param code
  */
 export async function changePassword(email: string, password: string, code: string): Promise<Token> {
-	const response = await fetch(
+	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/password`,
 		getOptions("POST", { email, password, code }),
 	);
-	return await handleResponse(response) as Token;
+	return await handleResponse(request) as Token;
 }

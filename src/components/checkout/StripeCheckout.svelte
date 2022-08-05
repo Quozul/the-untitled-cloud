@@ -4,7 +4,7 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, clientSecret } from "$store/store";
+	import { cart, checkoutStep, clientSecret, selectedServer } from "$store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
@@ -62,7 +62,10 @@
 			processing = false;
 		} else {
 			// Tell the API the payment has been made
-			await updatePaymentIntent(result.paymentIntent.id);
+			try {
+				$selectedServer = await updatePaymentIntent(result.paymentIntent.id)
+			} catch (e: ApiError) {
+			}
 
 			// Clear everything and redirect to app
 			window.removeEventListener("beforeunload", alertUnload);

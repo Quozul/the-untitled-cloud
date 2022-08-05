@@ -6,10 +6,13 @@ export enum AuthenticationErrors {
 	EXPIRED_CODE = "EXPIRED_CODE",
 	CANCEL_ERROR = "CANCEL_ERROR",
 
+	// Stripe errors
+	STRIPE_ERROR = "STRIPE_ERROR",
+
+	// Client side errors
+	FETCH_FAILED = "FETCH_FAILED",
+
 	// Form validation codes
 	PASSWORDS_DIFFER = "PASSWORDS_DIFFER",
 	EMPTY = "EMPTY",
-
-	// Stripe errors
-	STRIPE_ERROR = "STRIPE_ERROR",
 }

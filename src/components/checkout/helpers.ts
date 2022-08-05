@@ -1,4 +1,5 @@
 import type { ClientSecretResponse } from "./models";
+import type { Server } from "$components/app/models";
 import { CheckoutSteps } from "./constants";
 import { cart, checkoutStep, token } from "$store/store";
 import { goto } from "$app/navigation";
@@ -35,11 +36,11 @@ export async function setStep(newStep: CheckoutSteps): Promise<void> {
 }
 
 export async function getClientSecret(): Promise<ClientSecretResponse> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("POST"))
-	return await handleResponse(response) as ClientSecretResponse;
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("POST"))
+	return await handleResponse(request) as ClientSecretResponse;
 }
 
-export async function updatePaymentIntent(paymentIntentId: string): Promise<void> {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("PUT", { paymentIntentId }))
-	await handleResponse(response);
+export async function updatePaymentIntent(paymentIntentId: string): Promise<Server> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("PUT", { paymentIntentId }))
+	return await handleResponse(request) as Server;
 }

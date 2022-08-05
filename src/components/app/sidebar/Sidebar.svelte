@@ -9,7 +9,8 @@
 	import ServerItem from "./ServerItem.svelte";
     import { getAllServers } from "$components/app/helpers";
     import type { Unsubscriber } from "svelte/store";
-    import Link from "../../shared/Link.svelte";
+    import Link from "$shared/Link.svelte";
+    import type { ApiError } from "$shared/models";
 
 	// State
 	let servers: Paginate<Server>;
@@ -17,10 +18,12 @@
 	let currentPage: number = 0;
 	let fetching: boolean = true;
     let unsubscribe: Unsubscriber = null;
+    let error: ApiError = null;
 
     async function fetchServerList() {
         try {
             servers = null;
+            error = null;
             servers = await getAllServers(currentPage);
 
             const hasSelectedServer: boolean = !!$selectedServer;
@@ -32,6 +35,8 @@
             } else if (!hasServers) {
                 $selectedServer = null;
             }
+        } catch (e: ApiError) {
+            error = e;
         } finally {
             fetching = false;
         }
@@ -71,7 +76,7 @@
 
 	.sidebar {
         z-index: 1000;
-		width: 280px;
+		width: 300px;
         transition: .2s width;
 
 		&.collapsed {
@@ -111,6 +116,17 @@
             <hr/>
         {/if}
 
+        {#if error}
+            <div class="d-flex flex-column gap-3">
+                <SidebarItem className="btn-outline-danger" onClick={fetchServerList}>
+                    <Icon key="warning"/>
+                    Rafraichir la liste
+                </SidebarItem>
+            </div>
+
+            <hr/>
+        {/if}
+
         {#if servers && servers.data.length > 0}
             <div class="d-flex flex-column gap-3">
                 {#each servers.data as server}
@@ -127,8 +143,7 @@
             </SidebarItem>
 
             {#if !endedServers}
-                <SidebarItem className="btn-outline-secondary" onClick={loadEndedServers}>
-                    <Icon key="more"/>
+                <SidebarItem className="btn-outline-secondary" iconName="more" onClick={loadEndedServers}>
                     Charger les anciens serveurs
                 </SidebarItem>
             {/if}
@@ -147,6 +162,13 @@
                     <ServerItem server={server}/>
                 {/each}
             </div>
+        {:else if endedServers && endedServers.data.length === 0}
+            <hr/>
+
+            <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+                <Icon/>
+                Aucun anciens serveur
+            </h6>
         {/if}
     </div>
 

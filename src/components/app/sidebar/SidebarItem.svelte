@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { sidebarCollapsed } from "$store/store";
-	import Link from "../../shared/Link.svelte";
+	import Link from "$shared/Link.svelte";
+	import Button from "$shared/Button.svelte";
+	import { ButtonVariant } from "$shared/constants.js";
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;
@@ -9,13 +11,13 @@
 	export let iconName: string = null;
 </script>
 
-<style lang="scss">
+<style lang="scss" global>
 	.sidebar-item {
 		height: 38px;
 		overflow: hidden;
 		white-space: nowrap;
 
-		:global(.icon) {
+		.icon {
 			width: 16px;
 			height: 16px;
 			flex: none;
@@ -34,13 +36,9 @@
 		{/if}
 	</Link>
 {:else}
-	<button class="sidebar-item btn {className} d-flex align-items-center w-100" on:click|preventDefault={onClick}>
-		{#if iconName}
-			<Icon key={iconName} className="me-2 icon"/>
-		{/if}
-
+	<Button icon={iconName} className="sidebar-item {className} w-100" {onClick} variant={ButtonVariant.NONE}>
 		{#if !$sidebarCollapsed}
 			<slot/>
 		{/if}
-	</button>
+	</Button>
 {/if}

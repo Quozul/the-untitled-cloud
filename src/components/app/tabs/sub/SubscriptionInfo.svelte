@@ -109,11 +109,9 @@
 		</div>
 	</dl>
 
-	<hr/>
-
-	<h5>Actions</h5>
-
 	{#if !subscription || !subscription.canceledAt}
+		<hr/>
+		<h5>Actions</h5>
 		<div class="d-flex flex-wrap gap-3">
 			<Button loading={!subscription} variant={ButtonVariant.DANGER} onClick={cancel}>
 				Annuler son abonnement
