@@ -8,7 +8,7 @@ services:
     environment:
       STRIPE_API_KEY: ${STRIPE_SK}
       STRIPE_API_ENDPOINT_SECRET: ${STRIPE_WHOOK}
-      DOCKER_HOST: unix://${DOCKER_HOST}
+      DOCKER_HOST: "unix:///var/run/docker.sock"
       DATABASE_URL: "jdbc:postgresql://database:5432/${DATABASE_NAME}"
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASS: ${DATABASE_PASS}
@@ -22,8 +22,9 @@ services:
       SALT: ${SALT}
       PEPPER: ${PEPPER}
       CONTAINER_DIRECTORY: ${CONTAINER_DIRECTORY}
+      DOCKER_TLS_VERIFY: 0
     volumes:
-      - "${DOCKER_SOCK}:${DOCKER_HOST}"
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
     networks:
       mc_host_network:
     depends_on:
@@ -51,11 +52,12 @@ services:
       PGPASSWORD: ${DATABASE_PASS}
       PGDATABASE: ${DATABASE_NAME}
       PGPORT: 5432
-      CONTAINER_DIRECTORY: ${CONTAINER_DIRECTORY}
       SALT: ${SALT}
       PEPPER: ${PEPPER}
+    volumes:
+      - "${CONTAINER_DIRECTORY}:/var/servers"
     ports:
-      - "2121:2121"
+      - "2121:21"
     networks:
       mc_host_network:
     depends_on:
