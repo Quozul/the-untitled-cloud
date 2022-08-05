@@ -75,7 +75,7 @@
         {$t("to_login")}
     </Button>
 
-    {#if error.code === AuthenticationErrors.EXPIRED_CODE || error.code === AuthenticationErrors.INVALID_CODE}
+    {#if error && (error.code === AuthenticationErrors.EXPIRED_CODE || error.code === AuthenticationErrors.INVALID_CODE)}
         <Button className="btn btn-secondary" onClick={resendCode}>
             {$t("resend_code")}
         </Button>
