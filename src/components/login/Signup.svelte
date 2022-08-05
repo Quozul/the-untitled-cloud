@@ -7,7 +7,7 @@
 	import { credentials, loginMode } from "$store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import { signUp } from "./helpers";
-    import { href } from "$shared/helpers";
+    import Link from "$shared/Link.svelte";
 
 	// Props
 	export let redirectTo: string;
@@ -65,7 +65,7 @@
     <small class="form-check mb-3">
         <input id="tos" class="form-check-input" type="checkbox" value="" bind:checked={tos}>
         <label for="tos" class="form-check-label">
-            {$t("i_acknowledge_and_accept")} <a href={href("tos")}>{$t("terms_of_service")}</a>.
+            {$t("i_acknowledge_and_accept")} <Link href="/tos">{$t("terms_of_service")}</Link>.
         </label>
     </small>
 

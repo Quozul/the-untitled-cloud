@@ -10,7 +10,7 @@
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
 	import type { ApiError } from "$shared/models";
 	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
-	import { href } from "$shared/helpers";
+	import Link from "$shared/Link.svelte";
 
 	let stripe: Stripe | null = null;
 	let processing = false;
@@ -84,7 +84,7 @@
 			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv}>
 			<label class="form-check-label" for="cgv">
 				{$t("i_acknowledge_and_accept")}
-				<a href={href("cgv")}>{$t("terms_of_sale")}</a>.
+				<Link href="/cgv/">{$t("terms_of_sale")}</Link>.
 			</label>
 		</small>
 
@@ -93,7 +93,7 @@
 			<input class="form-check-input" type="checkbox" value="" id="eula" bind:checked={eula}>
 			<label class="form-check-label" for="eula">
 				J'ai pris connaissance et j'accepte le
-				<a href="https://www.minecraft.net/fr-fr/eula" target="_blank" rel="noreferrer noopener">contrat de licence utilisateur final</a>
+				<Link href="https://www.minecraft.net/fr-fr/eula">contrat de licence utilisateur final</Link>
 				de Minecraft.
 			</label>
 		</small>

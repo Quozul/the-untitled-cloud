@@ -1,7 +1,7 @@
 <script>
 	import { t } from "svelte-intl-precompile";
 	import { token } from "$store/store";
-	import { href } from "$shared/helpers";
+	import Link from "$shared/Link.svelte";
 </script>
 
 <h1 class="display-5 fw-bold lh-1 mb-3">
@@ -12,15 +12,15 @@
 </p>
 
 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-	<a href={href("rent/products")} class="btn btn-primary btn-lg px-4 me-md-2">{$t("rent_a_server")}</a>
+	<Link href="/rent/products/" className="btn btn-primary btn-lg px-4 me-md-2">{$t("rent_a_server")}</Link>
 
 	{#if $token}
-		<a href={href("app")} class="btn btn-outline-secondary btn-lg px-4">
+		<a href="/app/" class="btn btn-outline-secondary btn-lg px-4">
 			{$t("my_servers")}
 		</a>
 	{:else}
-		<a href={href("login/?redirect=/app")} class="btn btn-outline-secondary btn-lg px-4">
+		<Link href="/login/?redirect=/app" className="btn btn-outline-secondary btn-lg px-4">
 			{$t("to_login")}
-		</a>
+		</Link>
 	{/if}
 </div>

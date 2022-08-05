@@ -3,7 +3,8 @@ import { CheckoutSteps } from "./constants";
 import { cart, checkoutStep, token } from "$store/store";
 import { goto } from "$app/navigation";
 import { get } from "svelte/store";
-import { getOptions, handleResponse } from "$shared/helpers";
+import { getOptions, handleResponse, href } from "$shared/helpers";
+import { locale } from "svelte-intl-precompile";
 
 export async function setStep(newStep: CheckoutSteps): Promise<void> {
 	const tok = get(token);
@@ -30,7 +31,7 @@ export async function setStep(newStep: CheckoutSteps): Promise<void> {
 	}
 
 	checkoutStep.update(() => newStep);
-	await goto(`/rent/${newStep}/`);
+	await goto(href(`/rent/${newStep}/`, get(locale)));
 }
 
 export async function getClientSecret(): Promise<ClientSecretResponse> {

@@ -10,7 +10,6 @@ import { ServerTab } from "$components/app/constants";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
-export const lang: Writable<string> = createStoreEntry("lang", null, browser && localStorage);
 
 // Session store
 export const selectedServer: Writable<Server> = createStoreEntry("selectedServer", null, browser && sessionStorage);

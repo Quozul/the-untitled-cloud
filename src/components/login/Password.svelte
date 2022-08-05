@@ -67,24 +67,24 @@
     </button>
 
     <div class="mb-3">
-        <label class="form-label">{$t("email")}</label>
-        <input type="email" name="email" class="form-control" placeholder={$t("email")} bind:value={email}>
+        <label for="email" class="form-label">{$t("email")}</label>
+        <input id="email" type="email" name="email" class="form-control" placeholder={$t("email")} bind:value={email}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">{$t("password")}</label>
-        <input type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
+        <label for="password" class="form-label">{$t("password")}</label>
+        <input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">{$t("confirm_password")}</label>
-        <input type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
+        <label for="confirm" class="form-label">{$t("confirm_password")}</label>
+        <input id="confirm" type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">{$t("verification_code")}</label>
+        <label for="code" class="form-label">{$t("verification_code")}</label>
         <div class="input-group mb-3">
-            <input type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
+            <input id="code" type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
             <Button variant={ButtonVariant.SECONDARY} onClick={getCode}>{$t("get_code")}</Button>
         </div>
     </div>

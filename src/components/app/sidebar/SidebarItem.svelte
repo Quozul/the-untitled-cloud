@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { sidebarCollapsed } from "$store/store";
+	import Link from "../../shared/Link.svelte";
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;
@@ -23,7 +24,7 @@
 </style>
 
 {#if href}
-	<a class="sidebar-item btn {className} d-flex align-items-center w-100" {href}>
+	<Link className="sidebar-item btn {className} d-flex align-items-center w-100" {href}>
 		{#if iconName}
 			<Icon key={iconName} className="me-2 icon"/>
 		{/if}
@@ -31,7 +32,7 @@
 		{#if !$sidebarCollapsed}
 			<slot/>
 		{/if}
-	</a>
+	</Link>
 {:else}
 	<button class="sidebar-item btn {className} d-flex align-items-center w-100" on:click|preventDefault={onClick}>
 		{#if iconName}

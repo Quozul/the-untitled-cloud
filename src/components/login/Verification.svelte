@@ -68,8 +68,8 @@
     </p>
 
     <div class="mb-3">
-        <label class="form-label">{$t("verification_code")}</label>
-        <input type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
+        <label for="code" class="form-label">{$t("verification_code")}</label>
+        <input id="code" type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
     </div>
 
     <div class:visually-hidden={!error} class="text-danger mb-3">

@@ -1,27 +1,26 @@
 <script context="module" lang="ts">
 	import {
 		addMessages,
-		getLocaleFromNavigator,
 		init,
 		waitLocale,
 	} from "svelte-intl-precompile";
 	import en from "$locales/en.json";
 	import fr from "$locales/fr.json";
-	import { lang } from "$store/store";
+	import { defaultLocale } from "$shared/constants";
+
+	export const prerender = true;
 
 	/**
-	 * @type {import('@sveltejs/kit').Load}
+	 * @type {import("@sveltejs/kit").Load}
 	 */
-	export async function load({params}: any) {
+	export async function load({ params }: any) {
 		addMessages("en", en);
 		addMessages("fr", fr);
 
-		const paramLang = params.lang.match(/[a-z-A-Z]+/)?.[0];
-		lang.update(() => paramLang);
-		const initialLocale = paramLang || getLocaleFromNavigator();
+		const initialLocale = params.lang.match(/^\/?([a-z]*)\/?/)?.[1];
 
 		init({
-			fallbackLocale: "en",
+			fallbackLocale: defaultLocale,
 			initialLocale,
 		});
 

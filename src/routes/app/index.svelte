@@ -1,7 +1,3 @@
-<script context="module">
-	export const prerender = false;
-</script>
-
 <script lang="ts">
 	import ServerInfo from "../../components/app/tabs/info/ServerInfo.svelte";
 	import Sidebar from "../../components/app/sidebar/Sidebar.svelte";
