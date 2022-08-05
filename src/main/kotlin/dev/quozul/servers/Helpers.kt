@@ -8,8 +8,8 @@ import com.github.dockerjava.api.model.*
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
-import com.github.dockerjava.zerodep.ZerodepDockerHttpClient
 import com.sun.jna.LastErrorException
 import dev.quozul.authentication.User
 import dev.quozul.containerDirectory
@@ -24,7 +24,7 @@ import java.util.*
 fun getDockerClient(): DockerClient {
 	val config: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build()
 
-	val httpClient: DockerHttpClient = ZerodepDockerHttpClient.Builder()
+	val httpClient: DockerHttpClient = ApacheDockerHttpClient.Builder()
 		.dockerHost(config.dockerHost)
 		.sslConfig(config.sslConfig)
 		.maxConnections(100)
@@ -33,12 +33,6 @@ fun getDockerClient(): DockerClient {
 		.build()
 
 	val client = DockerClientImpl.getInstance(config, httpClient)
-
-	try {
-		println(client.listContainersCmd().exec().size)
-	} catch (e: LastErrorException) {
-		println("${e.errorCode} ${e.message}")
-	}
 
 	return client
 }
@@ -76,6 +70,7 @@ fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStat
 
 			Parameter.new {
 				this.server = server
+				this.eula = true
 			}
 
 			server

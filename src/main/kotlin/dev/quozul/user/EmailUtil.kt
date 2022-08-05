@@ -21,7 +21,6 @@ fun sendEmail(toEmail: String, subject: String, body: String, session: Session =
 	try {
 		val fromEmail = session.getProperty("mail.from.mail")
 		val fromName = session.getProperty("mail.from.name")
-		println("sending to $toEmail $fromEmail $fromName")
 
 		val msg = MimeMessage(session)
 		//set message headers
@@ -39,7 +38,6 @@ fun sendEmail(toEmail: String, subject: String, body: String, session: Session =
 		msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false))
 
 		Transport.send(msg)
-		println("sent")
 	} catch (e: Exception) {
 		e.printStackTrace()
 	}

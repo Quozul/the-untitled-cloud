@@ -8,6 +8,7 @@ import com.stripe.model.Invoice
 import com.stripe.model.PaymentMethod
 import com.stripe.model.Subscription
 import com.stripe.param.SubscriptionCancelParams
+import com.stripe.param.SubscriptionRetrieveParams
 import com.stripe.param.SubscriptionUpdateParams
 import dev.quozul.authentication.models.AuthenticationError
 import dev.quozul.authentication.models.AuthenticationErrors
@@ -54,17 +55,7 @@ fun Route.configureServerRoutes() {
 				}
 			}
 
-			servers.map {
-				val container = try {
-					dockerClient.inspectContainerCmd(it.containerId!!).exec()
-				} catch (_: NotFoundException) {
-					null
-				} catch (_: NullPointerException) {
-					null
-				}
-
-				ApiServer(it.id.toString(), it.status, container?.name, container?.state?.status)
-			}
+			servers.map { ApiServer.fromServer(it) }
 		}
 
 		val count = transaction {
@@ -250,9 +241,10 @@ fun Route.configureServerRoutes() {
 			}
 
 			try {
-				val subscription = Subscription.retrieve(server.subscriptionId)
-				val paymentMethod = PaymentMethod.retrieve(subscription.defaultPaymentMethod)
-				val invoice = Invoice.retrieve(subscription.latestInvoice)
+				val params = SubscriptionRetrieveParams.builder().addAllExpand(listOf("default_payment_method", "latest_invoice")).build()
+				val subscription = Subscription.retrieve(server.subscriptionId, params, null)
+				val paymentMethod = subscription.defaultPaymentMethodObject
+				val invoice = subscription.latestInvoiceObject
 
 				val latestInvoice = ApiInvoice(
 					Instant.fromEpochSeconds(invoice.periodStart),
@@ -284,7 +276,7 @@ fun Route.configureServerRoutes() {
 			}
 		}
 
-		delete("{subscriptionId}") {
+		delete("/subscription") {
 			val server = try {
 				val serverId = UUID.fromString(call.parameters["serverId"]!!)
 				transaction {
@@ -322,6 +314,10 @@ fun Route.configureServerRoutes() {
 						.build()
 
 					subscription.update(params)
+				}
+
+				transaction {
+					server.status = ServerStatus.SUSPENDED
 				}
 
 				call.response.status(HttpStatusCode.NoContent)

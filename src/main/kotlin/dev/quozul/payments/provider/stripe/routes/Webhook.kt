@@ -1,8 +1,11 @@
 package dev.quozul.payments.provider.stripe.routes
 
 import com.stripe.exception.SignatureVerificationException
+import com.stripe.exception.StripeException
 import com.stripe.model.*
 import com.stripe.net.Webhook
+import com.stripe.param.InvoiceRetrieveParams
+import com.stripe.param.InvoiceVoidInvoiceParams
 import dev.quozul.payments.provider.stripe.getUserFromStripeId
 import dev.quozul.servers.createContainer
 import dev.quozul.servers.deleteContainer
@@ -10,6 +13,7 @@ import dev.quozul.servers.suspendContainer
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.configureStripeWebhook() {
@@ -47,7 +51,7 @@ fun Route.configureStripeWebhook() {
 					createContainer(it, stripeObject.subscription)
 					// TODO: Send notification email
 					call.response.status(HttpStatusCode.OK)
-				} ?: call.response.status(HttpStatusCode.NotFound)
+				} ?: call.response.status(HttpStatusCode.BadRequest)
 			}
 
 			"invoice.payment_failed" -> {
@@ -57,7 +61,7 @@ fun Route.configureStripeWebhook() {
 					suspendContainer(it, stripeObject.subscription)
 					// TODO: Send notification email
 					call.response.status(HttpStatusCode.OK)
-				} ?: call.response.status(HttpStatusCode.NotFound)
+				} ?: call.response.status(HttpStatusCode.BadRequest)
 			}
 
 			"customer.subscription.deleted" -> {
@@ -65,9 +69,26 @@ fun Route.configureStripeWebhook() {
 
 				getUserFromStripeId(stripeObject.customer)?.let {
 					deleteContainer(it, stripeObject.id)
+
+					// Try to void invoice if it hasn't been paid
+					try {
+						val invoice = Invoice.retrieve(stripeObject.latestInvoice)
+
+						if (!invoice.paid) {
+							invoice.voidInvoice()
+						}
+
+						call.response.status(HttpStatusCode.OK)
+					} catch (e: StripeException) {
+						call.respondText("An error has occurred while voiding invoice\n${e.message}")
+						call.response.status(HttpStatusCode.InternalServerError)
+					}
+
 					// TODO: Send notification email
-					call.response.status(HttpStatusCode.OK)
-				} ?: call.response.status(HttpStatusCode.NotFound)
+				} ?: run {
+					call.respondText("Cannot find user")
+					call.response.status(HttpStatusCode.BadRequest)
+				}
 			}
 
 			else -> {
