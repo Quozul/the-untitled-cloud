@@ -12,6 +12,7 @@
 	import { getServerInfo } from "$components/app/helpers";
 	import Tabs from "$components/app/Tabs.svelte";
 	import InfoTab from "$components/app/InfoTab.svelte";
+	import Console from "$components/app/tabs/console/Console.svelte";
 
 	// State
 	let server: DetailedServer = null;
@@ -78,6 +79,8 @@
 
 			{#if $selectedTab === ServerTab.INFO}
 				<InfoTab {server}/>
+			{:else if $selectedTab === ServerTab.CONSOLE}
+				<Console/>
 			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
 				<SubscriptionInfo/>
 			{/if}
