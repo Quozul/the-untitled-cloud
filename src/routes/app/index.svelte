@@ -80,7 +80,7 @@
 			{#if $selectedTab === ServerTab.INFO}
 				<InfoTab {server}/>
 			{:else if $selectedTab === ServerTab.CONSOLE}
-				<Console/>
+				<Console {server}/>
 			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
 				<SubscriptionInfo/>
 			{/if}
