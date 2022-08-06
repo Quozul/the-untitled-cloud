@@ -1,6 +1,7 @@
 package dev.quozul.servers
 
 import dev.quozul.servers.models.*
+import dev.quozul.servers.routes.configureConsoleWebsocket
 import dev.quozul.servers.routes.configureParametersRoutes
 import dev.quozul.servers.routes.configureServerRoutes
 import dev.quozul.servers.routes.configureServerSubscriptionRoutes
@@ -62,6 +63,8 @@ fun Route.configureServersRoutes() {
 
 	route("{serverId}") {
 		configureServerRoutes()
+
+		configureConsoleWebsocket()
 
 		configureParametersRoutes()
 
