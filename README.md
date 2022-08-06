@@ -30,6 +30,7 @@ DATABASE_VOLUME=/home/mchost/database/ # Where the database's data will be persi
 # App configuration
 PORT=80 # The port to listen
 API_ENDPOINT=http://localhost:${PORT}/api/ # Trailing slash is mandatory
+WS_ENDPOINT=ws://localhost:${PORT}/api/ # Endpoint of the websocket server
 
 # SMTP configuration
 SMTP_USER=username
