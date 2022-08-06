@@ -15,7 +15,7 @@
 	function connect() {
 		socket?.close();
 
-		socket = new WebSocket(`ws://localhost:8080/server/${$selectedServer.id}/console`);
+		socket = new WebSocket(`${import.meta.env.VITE_API_WS_URL}server/${$selectedServer.id}/console`);
 
 		socket.onopen = function() {
 			socket.send(`Bearer ${$token}`); // Send authentication token
