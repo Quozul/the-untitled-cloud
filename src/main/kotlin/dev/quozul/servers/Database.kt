@@ -21,7 +21,6 @@ enum class ServerStatus {
 	PENDING, // Awaiting payment
 	ACTIVE, // Payment has been made, the service can be used
 	SUSPENDED, // Payment failed, but subscription isn't cancelled
-//	DELETING, // Waiting for Stripe deletion confirmation
 	ENDED, // Customer has stopped the subscription
 }
 

@@ -3,7 +3,7 @@ package dev.quozul.plugins
 import dev.quozul.authentication.configureAuthenticationRoutes
 import dev.quozul.payments.provider.stripe.routes.configureStripeWebhook
 import dev.quozul.payments.provider.stripe.routes.configureSubscriptionRoutes
-import dev.quozul.servers.configureServerRoutes
+import dev.quozul.servers.configureServersRoutes
 import dev.quozul.user.configureUserRoutes
 import dev.quozul.versions.configureVersionRoutes
 import io.ktor.server.routing.*
@@ -38,7 +38,7 @@ fun Application.configureRouting() {
 
 		route("/server") {
 			authenticate {
-				configureServerRoutes()
+				configureServersRoutes()
 			}
 		}
 

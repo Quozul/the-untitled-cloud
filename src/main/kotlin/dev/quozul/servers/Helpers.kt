@@ -10,7 +10,6 @@ import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
-import com.sun.jna.LastErrorException
 import dev.quozul.authentication.User
 import dev.quozul.containerDirectory
 import dev.quozul.dockerClient
