@@ -55,9 +55,9 @@ services:
       SALT: ${SALT}
       PEPPER: ${PEPPER}
     volumes:
-      - "${CONTAINER_DIRECTORY}:/var/servers"
+      - "${CONTAINER_DIRECTORY}:/servers"
     ports:
-      - "2121:21"
+      - "21:21"
     networks:
       mc_host_network:
     depends_on:
