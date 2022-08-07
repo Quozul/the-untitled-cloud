@@ -90,20 +90,34 @@ fun Route.configureServerSubscriptionRoutes() {
 			}
 
 			val subscription = try {
-				Subscription.retrieve(server.subscriptionId)
+				val params = SubscriptionRetrieveParams.builder()
+					.addExpand("latest_invoice")
+					.build()
+
+				Subscription.retrieve(server.subscriptionId, params, null)
 			} catch (_: StripeException) {
 				call.response.status(HttpStatusCode.NotFound)
+				return@delete
+			}
+
+			if (subscription.latestInvoiceObject.paid) {
+				call.response.status(HttpStatusCode.BadRequest)
+				call.respond(AuthenticationErrors.NOT_PAID.toHashMap(true))
 				return@delete
 			}
 
 			try {
 				if (mode.now) {
 					val params = SubscriptionCancelParams.builder()
-						.setProrate(false) // TODO: Verify its in the 14 days trial
+						.setProrate(false) // TODO: Verify the 14 days trial period, if that's the case, do not delete the invoice
 						.build()
 
+					// Delete invoice if it hasn't been paid
+					if (!subscription.latestInvoiceObject.paid) {
+						subscription.latestInvoiceObject.voidInvoice()
+					}
+
 					subscription.cancel(params)
-					// TODO: Void invoice
 				} else {
 					val params = SubscriptionUpdateParams.builder()
 						.setCancelAtPeriodEnd(true)
@@ -117,7 +131,8 @@ fun Route.configureServerSubscriptionRoutes() {
 				}
 
 				call.response.status(HttpStatusCode.NoContent)
-			} catch (_: StripeException) {
+			} catch (e: StripeException) {
+				e.printStackTrace()
 				call.response.status(HttpStatusCode.InternalServerError)
 				call.respond(AuthenticationErrors.CANCEL_ERROR.toHashMap(true))
 				return@delete

@@ -42,6 +42,7 @@ fun Route.configureStripeWebhook() {
 			return@post
 		}
 
+		// TODO: Send notification email
 		when (event.type) {
 			"invoice.paid" -> {
 				stripeObject as Invoice
@@ -49,7 +50,6 @@ fun Route.configureStripeWebhook() {
 				getUserFromStripeId(stripeObject.customer)?.let {
 					// TODO: Support other products and options
 					createContainer(it, stripeObject.subscription)
-					// TODO: Send notification email
 					call.response.status(HttpStatusCode.OK)
 				} ?: call.response.status(HttpStatusCode.BadRequest)
 			}
@@ -59,7 +59,6 @@ fun Route.configureStripeWebhook() {
 
 				getUserFromStripeId(stripeObject.customer)?.let {
 					suspendContainer(it, stripeObject.subscription)
-					// TODO: Send notification email
 					call.response.status(HttpStatusCode.OK)
 				} ?: call.response.status(HttpStatusCode.BadRequest)
 			}
@@ -69,22 +68,7 @@ fun Route.configureStripeWebhook() {
 
 				getUserFromStripeId(stripeObject.customer)?.let {
 					deleteContainer(it, stripeObject.id)
-
-					// Try to void invoice if it hasn't been paid
-					try {
-						val invoice = Invoice.retrieve(stripeObject.latestInvoice)
-
-						if (!invoice.paid) {
-							invoice.voidInvoice()
-						}
-
-						call.response.status(HttpStatusCode.OK)
-					} catch (e: StripeException) {
-						call.respondText("An error has occurred while voiding invoice\n${e.message}")
-						call.response.status(HttpStatusCode.InternalServerError)
-					}
-
-					// TODO: Send notification email
+					call.response.status(HttpStatusCode.OK)
 				} ?: run {
 					call.respondText("Cannot find user")
 					call.response.status(HttpStatusCode.BadRequest)

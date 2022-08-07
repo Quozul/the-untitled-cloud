@@ -7,6 +7,7 @@ import com.stripe.model.PaymentIntent
 import com.stripe.model.Subscription
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.User
+import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.dockerClient
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
@@ -60,7 +61,13 @@ fun Route.configureSubscriptionRoutes() {
 				.addAllExpand(listOf("latest_invoice.payment_intent"))
 				.build()
 
-			val subscription = Subscription.create(subCreateParams)
+			val subscription = try {
+				Subscription.create(subCreateParams)
+			} catch (_: StripeException) {
+				call.response.status(HttpStatusCode.InternalServerError)
+				call.respond(AuthenticationErrors.STRIPE_ERROR.toHashMap(true))
+				return@post
+			}
 
 			val response = SubscriptionCreateResponse(
 				subscription.latestInvoiceObject.paymentIntentObject.clientSecret,

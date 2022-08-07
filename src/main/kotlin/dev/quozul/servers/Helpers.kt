@@ -127,6 +127,7 @@ suspend fun createContainer(
 	image: String = "itzg/minecraft-server",
 	tag: String = "latest",
 	start: Boolean = false,
+	name: String? = null,
 ) = coroutineScope {
 	val parameters = transaction {
 		Parameter.find {
@@ -152,6 +153,7 @@ suspend fun createContainer(
 		val container = dockerClient.createContainerCmd("$image:$tag")
 			.withVolumes(volume)
 			.withEnv(parameters)
+			.withName(name)
 			.withHostConfig(
 				HostConfig
 					.newHostConfig()
@@ -170,6 +172,7 @@ suspend fun createContainer(
 		if (start) {
 			try {
 				dockerClient.startContainerCmd(container.id).exec()
+			} catch (_: NotModifiedException) {
 			} catch (_: NotFoundException) {
 			}
 		}
@@ -186,12 +189,15 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 	}
 
 	// Try stopping then removing the previous container
-	val wasRunning: Boolean = server.containerId?.let {
-		val wasRunning = try {
-			dockerClient.inspectContainerCmd(it).exec().state.running
+	val (wasRunning, previousName) = server.containerId?.let {
+		val previousContainer = try {
+			dockerClient.inspectContainerCmd(it).exec()
 		} catch (_: NotFoundException) {
-			false
+			null
 		}
+
+		val wasRunning = previousContainer?.state?.running ?: false
+		val previousName = previousContainer?.name
 
 		try {
 			dockerClient.stopContainerCmd(it).exec()
@@ -204,10 +210,10 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 		} catch (_: NotFoundException) {
 		}
 
-		wasRunning
-	} ?: false
+		Pair(wasRunning, previousName)
+	} ?: Pair(false, null)
 
-	createContainer(server, start = wasRunning)
+	createContainer(server, start = wasRunning, name = previousName)
 
 	return true
 }

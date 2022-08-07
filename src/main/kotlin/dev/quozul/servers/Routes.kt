@@ -56,6 +56,7 @@ fun Route.configureServersRoutes() {
 			lastPage,
 			count / size,
 			count,
+			page,
 		)
 
 		call.respond(response)

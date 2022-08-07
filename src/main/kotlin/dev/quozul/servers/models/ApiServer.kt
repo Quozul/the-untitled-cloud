@@ -35,6 +35,7 @@ data class Paginate<T>(
 	val lastPage: Boolean,
 	val totalPages: Long,
 	val totalElements: Long,
+	val page: Int,
 )
 
 @Serializable

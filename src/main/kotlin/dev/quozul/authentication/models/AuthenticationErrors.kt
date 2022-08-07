@@ -16,6 +16,8 @@ enum class AuthenticationErrors(private val message: String) {
 	EXPIRED_CODE("Code expired"),
 	CANCEL_ERROR("Cancel error"),
 	NO_CONTAINER("Container not found"),
+	STRIPE_ERROR("Stripe error"),
+	NOT_PAID("Not paid invoices cannot be cancelled"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {
