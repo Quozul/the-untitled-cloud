@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { toggleRefreshServerInfo, toggleRefreshServerList } from "../../../helpers";
+	import { refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
 
-	function refresh() {
-		toggleRefreshServerList();
-		toggleRefreshServerInfo();
+	async function refresh() {
+		await refreshAllServers();
+		await refreshSelectedServer();
 	}
 </script>
 

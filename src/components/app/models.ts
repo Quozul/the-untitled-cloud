@@ -10,6 +10,14 @@ export type Paginate<T extends Id> = {
 	totalElements: number,
 }
 
+export const EmptyPaginate: Paginate<any> = {
+	data: [],
+	firstPage: true,
+	lastPage: true,
+	totalPage: 0,
+	totalElements: 0,
+}
+
 export type Server = Id & {
 	name: string,
 	subscriptionStatus: ServerSubscriptionStatus,

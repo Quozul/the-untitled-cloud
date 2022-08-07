@@ -2,12 +2,7 @@
 	import type { Server, SubscriptionInfo } from "$components/app/models";
 	import { ZonedDateTime } from "@js-joda/core";
 	import Button from "$shared/Button.svelte";
-	import {
-		cancelSubscription,
-		getSubscription,
-		toggleRefreshServerInfo,
-		toggleRefreshServerList
-	} from "$components/app/helpers";
+	import { cancelSubscription, getSubscription, refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
 	import { selectedServer } from "$store/store";
 	import type { ApiError } from "$shared/models";
 	import { ButtonVariant } from "$shared/constants";
@@ -42,8 +37,8 @@
 	async function cancel() {
 		try {
 			await cancelSubscription($selectedServer.id)
-			toggleRefreshServerInfo()
-			toggleRefreshServerList()
+			await refreshSelectedServer()
+			await refreshAllServers()
 		} catch (e: ApiError) {
 			error = e;
 		}

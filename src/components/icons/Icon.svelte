@@ -6,6 +6,6 @@
     export let onClick: VoidFunction | null = null;
 </script>
 
-<svg class="{className}" {width} {height} on:click|preventDefault={onClick}>
+<svg class="icon {className}" {width} {height} on:click|preventDefault={onClick}>
     <use xlink:href="#{key}"></use>
 </svg>

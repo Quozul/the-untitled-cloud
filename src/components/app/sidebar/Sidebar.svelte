@@ -1,57 +1,23 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-    import { refreshServerList, selectedServer, sidebarCollapsed, token } from "$store/store";
+    import { onMount } from "svelte";
+    import { sidebarCollapsed, token, fetchingServers, fetchServersError, servers } from "$store/store";
 	import type { Paginate, Server } from "$components/app/models";
 	import Icon from "$components/icons/Icon.svelte";
-	import { containId } from "$shared/helpers";
 	import { goto } from "$app/navigation";
 	import SidebarItem from "./SidebarItem.svelte";
 	import ServerItem from "./ServerItem.svelte";
-    import { getAllServers } from "$components/app/helpers";
-    import type { Unsubscriber } from "svelte/store";
+    import { getAllServers, refreshAllServers } from "$components/app/helpers";
     import Link from "$shared/Link.svelte";
-    import type { ApiError } from "$shared/models";
 
 	// State
-	let servers: Paginate<Server>;
 	let endedServers: Paginate<Server>;
-	let currentPage: number = 0;
-	let fetching: boolean = true;
-    let unsubscribe: Unsubscriber = null;
-    let error: ApiError = null;
 
-    async function fetchServerList() {
-        try {
-            servers = null;
-            error = null;
-            servers = await getAllServers(currentPage);
-
-            const hasSelectedServer: boolean = !!$selectedServer;
-            const hasServers: boolean = servers.data.length > 0;
-            const contains: boolean = hasSelectedServer && hasServers && containId(servers, $selectedServer?.id);
-
-            if (!contains) {
-                $selectedServer = servers.data[0];
-            } else if (!hasServers) {
-                $selectedServer = null;
-            }
-        } catch (e: ApiError) {
-            error = e;
-        } finally {
-            fetching = false;
-        }
-    }
-
-    onMount(() => {
-        unsubscribe = refreshServerList.subscribe(() => fetchServerList());
-    });
-
-    onDestroy(async () => {
-        unsubscribe?.();
+    onMount(async () => {
+        await refreshAllServers();
     });
 
     async function loadEndedServers() {
-        endedServers = await getAllServers(currentPage, true);
+        endedServers = await getAllServers(0, true);
     }
 
 	async function logout() {
@@ -97,18 +63,28 @@
         {/if}
     </Link>
 
-    <SidebarItem
-        iconName={$sidebarCollapsed ? "chevron-double-right" : "chevron-double-left"}
-        className="btn-outline-secondary mt-3 collapse-button"
-        onClick={toggleCollapsed}
-    >
-        Réduire
-    </SidebarItem>
+    <div class="d-flex gap-3">
+        <SidebarItem
+            iconName={$sidebarCollapsed ? "chevron-double-right" : "chevron-double-left"}
+            className="btn-outline-secondary mt-3 collapse-button w-100"
+            onClick={toggleCollapsed}
+        >
+            Réduire
+        </SidebarItem>
+
+        {#if !$sidebarCollapsed}
+            <SidebarItem
+                iconName="arrow-clockwise"
+                className="btn-outline-secondary mt-3 collapse-button"
+                onClick={refreshAllServers}
+            />
+        {/if}
+    </div>
 
     <hr>
 
     <div class="mb-auto">
-        {#if fetching}
+        {#if $fetchingServers}
             <p class="placeholder-glow">
             <button class="btn btn-secondary w-100 placeholder" disabled></button>
             </p>
@@ -116,9 +92,9 @@
             <hr/>
         {/if}
 
-        {#if error}
+        {#if $fetchServersError}
             <div class="d-flex flex-column gap-3">
-                <SidebarItem className="btn-outline-danger" onClick={fetchServerList}>
+                <SidebarItem className="btn-outline-danger" onClick={refreshAllServers}>
                     <Icon key="warning"/>
                     Rafraichir la liste
                 </SidebarItem>
@@ -127,9 +103,9 @@
             <hr/>
         {/if}
 
-        {#if servers && servers.data.length > 0}
+        {#if $servers.data.length > 0}
             <div class="d-flex flex-column gap-3">
-                {#each servers.data as server}
+                {#each $servers.data as server}
                     <ServerItem server={server}/>
                 {/each}
             </div>
@@ -144,7 +120,7 @@
 
             {#if !endedServers}
                 <SidebarItem className="btn-outline-secondary" iconName="more" onClick={loadEndedServers}>
-                    Charger les anciens serveurs
+                    Charger les ancien serveur
                 </SidebarItem>
             {/if}
         </div>
@@ -155,7 +131,7 @@
             <div class="d-flex flex-column gap-3">
                 <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
                     <Icon/>
-                    Anciens serveur
+                    Anciens serveurs
                 </h6>
 
                 {#each endedServers.data as server}

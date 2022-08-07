@@ -1,16 +1,12 @@
 <script lang="ts">
-	import type { DetailedServer } from "./models";
 	import Icon from "$components/icons/Icon.svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import { ServerStatus, ServerSubscriptionStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
-	import { selectedServer } from "$store/store";
+	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
-	import { patchServer, toggleRefreshServerInfo } from "./helpers";
+	import { patchServer, refreshSelectedServer } from "./helpers";
 	import { ButtonVariant } from "$shared/constants";
-
-	// Props
-	export let server: DetailedServer;
 
 	// State
 	let started: ZonedDateTime = null;
@@ -25,55 +21,55 @@
 		.withLocale(Locale.FRANCE);
 
 	$: {
-		if (server) {
-			if (server.state) {
+		if ($server) {
+			if ($server.state) {
 				// Parse dates
-				started = ZonedDateTime.parse(server.state.startedAt);
-				stopped = ZonedDateTime.parse(server.state.finishedAt);
+				started = ZonedDateTime.parse($server.state.startedAt);
+				stopped = ZonedDateTime.parse($server.state.finishedAt);
 				if (stopped.year() === 1) {
 					stopped = ZonedDateTime.now();
 				}
 				duration = Duration.between(started, stopped);
-				formattedStartDate = ZonedDateTime.parse(server.state.startedAt).format(formatter);
+				formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
 			}
 		}
 	}
 
 	async function toggleServerState() {
-		if (server.state?.running) {
-			await patchServer($selectedServer.id, "STOP");
+		if ($server.state?.running) {
+			await patchServer($server.id, "STOP");
 		} else {
-			await patchServer($selectedServer.id, "START");
+			await patchServer($server.id, "START");
 		}
-		toggleRefreshServerInfo();
+		await refreshSelectedServer();
 	}
 </script>
 
-{#if server}
+{#if $server}
 <div class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
 	<Button
 			onClick={toggleServerState}
 			className="d-flex align-items-center"
-			disabled="{server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+			disabled="{$server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
 			variant={ButtonVariant.LIGHT}
 	>
-		{#if server?.name}
-			{#if server.state?.running}
+		{#if $server?.name}
+			{#if $server.state?.running}
 				<Icon key="play-fill" width="28" height="28"/>
 			{:else}
 				<Icon key="stop-fill" width="28" height="28"/>
 			{/if}
 
-			<h3 class="m-0">{server.name}</h3>
-		{:else if server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+			<h3 class="m-0">{$server.name}</h3>
+		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
 			<Icon key="hourglass" width="28" height="28"/>
 
 			<h3 class="m-0">En attente</h3>
-		{:else if server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
 			<Icon key="pause" width="28" height="28"/>
 
 			<h3 class="m-0">Suspendu</h3>
-		{:else if server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
 			<Icon key="archive" width="28" height="28"/>
 
 			<h3 class="m-0">Terminé</h3>
@@ -84,23 +80,23 @@
 		<div>
 			<dt>État</dt>
 			<dd class="m-0">
-				{#if server.serverCreated}
-					{server.state.status}
-				{:else if server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+				{#if $server.serverCreated}
+					{$server.state.status}
+				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
 					En attente
-				{:else if server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
 					Suspendu
-				{:else if server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
 					Terminé
 				{/if}
 			</dd>
 		</div>
 
-		{#if server?.serverCreated}
+		{#if $server?.serverCreated}
 			<div>
 				<dt>Dernier démarrage</dt>
 				<dd class="m-0">
-					{#if server.state?.status === ServerStatus.CREATED}
+					{#if $server.state?.status === ServerStatus.CREATED}
 						Jamais démarré
 					{:else}
 						{formattedStartDate}
@@ -111,10 +107,10 @@
 			<div>
 				<dt>Adresse de connexion</dt>
 				<dd class="m-0">
-					{#if !server.port}
+					{#if !$server.port}
 						Démarrez le serveur pour avoir une adresse de connexion.
 					{:else}
-						quozul.com:{server.port}
+						quozul.com:{$server.port}
 					{/if}
 				</dd>
 			</div>

@@ -3,6 +3,7 @@
 	import { selectedServer } from "$store/store";
 	import { ServerSubscriptionStatus } from "$components/app/constants";
 	import SidebarItem from "./SidebarItem.svelte";
+    import { refreshSelectedServer } from "$components/app/helpers";
 
 	export let server: Server;
 	let iconName: string = "box";
@@ -30,8 +31,9 @@
 
 	$: classes = className + ($selectedServer?.id === server.id ? " active" : "");
 
-	const setServer = () => {
-		$selectedServer = server;
+    async function setServer() {
+        $selectedServer = server;
+        await refreshSelectedServer();
     }
 </script>
 

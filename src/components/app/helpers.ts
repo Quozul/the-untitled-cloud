@@ -1,14 +1,16 @@
-import { refreshServerInfo, refreshServerList } from "$store/store";
+import {
+	fetchingServer,
+	fetchingServers, fetchServerError,
+	fetchServersError,
+	refreshServerInfo,
+	selectedServer, server,
+	servers,
+	sidebarCurrentPage
+} from "$store/store";
 import type { DetailedServer, Paginate, Server, ServerParameters, SubscriptionInfo } from "./models";
-import { getOptions, handleResponse } from "$shared/helpers";
-
-export const toggleRefreshServerInfo = () => {
-	refreshServerInfo.update(v => !v);
-}
-
-export const toggleRefreshServerList = () => {
-	refreshServerList.update(v => !v);
-}
+import { containId, getOptions, handleResponse } from "$shared/helpers";
+import { get } from "svelte/store";
+import { EmptyPaginate } from "./models";
 
 export async function getAllServers(page: number = 0, ended: boolean = false): Promise<Paginate<Server>> {
 	const params = new URLSearchParams();
@@ -21,9 +23,59 @@ export async function getAllServers(page: number = 0, ended: boolean = false): P
 	return await handleResponse(request) as Paginate<Server>;
 }
 
+export async function refreshAllServers(): Promise<void> {
+	servers.set(EmptyPaginate);
+	fetchServersError.set(null);
+	fetchingServers.set(true);
+
+	try {
+		const response = await getAllServers(get(sidebarCurrentPage));
+		servers.set(response);
+		setDefaultSelectedServer();
+	} catch (error: any) {
+		fetchServersError.set(error);
+	} finally {
+		fetchingServers.set(false);
+	}
+}
+
+export function setDefaultSelectedServer(): void {
+	const ss = get(selectedServer);
+	const s = get(servers);
+
+	const hasSelectedServer: boolean = !!ss;
+	const hasServers: boolean = s.data.length > 0;
+	const contains: boolean = hasSelectedServer && hasServers && containId(s, ss?.id);
+
+	if (!contains) {
+		selectedServer.set(s.data[0]);
+	} else if (!hasServers) {
+		selectedServer.set(null);
+	}
+}
+
 export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
 	return await handleResponse(request) as DetailedServer;
+}
+
+export async function refreshSelectedServer(): Promise<void> {
+	const ss = get(selectedServer)?.id;
+	server.set(null);
+	if (!ss) return;
+
+	fetchServerError.set(null);
+	fetchingServer.set(true);
+
+	try {
+		const response = await getServerInfo(ss);
+		server.set(response);
+	} catch (error: any) {
+		fetchServerError.set(error);
+	} finally {
+		fetchingServer.set(false);
+	}
+
 }
 
 export async function patchServer(selectedServer: string, action: string): Promise<void> {

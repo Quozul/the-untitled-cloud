@@ -1,12 +1,6 @@
 <script lang="ts">
-	import { toggleRefreshServerInfo, toggleRefreshServerList } from "$components/app/helpers";
 	import { ServerTab } from "$components/app/constants";
 	import { selectedTab } from "$store/store";
-
-	function refresh() {
-		toggleRefreshServerList();
-		toggleRefreshServerInfo();
-	}
 
 	function goToSubscriptionTab() {
 		$selectedTab = ServerTab.SUBSCRIPTION

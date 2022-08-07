@@ -80,7 +80,9 @@ export async function handleResponse(response: Promise<Response>): Promise<Objec
 	});
 }
 
-export function containId(paginate: Paginate<Id>, id: string): boolean {
+export function containId(paginate: Paginate<Id>, id: string | undefined): boolean {
+	if (!id) return false;
+
 	for (const element of paginate.data) {
 		if (element.id === id) {
 			return true;

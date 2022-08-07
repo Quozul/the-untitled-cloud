@@ -4,20 +4,18 @@
 	import Parameters from "$components/app/tabs/info/Parameters.svelte";
 	import Pending from "./tabs/info/errors/Pending.svelte";
 	import NotFound from "./tabs/info/errors/NotFound.svelte";
-	import type { DetailedServer } from "./models";
 	import { ServerSubscriptionStatus } from "./constants";
 	import Suspended from "./tabs/info/errors/Suspended.svelte";
-
-	export let server: DetailedServer;
+	import { server } from "$store/store.js";
 
 	let isPending: boolean
 	let isSuspended: boolean
 	let containerNotFound: boolean
 
 	$: {
-		isPending = server?.subscriptionStatus === ServerSubscriptionStatus.PENDING;
-		isSuspended = server?.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED;
-		containerNotFound = server?.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !server?.serverCreated;
+		isPending = $server?.subscriptionStatus === ServerSubscriptionStatus.PENDING;
+		isSuspended = $server?.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED;
+		containerNotFound = $server?.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !$server?.serverCreated;
 	}
 </script>
 
@@ -29,11 +27,11 @@
 	<Suspended/>
 {:else}
 	<div class="d-flex gap-3 flex-column flex-xl-row">
-		<ServerInfo {server}/>
-		<ServerFtp {server}/>
+		<ServerInfo/>
+		<ServerFtp/>
 	</div>
 
-	{#if server}
-		<Parameters parameters={server.parameters}/>
+	{#if $server}
+		<Parameters/>
 	{/if}
 {/if}

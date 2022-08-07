@@ -26,7 +26,7 @@
 </style>
 
 {#if href}
-	<Link className="sidebar-item btn {className} d-flex align-items-center w-100" {href}>
+	<Link className="sidebar-item btn {className} d-flex align-items-center" {href}>
 		{#if iconName}
 			<Icon key={iconName} className="me-2 icon"/>
 		{/if}
@@ -36,7 +36,7 @@
 		{/if}
 	</Link>
 {:else}
-	<Button icon={iconName} className="sidebar-item {className} w-100" {onClick} variant={ButtonVariant.NONE}>
+	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={ButtonVariant.NONE}>
 		{#if !$sidebarCollapsed}
 			<slot/>
 		{/if}

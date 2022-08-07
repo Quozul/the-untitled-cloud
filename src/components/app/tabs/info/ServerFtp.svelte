@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type { DetailedServer } from "$components/app/models";
-
-	// Props
-	export let server: DetailedServer;
+	import { server } from "$store/store.js";
 </script>
 
 <style lang="scss">
@@ -66,14 +63,14 @@
 		</div>
 
 		<div class="separation">
-			{#if !server}
+			{#if !$server}
 				<p class="placeholder-glow w-100 m-0">
 					<span class="placeholder h-100 col-12"></span>
 				</p>
 			{:else}
 				<dt>Répertoire</dt>
 				<dd>
-					{server.id}
+					{$server.id}
 				</dd>
 			{/if}
 		</div>

@@ -3,11 +3,13 @@
 	import { ServerType } from "$components/app/constants";
 	import { onMount } from "svelte";
 	import { VersionType } from "$components/app/models";
-    import { refreshServerInfo, selectedServer } from "$store/store";
+    import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
-    import { putParameters, toggleRefreshServerInfo } from "$components/app/helpers";
+    import { putParameters, refreshSelectedServer } from "$components/app/helpers";
 
-	export let parameters: ServerParameters;
+    let parameters: ServerParameters;
+	$: parameters = $server.parameters;
+
 	let versions: Version[] = [];
 
 	onMount(() => {
@@ -20,8 +22,8 @@
     })
 
 	async function submit() {
-		await putParameters($selectedServer.id, parameters);
-        toggleRefreshServerInfo();
+		await putParameters($server.id, parameters);
+        await refreshSelectedServer();
 	}
 </script>
 
