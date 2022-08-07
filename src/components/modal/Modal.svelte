@@ -52,7 +52,7 @@
 
 			<div class="modal-footer">
 				<Button variant={ButtonVariant.SECONDARY} onClick={hide}>{closeText}</Button>
-				<Button {variant} class="btn btn-primary" onClick={onClick}>{okText}</Button>
+				<Button {variant} onClick={onClick}>{okText}</Button>
 			</div>
 		</div>
 	</div>
