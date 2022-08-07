@@ -14,7 +14,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.future.asCompletableFuture
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.io.*
+import java.io.Closeable
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import com.github.dockerjava.api.model.Frame as DockerFrame
@@ -32,47 +34,37 @@ class Console(serverId: UUID, private val socket: WebSocketSession) {
 		}
 
 		val callback = object : ResultCallback<DockerFrame> {
-			override fun close() {
-				println("close")
-			}
+			override fun close() {}
 
-			override fun onStart(closeable: Closeable?) {
-				println("start")
-			}
+			override fun onStart(closeable: Closeable?) {}
 
-			override fun onError(throwable: Throwable?) {
-				println("error")
-			}
+			override fun onError(throwable: Throwable?) {}
 
-			override fun onComplete() {
-				println("completed")
-			}
+			override fun onComplete() {}
 
 			override fun onNext(obj: DockerFrame) {
-				send(obj.payload.decodeToString())
+				println(obj.payload.decodeToString())
+				send(obj.payload)
 			}
 		}
 
-		attach = dockerClient.attachContainerCmd(containerId)
+		val command = dockerClient.execCreateCmd(containerId)
+			.withAttachStdin(true)
+			.withAttachStdout(true)
+			.withTty(true)
+			.withCmd("rcon-cli")
+			.exec()
+
+		attach = dockerClient.execStartCmd(command.id)
+			.withTty(true)
 			.withStdIn(PipedInputStream(outputStream))
-			.withStdOut(true)
-			.withLogs(true)
-			.withFollowStream(true)
 			.exec(callback)
 	}
 
-	fun send(str: String): CompletableFuture<Unit> = scope.async { socket.send(str) }.asCompletableFuture()
+	fun send(content: ByteArray): CompletableFuture<Unit> = scope.async { socket.send(content) }.asCompletableFuture()
 
 	fun close() {
 		attach.close()
-	}
-
-	fun exec(command: String) {
-		val cmd = dockerClient.execCreateCmd(containerId)
-			.withCmd("mc-send-to-console", command)
-			.exec()
-
-		dockerClient.execStartCmd(cmd.id).exec(null)
 	}
 }
 
@@ -89,8 +81,8 @@ fun Route.configureConsoleWebsocket() {
 		try {
 			for (frame in incoming) {
 				if (frame is Frame.Text) {
-					val receivedText = frame.readText()
 					if (jwt == null) {
+						val receivedText = frame.readText()
 						receivedText.startsWith("Bearer ")
 						val token = receivedText.substring(7)
 
@@ -114,9 +106,12 @@ fun Route.configureConsoleWebsocket() {
 						} catch (exception: JWTVerificationException) {
 							close(CloseReason(CloseReason.Codes.NORMAL, "Not allowed"))
 						}
-					} else {
-						// Execute command
-						console?.exec(receivedText)
+					}
+				} else if (frame is Frame.Binary) {
+					val receivedBytes = frame.readBytes()
+					// Execute command
+					withContext(Dispatchers.IO) {
+						console?.outputStream?.write(receivedBytes)
 					}
 				}
 			}
