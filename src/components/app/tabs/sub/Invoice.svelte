@@ -47,7 +47,7 @@
 					<span class="placeholder h-100 col-12"></span>
 				</p>
 			{:else}
-				<dt>Montant dû/dt>
+				<dt>Montant dû</dt>
 				<dd>{formatPrice(invoice.amountDue, invoice.currency)}</dd>
 			{/if}
 		</div>

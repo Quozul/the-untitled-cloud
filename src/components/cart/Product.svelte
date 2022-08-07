@@ -1,8 +1,7 @@
 <script lang="ts">
     import { t } from "svelte-intl-precompile";
-	import { cart } from "$store/store";
-	import { setStep } from "$components/checkout/helpers";
-	import { CheckoutSteps } from "$components/checkout/constants";
+	import { cart, token } from "$store/store";
+    import Link from "../shared/Link.svelte";
 
 	function addToCart() {
 		$cart = {
@@ -11,8 +10,6 @@
 			name: $t("product.starter.name"),
 			description: $t("product.starter.description"),
 		}
-
-		setStep(CheckoutSteps.LOGIN);
 	}
 </script>
 
@@ -31,8 +28,8 @@
             <li>1 {$t("cpu_core")}</li>
         </ul>
 
-        <button on:click|preventDefault={addToCart} class="w-100 btn btn-lg btn-outline-primary">
+        <Link onClick={addToCart} href={$token ? "/rent/profile/" : "/rent/login/"} className="w-100 btn btn-lg btn-outline-primary">
             {$t("choose")}
-        </button>
+        </Link>
     </div>
 </div>

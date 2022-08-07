@@ -26,9 +26,9 @@
 </style>
 
 {#if href}
-	<Link className="sidebar-item btn {className} d-flex align-items-center" {href}>
+	<Link className="sidebar-item btn {className} d-flex align-items-center gap-2" {href}>
 		{#if iconName}
-			<Icon key={iconName} className="me-2 icon"/>
+			<Icon key={iconName}/>
 		{/if}
 
 		{#if !$sidebarCollapsed}

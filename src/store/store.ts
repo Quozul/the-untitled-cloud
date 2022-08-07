@@ -21,7 +21,6 @@ export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarColl
 
 // App active servers stores
 export const servers: Writable<Paginate<Server>> = createStoreEntry("servers", EmptyPaginate, browser && sessionStorage);
-export const sidebarCurrentPage: Writable<number> = writable(0);
 export const fetchingServers: Writable<boolean> = writable(false);
 export const fetchServersError: Writable<ApiError | null> = writable(null);
 
@@ -29,8 +28,6 @@ export const fetchServersError: Writable<ApiError | null> = writable(null);
 export const server: Writable<DetailedServer | null> = createStoreEntry("server", null, browser && sessionStorage);
 export const fetchingServer: Writable<boolean> = writable(false);
 export const fetchServerError: Writable<ApiError | null> = writable(null);
-
-export const endedServers: Writable<Paginate<Server>> = createStoreEntry("endedServers", EmptyPaginate, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

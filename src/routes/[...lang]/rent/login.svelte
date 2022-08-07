@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
 	import LoginForm from "$components/login/LoginForm.svelte";
-	import { token, checkoutStep } from "$store/store";
+	import { checkoutStep, cart } from "$store/store";
 	import { CheckoutSteps } from "$components/checkout/constants";
 
 	$checkoutStep = CheckoutSteps.LOGIN;
@@ -10,4 +10,4 @@
     <title>Connexion</title>
 </svelte:head>
 
-<LoginForm redirectTo="/rent/profile/"/>
+<LoginForm redirectTo={$cart ? "/rent/profile/" : "/rent/products/"}/>

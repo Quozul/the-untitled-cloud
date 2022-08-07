@@ -33,7 +33,7 @@
         {#if $cart}
             <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center gap-2">
                         <Icon key="x-lg" onClick={removeFromCart}/>
                         <h6 class="my-0">{$cart.name}</h6>
                     </div>

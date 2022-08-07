@@ -26,14 +26,14 @@
     <div class="placeholder-glow">
         <button
             {type}
-            class="placeholder disabled text-{variant} btn btn-{variant} d-inline-flex align-items-center {className}"
+            class="placeholder disabled text-{variant} btn btn-{variant} d-inline-flex align-items-center gap-2 {className}"
             disabled
             on:click|preventDefault={handleClick}
         >
             {#if processing}
-                <span class="spinner-border spinner-border-sm me-2"></span>
+                <span class="spinner-border spinner-border-sm"></span>
             {:else if icon}
-                <Icon key={icon} className="me-2"/>
+                <Icon key={icon}/>
             {/if}
 
             <slot/>
@@ -42,14 +42,14 @@
 {:else}
     <button
         {type}
-        class="btn btn-{variant} d-inline-flex align-items-center {className}"
+        class="btn btn-{variant} d-inline-flex align-items-center gap-2 {className}"
         disabled="{disabled || processing}"
         on:click|preventDefault={handleClick}
     >
         {#if processing}
-            <span class="spinner-border spinner-border-sm me-2"></span>
+            <span class="spinner-border spinner-border-sm"></span>
         {:else if icon}
-            <Icon key={icon} className="me-2"/>
+            <Icon key={icon}/>
         {/if}
 
         <slot/>

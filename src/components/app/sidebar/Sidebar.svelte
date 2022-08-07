@@ -1,6 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { sidebarCollapsed, token, fetchingServers, fetchServersError, servers } from "$store/store";
+    import {
+        sidebarCollapsed,
+        token,
+        fetchingServers,
+        fetchServersError,
+        servers,
+    } from "$store/store";
 	import type { Paginate, Server } from "$components/app/models";
 	import Icon from "$components/icons/Icon.svelte";
 	import { goto } from "$app/navigation";
@@ -8,6 +14,7 @@
 	import ServerItem from "./ServerItem.svelte";
     import { getAllServers, refreshAllServers } from "$components/app/helpers";
     import Link from "$shared/Link.svelte";
+    import { mergePaginate } from "$shared/helpers";
 
 	// State
 	let endedServers: Paginate<Server>;
@@ -16,8 +23,17 @@
         await refreshAllServers();
     });
 
+    async function loadMoreServers() {
+        await refreshAllServers($servers.page + 1);
+    }
+
     async function loadEndedServers() {
-        endedServers = await getAllServers(0, true);
+        if (endedServers && !endedServers?.lastPage) {
+            const response = await getAllServers(endedServers.page + 1, true);
+            endedServers = mergePaginate(endedServers, response);
+        } else {
+            endedServers = await getAllServers(0, true);
+        }
     }
 
 	async function logout() {
@@ -43,7 +59,8 @@
 	.sidebar {
         z-index: 1000;
 		width: 300px;
-        transition: .2s width;
+        height: 100%;
+        overflow-y: auto;
 
 		&.collapsed {
 			width: 74px;
@@ -66,7 +83,7 @@
     <div class="d-flex gap-3">
         <SidebarItem
             iconName={$sidebarCollapsed ? "chevron-double-right" : "chevron-double-left"}
-            className="btn-outline-secondary mt-3 collapse-button w-100"
+            className="btn-outline-secondary mt-3 collapse-button flex-grow-1"
             onClick={toggleCollapsed}
         >
             Réduire
@@ -108,6 +125,12 @@
                 {#each $servers.data as server}
                     <ServerItem server={server}/>
                 {/each}
+
+                {#if !$servers.lastPage}
+                    <SidebarItem className="btn-outline-secondary" iconName="plus" onClick={loadMoreServers}>
+                        Charger plus
+                    </SidebarItem>
+                {/if}
             </div>
 
             <hr/>
@@ -137,6 +160,12 @@
                 {#each endedServers.data as server}
                     <ServerItem server={server}/>
                 {/each}
+
+                {#if !endedServers.lastPage}
+                    <SidebarItem className="btn-outline-secondary" iconName="plus" onClick={loadEndedServers}>
+                        Charger plus
+                    </SidebarItem>
+                {/if}
             </div>
         {:else if endedServers && endedServers.data.length === 0}
             <hr/>

@@ -30,8 +30,12 @@
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 		if (!$clientSecret) {
-			const response = await getClientSecret();
-			$clientSecret = response.clientSecret;
+			try {
+				const response = await getClientSecret();
+				$clientSecret = response.clientSecret;
+			} catch (e: ApiError) {
+				error = e;
+			}
 		}
 	});
 
@@ -65,6 +69,7 @@
 			try {
 				$selectedServer = await updatePaymentIntent(result.paymentIntent.id)
 			} catch (e: ApiError) {
+				error = e;
 			}
 
 			// Clear everything and redirect to app
@@ -107,14 +112,14 @@
 			{/if}
 			{$t("checkout.proceed")}
 		</button>
-
-		<div class:visually-hidden={!error} class="text-danger mb-3">
-			Erreur : {error?.message}
-		</div>
 	</form>
 {:else}
-	<div class="d-flex align-items-center">
+	<div class="d-flex align-items-center mb-3">
 		<div class="spinner-border me-3" role="status" aria-hidden="true"></div>
 		<strong>{$t("loading")}...</strong>
 	</div>
 {/if}
+
+<div class:visually-hidden={!error} class="text-danger mb-3">
+	Erreur : {error?.message}
+</div>

@@ -37,8 +37,8 @@
 	async function cancel() {
 		try {
 			await cancelSubscription($selectedServer.id)
-			await refreshSelectedServer()
-			await refreshAllServers()
+			refreshSelectedServer();
+			refreshAllServers();
 		} catch (e: ApiError) {
 			error = e;
 		}

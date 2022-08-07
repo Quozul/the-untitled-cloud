@@ -1,17 +1,45 @@
 <script lang="ts">
 	import { CheckoutSteps } from "./constants";
-	import { checkoutStep } from "$store/store";
-	import { setStep } from "./helpers";
+    import { cart, checkoutStep, token } from "$store/store";
+    import { locale } from "svelte-intl-precompile";
+    import { href } from "$shared/helpers";
 
 	export let step: CheckoutSteps;
 	export let disabled: boolean = false;
+
+    let link: string;
+
+    function getStepLink(): string {
+        if (step === CheckoutSteps.LOGIN) {
+            if (!!$token) {
+                return href(`/rent/${CheckoutSteps.PROFILE}/`, $locale as string);
+            }
+        }
+
+        if (step === CheckoutSteps.CHECKOUT || step === CheckoutSteps.PROFILE) {
+            if (!$token) {
+                return href(`/rent/${CheckoutSteps.LOGIN}/`, $locale as string);
+            }
+        }
+
+        if (step === CheckoutSteps.CHECKOUT) {
+            if (!$cart) {
+                return href(`/rent/${CheckoutSteps.PRODUCTS}/`, $locale as string);
+            }
+        }
+
+        return href(`/rent/${step}/`, $locale as string);
+    }
+
+    $: {
+        link = getStepLink();
+    }
 </script>
 
-<button
-    class="nav-link"
-    on:click={() => setStep(step)}
+<a
+    class="nav-link {disabled && 'disabled'}"
+    {href}
     class:active={$checkoutStep === step}
-    {disabled}
 >
     <slot/>
-</button>
+</a>

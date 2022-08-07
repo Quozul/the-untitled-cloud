@@ -8,6 +8,7 @@ export type Paginate<T extends Id> = {
 	lastPage: boolean,
 	totalPage: number,
 	totalElements: number,
+	page: number,
 }
 
 export const EmptyPaginate: Paginate<any> = {
@@ -16,6 +17,7 @@ export const EmptyPaginate: Paginate<any> = {
 	lastPage: true,
 	totalPage: 0,
 	totalElements: 0,
+	page: 0,
 }
 
 export type Server = Id & {

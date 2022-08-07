@@ -10,8 +10,8 @@
 
 	async function recreate() {
 		await patchServer($selectedServer.id, "RECREATE");
-		await refreshAllServers();
-		await refreshSelectedServer();
+		refreshAllServers();
+		refreshSelectedServer();
 	}
 </script>
 

@@ -1,31 +1,61 @@
 <script lang="ts">
 	import { CheckoutSteps } from "$components/checkout/constants";
-	import Step from "$components/checkout/Step.svelte";
 	import Cart from "$components/Cart.svelte";
-	import { cart } from "$store/store";
-	import { token } from "$store/store";
-    import { t } from "svelte-intl-precompile";
+	import { cart, token, checkoutStep } from "$store/store";
+	import { t } from "svelte-intl-precompile";
+	import Link from "$components/shared/Link.svelte";
+	import { classNames } from "$shared/helpers";
 </script>
 
 <nav class="nav nav-pills nav-fill mb-3">
-    <Step step={CheckoutSteps.PRODUCTS}>
-        {$t("choose_product")}
-    </Step>
-    <Step step={CheckoutSteps.LOGIN} disabled="{!!$token}">
-        {$t("to_login")}
-    </Step>
-    <Step step={CheckoutSteps.PROFILE} disabled="{!$token}">
-        {$t("complete_profile")}
-    </Step>
-    <Step step={CheckoutSteps.CHECKOUT} disabled="{!$token || !$cart}">
-        {$t("checkout")}
-    </Step>
+	<Link
+		href="/rent/products/"
+		className={classNames({
+            "nav-link": true,
+            active: $checkoutStep === CheckoutSteps.PRODUCTS,
+        })}
+	>
+		1. {$t("choose_product")}
+	</Link>
+
+	<Link
+		href="/rent/login/"
+		className={classNames({
+            "nav-link": true,
+            active: $checkoutStep === CheckoutSteps.LOGIN,
+            disabled: !!$token,
+        })}
+	>
+		2. {$t("to_login")}
+	</Link>
+
+	<Link
+		href="/rent/profile/"
+		className={classNames({
+            "nav-link": true,
+            active: $checkoutStep === CheckoutSteps.PROFILE,
+            disabled: !$token
+        })}
+	>
+		3. {$t("complete_profile")}
+	</Link>
+
+	<Link
+		href="/rent/checkout/"
+		className={classNames({
+            "nav-link": true,
+            active: $checkoutStep === CheckoutSteps.CHECKOUT,
+            disabled: !$token || !$cart
+        })}
+	>
+		4. {$t("checkout")}
+	</Link>
 </nav>
 
 <div class="row g-5">
-    <Cart/>
+	<Cart/>
 
-    <div class="col-md-7 col-lg-8">
-        <slot/>
-    </div>
+	<div class="col-md-7 col-lg-8">
+		<slot/>
+	</div>
 </div>

@@ -50,18 +50,10 @@
 	<Button
 			onClick={toggleServerState}
 			className="d-flex align-items-center"
-			disabled="{$server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+			disabled="{!$server.serverCreated || $server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
 			variant={ButtonVariant.LIGHT}
 	>
-		{#if $server?.name}
-			{#if $server.state?.running}
-				<Icon key="play-fill" width="28" height="28"/>
-			{:else}
-				<Icon key="stop-fill" width="28" height="28"/>
-			{/if}
-
-			<h3 class="m-0">{$server.name}</h3>
-		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+		{#if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
 			<Icon key="hourglass" width="28" height="28"/>
 
 			<h3 class="m-0">En attente</h3>
@@ -73,6 +65,18 @@
 			<Icon key="archive" width="28" height="28"/>
 
 			<h3 class="m-0">Terminé</h3>
+		{:else if $server.serverCreated && $server.name}
+			{#if $server.state?.running}
+				<Icon key="play-fill" width="28" height="28"/>
+			{:else}
+				<Icon key="stop-fill" width="28" height="28"/>
+			{/if}
+
+			<h3 class="m-0">{$server.name}</h3>
+		{:else}
+			<Icon key="warning" width="28" height="28"/>
+
+			<h3 class="m-0">Introuvable</h3>
 		{/if}
 	</Button>
 
@@ -88,6 +92,8 @@
 					Suspendu
 				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
 					Terminé
+				{:else}
+					Introuvable
 				{/if}
 			</dd>
 		</div>

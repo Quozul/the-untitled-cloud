@@ -3,13 +3,13 @@
 	import type { Address } from "./Address";
 	import type { ApiError } from "$shared/models";
 	import { onMount } from "svelte";
-	import { token } from "$store/store";
+	import { token, cart } from "$store/store";
 	import { CheckoutSteps } from "$components/checkout/constants";
 	import Icon from "$components/icons/Icon.svelte";
-	import { setStep } from "$components/checkout/helpers";
 	import jwtDecode from "jwt-decode";
-	import { getAddress, setAddress } from "$shared/helpers";
+	import { getAddress, setAddress, href } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
+    import Link from "../shared/Link.svelte";
 
 	let address: Address = {
 		city: null,
@@ -47,10 +47,6 @@
 			// TODO: Handle error
 			console.log(e);
 		}
-	}
-
-	async function skip() {
-        await setStep(CheckoutSteps.CHECKOUT);
 	}
 </script>
 
@@ -105,8 +101,8 @@
         {$t("save")}
     </Button>
 
-    <button class="btn btn-secondary mt-3 d-inline-flex align-items-center" type="button" on:click|preventDefault={skip}>
+    <Link href={$cart ? "/rent/checkout/" : "/rent/products/"} className="btn btn-secondary mt-3 d-inline-flex align-items-center gap-2">
         {$t("skip")}
-        <Icon key="chevron-double-right" className="ms-2"/>
-    </button>
+        <Icon key="chevron-double-right"/>
+    </Link>
 </form>

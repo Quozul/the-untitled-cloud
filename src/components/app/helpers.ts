@@ -2,13 +2,11 @@ import {
 	fetchingServer,
 	fetchingServers, fetchServerError,
 	fetchServersError,
-	refreshServerInfo,
 	selectedServer, server,
 	servers,
-	sidebarCurrentPage
 } from "$store/store";
 import type { DetailedServer, Paginate, Server, ServerParameters, SubscriptionInfo } from "./models";
-import { containId, getOptions, handleResponse } from "$shared/helpers";
+import { containId, getOptions, handleResponse, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
 
@@ -23,14 +21,15 @@ export async function getAllServers(page: number = 0, ended: boolean = false): P
 	return await handleResponse(request) as Paginate<Server>;
 }
 
-export async function refreshAllServers(): Promise<void> {
-	servers.set(EmptyPaginate);
+export async function refreshAllServers(page: number = 0): Promise<void> {
+	if (page === 0) servers.set(EmptyPaginate);
 	fetchServersError.set(null);
 	fetchingServers.set(true);
 
 	try {
-		const response = await getAllServers(get(sidebarCurrentPage));
-		servers.set(response);
+		const response = await getAllServers(page);
+		if (page === 0) servers.set(response);
+		else servers.set(mergePaginate(get(servers), response));
 		setDefaultSelectedServer();
 	} catch (error: any) {
 		fetchServersError.set(error);
@@ -40,12 +39,10 @@ export async function refreshAllServers(): Promise<void> {
 }
 
 export function setDefaultSelectedServer(): void {
-	const ss = get(selectedServer);
 	const s = get(servers);
 
-	const hasSelectedServer: boolean = !!ss;
 	const hasServers: boolean = s.data.length > 0;
-	const contains: boolean = hasSelectedServer && hasServers && containId(s, ss?.id);
+	const contains = containId(s, get(selectedServer)?.id);
 
 	if (!contains) {
 		selectedServer.set(s.data[0]);

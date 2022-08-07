@@ -7,13 +7,10 @@ import { goto } from "$app/navigation";
 import { defaultLocale } from "./constants";
 import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
 import { t } from "svelte-intl-precompile";
+import type { ClassNames } from "./models";
 
 /**
  * Build request's options
- *
- * @param {string?} method
- * @param {string?} raw
- * @returns {Promise<RequestInit>}
  */
 export function getOptions(method: string = "POST", raw: Object | null = null): RequestInit {
 	const jwt = get(token) || "";
@@ -33,11 +30,7 @@ export function getOptions(method: string = "POST", raw: Object | null = null): 
 }
 
 /**
- * Handle API's response
- *
- * @param {Promise<Response>} response
- * @returns {Promise<{data: Object | null, message: string}>}
- * @throws {message: string, message: number}
+ * Handle API response
  */
 export async function handleResponse(response: Promise<Response>): Promise<Object | null> {
 	return new Promise((resolve, reject) => {
@@ -80,17 +73,22 @@ export async function handleResponse(response: Promise<Response>): Promise<Objec
 	});
 }
 
-export function containId(paginate: Paginate<Id>, id: string | undefined): boolean {
-	if (!id) return false;
+export function containId<T extends Id>(paginate: Paginate<T>, id: string | undefined): T | null {
+	if (!id) return null;
 
 	for (const element of paginate.data) {
 		if (element.id === id) {
-			return true;
+			return element;
 		}
 	}
-	return false;
+	return null;
 }
 
+/**
+ * @deprecated Use <Link/> component instead.
+ * @param link
+ * @param locale
+ */
 export const href = (link: string = "", locale: string = ""): string => {
 	if (locale === defaultLocale) {
 		return link;
@@ -98,6 +96,10 @@ export const href = (link: string = "", locale: string = ""): string => {
 		return `/${locale}${link}`;
 	}
 };
+
+export function classNames(classes: ClassNames): string {
+	return Object.entries(classes).filter(c => c[1]).map(c => c[0]).join(" ");
+}
 
 
 export function formatPrice(amount: number, currency: string = "EUR"): string {
@@ -108,6 +110,17 @@ export async function redirect(fallback: string = "/") {
 	const search = new URLSearchParams(location.search);
 	const redirect = search.get("redirect") ?? fallback;
 	await goto(redirect);
+}
+
+export function mergePaginate<T extends Id>(a: Paginate<T>, b: Paginate<T>): Paginate<T> {
+	return {
+		data: [...a.data, ...b.data],
+		firstPage: a.firstPage,
+		lastPage: b.lastPage,
+		totalElements: b.totalElements,
+		totalPage: b.totalPage,
+		page: b.page,
+	}
 }
 
 export async function getAddress(): Promise<Address> {

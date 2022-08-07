@@ -10,3 +10,7 @@ export type ApiError = {
 	code: AuthenticationErrors,
 	translatedMessage?: string,
 }
+
+export type ClassNames = {
+	[className: string]: boolean,
+}
