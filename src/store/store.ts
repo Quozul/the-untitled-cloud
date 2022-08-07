@@ -31,8 +31,6 @@ export const fetchServerError: Writable<ApiError | null> = writable(null);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);
-export const refreshServerInfo: Writable<boolean> = writable(false);
-export const refreshServerList: Writable<boolean> = writable(false);
 export const loginMode: Writable<LoginMode> = writable(LoginMode.LOGIN);
 export const checkoutStep: Writable<CheckoutSteps | null> = writable(null);
 export const clientSecret: Writable<string | null> = writable(null);

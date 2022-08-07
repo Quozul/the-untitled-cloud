@@ -7,10 +7,12 @@
 	import Button from "$shared/Button.svelte";
     import { patchServer, refreshSelectedServer } from "$components/app/helpers";
     import { ButtonVariant } from "$shared/constants";
+    import Modal from "../../../modal/Modal.svelte";
 
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
+	let modalVisible: boolean = false;
 
 	const formatter = DateTimeFormatter
 		.ofPattern("eeee d MMMM yyyy")
@@ -43,9 +45,17 @@
         await refreshSelectedServer();
 	}
 
+    function openModal() {
+        modalVisible = true;
+    }
+
 	async function reset() {
-		await patchServer($server.id, "RESET");
-        await refreshSelectedServer();
+		try {
+			await patchServer($server.id, "RESET");
+			await refreshSelectedServer();
+		} finally {
+			modalVisible = false;
+		}
 	}
 </script>
 
@@ -74,11 +84,29 @@
                 Redémarrer
             </Button>
 
-            <button class="btn btn-primary" on:click|preventDefault={refreshSelectedServer}>Rafraichir les informations</button>
+            <Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
 
-            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={reset}>
+            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={openModal}>
                 Réinitialiser
             </Button>
+
+			<Modal
+				bind:visible={modalVisible}
+				icon="trash"
+				onClick={reset}
+				title="Réinitialisation"
+				okText="Réinitialiser"
+				closeText="Annuler"
+				variant={ButtonVariant.DANGER}
+			>
+				<p>
+					Vous êtes sur le point de réinitialiser votre serveur.
+					Cette action supprimera tous les fichiers et ne seront pas récupérables.
+				</p>
+				<p>
+					Êtes-vous sûr de vouloir continuer ?
+				</p>
+            </Modal>
         </div>
     {/if}
 </div>

@@ -1,16 +1,17 @@
 <script lang="ts">
 	import Sidebar from "$components/app/sidebar/Sidebar.svelte";
-	import { token, selectedServer, selectedTab, server } from "$store/store";
+	import { token, selectedServer, selectedTab, server, fetchServersError } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
 	import NoServer from "$components/app/tabs/info/errors/NoServer.svelte";
 	import ServerBar from "$components/app/ServerBar.svelte";
 	import { ServerTab } from "$components/app/constants";
 	import SubscriptionInfo from "$components/app/tabs/sub/SubscriptionInfo.svelte";
-	import { refreshSelectedServer } from "$components/app/helpers";
+	import { refreshSelectedServer, refreshAllServers } from "$components/app/helpers";
 	import Tabs from "$components/app/Tabs.svelte";
 	import InfoTab from "$components/app/InfoTab.svelte";
 	import Console from "$components/app/tabs/console/Console.svelte";
+	import InternalError from "$components/app/tabs/info/errors/InternalError.svelte";
 
 	// State
 	let showDebug: boolean = false;
@@ -56,6 +57,8 @@
 			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
 				<SubscriptionInfo/>
 			{/if}
+		{:else if $fetchServersError}
+			<InternalError refresh={refreshAllServers}/>
 		{:else}
 			<NoServer/>
 		{/if}

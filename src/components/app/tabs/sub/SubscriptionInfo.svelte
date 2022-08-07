@@ -8,10 +8,14 @@
 	import { ButtonVariant } from "$shared/constants";
 	import { formatter, shortDate } from "$shared/constants";
 	import Invoices from "./Invoices.svelte";
+	import Modal from "$components/modal/Modal.svelte";
+	import InternalError from "../info/errors/InternalError.svelte";
 
 	// State
 	let subscription: SubscriptionInfo | null = null;
 	let error: ApiError = null;
+	let modalVisible: boolean = false;
+	let cancelError: ApiError = null;
 
 	let startDate: string;
 	let currentPeriodStart: string;
@@ -34,17 +38,28 @@
 
 	$: fetchSubscription($selectedServer);
 
+	function openModal() {
+		modalVisible = true;
+	}
+
 	async function cancel() {
 		try {
-			await cancelSubscription($selectedServer.id)
+			cancelError = null;
+			await cancelSubscription($selectedServer.id);
+			modalVisible = false;
+
+			// Toggle global refresh
+			fetchSubscription();
 			refreshSelectedServer();
 			refreshAllServers();
 		} catch (e: ApiError) {
-			error = e;
+			cancelError = e;
+			// TODO: Display error message somewhere
 		}
 	}
 </script>
 
+{#if !error}
 <div class="bg-light p-4 d-flex element flex-column align-items-stretch">
 	<h4>Votre abonnement</h4>
 
@@ -104,15 +119,45 @@
 		</div>
 	</dl>
 
-	{#if !subscription || !subscription.canceledAt}
+	{#if subscription && !subscription.canceledAt}
 		<hr/>
 		<h5>Actions</h5>
+
 		<div class="d-flex flex-wrap gap-3">
-			<Button loading={!subscription} variant={ButtonVariant.DANGER} onClick={cancel}>
-				Annuler son abonnement
+			<Button loading={!subscription} variant={ButtonVariant.DANGER} onClick={openModal} disabled="{!subscription.latestInvoice.paid}">
+				Annuler mon abonnement
 			</Button>
+
+			{#if subscription.latestInvoice.paid}
+				<Modal
+						bind:visible={modalVisible}
+						onClick={cancel}
+						title="Annulation"
+						okText="Annuler mon abonnement"
+						closeText="Annuler"
+						variant={ButtonVariant.DANGER}
+				>
+					<p>
+						Vous êtes sur le point de d'annuler votre abonnement.
+						Dès que nous recevrons la confirmation de votre désabonnement, les fichiers de votre serveur seront
+						immédiatement supprimés et ne seront pas récupérables.
+					</p>
+					<p>
+						Vous serez remboursé au prorata de votre consommation.
+					</p>
+					<p>
+						Êtes-vous sûr de vouloir continuer ?
+					</p>
+				</Modal>
+			{:else}
+				Vous ne pouvez pas annuler votre abonnement pour le moment.
+				La dernière facture a été émise mais n'a pas encore été payée.
+			{/if}
 		</div>
 	{/if}
 </div>
 
 <Invoices {subscription}/>
+{:else}
+<InternalError refresh={fetchSubscription}/>
+{/if}

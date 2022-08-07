@@ -75,7 +75,8 @@
 		</div>
 	</dl>
 
-	<Button onClick={downloadInvoice}>
+	<Button onClick={downloadInvoice} disabled="true">
 		Télécharger
 	</Button>
+	Le téléchargement des factures n'est pas encore disponible.
 </div>

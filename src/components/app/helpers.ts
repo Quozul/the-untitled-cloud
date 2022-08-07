@@ -30,7 +30,7 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 		const response = await getAllServers(page);
 		if (page === 0) servers.set(response);
 		else servers.set(mergePaginate(get(servers), response));
-		setDefaultSelectedServer();
+		await setDefaultSelectedServer();
 	} catch (error: any) {
 		fetchServersError.set(error);
 	} finally {
@@ -38,7 +38,7 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 	}
 }
 
-export function setDefaultSelectedServer(): void {
+export async function setDefaultSelectedServer(): Promise<void> {
 	const s = get(servers);
 
 	const hasServers: boolean = s.data.length > 0;
@@ -46,6 +46,7 @@ export function setDefaultSelectedServer(): void {
 
 	if (!contains) {
 		selectedServer.set(s.data[0]);
+		await refreshSelectedServer();
 	} else if (!hasServers) {
 		selectedServer.set(null);
 	}
