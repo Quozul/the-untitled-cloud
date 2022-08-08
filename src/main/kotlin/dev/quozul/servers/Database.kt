@@ -17,22 +17,27 @@ import java.util.*
  * Servers
  */
 
-enum class ServerStatus {
+enum class SubscriptionServerStatus {
 	PENDING, // Awaiting payment
 	ACTIVE, // Payment has been made, the service can be used
 	SUSPENDED, // Payment failed, but subscription isn't cancelled
 	ENDED, // Customer has stopped the subscription
 }
 
+enum class SubscriptionProvider {
+	STRIPE,
+}
+
 object Servers : UUIDTable("servers") {
 	val owner = reference("owner", Users) // Foreign key to User.id
 	val subscriptionId = varchar("subscription_id", 255).uniqueIndex() // External foreign key to Stripe
 	val containerId = char("container_id", 64).nullable() // External foreign key to Docker
-	val status = enumeration<ServerStatus>("status") // Status of the subscription
+	val subscriptionStatus = enumeration<SubscriptionServerStatus>("subscription_status") // Status of the subscription
 	val containerTag = varchar("container_tag", 255).default("latest") // Not used yet
 	val containerName = varchar("container_name", 255).nullable() // Not used yet
 	val creationDate = datetime("creationDate").defaultExpression(CurrentDateTime())
 	val deletionDate = datetime("deletionDate").nullable()
+	val subscriptionProvider = enumeration<SubscriptionProvider>("subscription_provider").default(SubscriptionProvider.STRIPE)
 }
 
 class Server(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -41,13 +46,12 @@ class Server(id: EntityID<UUID>) : UUIDEntity(id) {
 	var owner by User referencedOn Servers.owner
 	var subscriptionId by Servers.subscriptionId
 	var containerId by Servers.containerId
-	var status by Servers.status
+	var subscriptionStatus by Servers.subscriptionStatus
 	var containerTag by Servers.containerTag
 	var containerName by Servers.containerName
 	val creationDate by Servers.creationDate
 	var deletionDate by Servers.deletionDate
-	// TODO: Add tag column for JDK version
-	// TODO: Add server name column, with a default random one (generated like Docker does)
+	var subscriptionProvider by Servers.subscriptionProvider
 }
 
 /*

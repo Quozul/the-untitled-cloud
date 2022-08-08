@@ -3,13 +3,15 @@ package dev.quozul.servers.models
 import com.github.dockerjava.api.exception.NotFoundException
 import dev.quozul.dockerClient
 import dev.quozul.servers.Server
-import dev.quozul.servers.ServerStatus
+import dev.quozul.servers.SubscriptionServerStatus
+import dev.quozul.servers.helpers.NameGenerator
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class ApiServer(
 	val id: String,
-	val subscriptionStatus: ServerStatus,
+	val subscriptionStatus: SubscriptionServerStatus,
 	val name: String?,
 	val serverStatus: String?,
 ) {
@@ -23,7 +25,15 @@ data class ApiServer(
 				null
 			}
 
-			return ApiServer(server.id.toString(), server.status, container?.name, container?.state?.status)
+			// TODO: This should not be happening here
+			// Generate a random name if the servers does not have one
+			if (server.containerName == null) {
+				transaction {
+					server.containerName = NameGenerator.getRandomName()
+				}
+			}
+
+			return ApiServer(server.id.toString(), server.subscriptionStatus, server.containerName, container?.state?.status)
 		}
 	}
 }
@@ -41,10 +51,9 @@ data class Paginate<T>(
 @Serializable
 data class DetailedApiServer(
 	val id: String,
-	val subscriptionStatus: ServerStatus,
-	val serverCreated: Boolean,
+	val subscriptionStatus: SubscriptionServerStatus,
 	val name: String?,
 	val port: String?,
-	val state: ServerState?,
+	val state: ServerState,
 	val parameters: ServerParameters,
 )

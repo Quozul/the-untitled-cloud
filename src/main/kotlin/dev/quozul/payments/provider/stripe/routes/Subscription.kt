@@ -1,6 +1,5 @@
 package dev.quozul.payments.provider.stripe.routes
 
-import com.github.dockerjava.api.exception.NotFoundException
 import com.stripe.exception.StripeException
 import com.stripe.model.Invoice
 import com.stripe.model.PaymentIntent
@@ -8,12 +7,11 @@ import com.stripe.model.Subscription
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.User
 import dev.quozul.authentication.models.AuthenticationErrors
-import dev.quozul.dockerClient
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
-import dev.quozul.servers.ServerStatus
+import dev.quozul.servers.SubscriptionServerStatus
 import dev.quozul.servers.createOrUpdateServer
 import dev.quozul.servers.findServerFromSubscription
 import dev.quozul.servers.models.ApiServer
@@ -107,7 +105,7 @@ fun Route.configureSubscriptionRoutes() {
 		}
 
 		if (invoice.subscription != null) {
-			val server = findServerFromSubscription(invoice.subscription) ?: createOrUpdateServer(user, invoice.subscription, ServerStatus.PENDING)
+			val server = findServerFromSubscription(invoice.subscription) ?: createOrUpdateServer(user, invoice.subscription, SubscriptionServerStatus.PENDING)
 			call.respond(ApiServer.fromServer(server))
 		} else {
 			call.response.status(HttpStatusCode.NotFound)

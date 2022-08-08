@@ -21,5 +21,9 @@ fun Application.configureDatabase() {
         SchemaUtils.create(Users)
         SchemaUtils.create(Servers)
         SchemaUtils.create(Parameters)
+
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Users))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Servers))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Parameters))
     }
 }

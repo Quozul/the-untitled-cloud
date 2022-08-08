@@ -54,13 +54,12 @@ fun Route.configureServerRoutes() {
 
 		val exposedPort = ExposedPort.tcp(25565)
 		val port = container?.let { it.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
-		val state = container?.let { ServerState.fromContainerState(it.state) }
+		val state = ServerState.fromContainerState(container?.state)
 
 		val response = DetailedApiServer(
 			serverId.toString(),
-			server.status,
-			container != null,
-			container?.name,
+			server.subscriptionStatus,
+			server.containerName,
 			port,
 			state,
 			ServerParameters.fromParameterEntity(parameters),

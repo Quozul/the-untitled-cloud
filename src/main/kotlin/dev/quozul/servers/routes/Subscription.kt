@@ -7,7 +7,7 @@ import com.stripe.param.SubscriptionRetrieveParams
 import com.stripe.param.SubscriptionUpdateParams
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.servers.Server
-import dev.quozul.servers.ServerStatus
+import dev.quozul.servers.SubscriptionServerStatus
 import dev.quozul.servers.models.ApiInvoice
 import dev.quozul.servers.models.CancelMode
 import dev.quozul.servers.models.SubscriptionInfo
@@ -127,7 +127,7 @@ fun Route.configureServerSubscriptionRoutes() {
 				}
 
 				transaction {
-					server.status = ServerStatus.SUSPENDED
+					server.subscriptionStatus = SubscriptionServerStatus.SUSPENDED
 				}
 
 				call.response.status(HttpStatusCode.NoContent)

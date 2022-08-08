@@ -1,36 +1,56 @@
 package dev.quozul.servers.models
 
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import java.lang.Exception
+
+enum class ServerStatus {
+	// Docker statuses
+	CREATED,
+	RESTARTING,
+	RUNNING,
+	REMOVING,
+	PAUSED,
+	EXITED,
+	DEAD,
+
+	// Custom statuses
+	UNAVAILABLE,
+	STARTING,
+	STOPPED,
+}
 
 @Serializable
 data class ServerState(
-	val status: String?,
-	val running: Boolean?,
-	val paused: Boolean?,
-	val restarting: Boolean?,
-	val oomKilled: Boolean?,
-	val dead: Boolean?,
-	val exitCode: Long?,
-	val error: String?,
+	val status: ServerStatus,
+	val created: Boolean,
+	val running: Boolean,
+	val starting: Boolean,
 	val startedAt: String?,
 	val finishedAt: String?,
-	val failingStreak: Int?,
 ) {
 	companion object {
-		fun fromContainerState(containerState: ContainerState): ServerState {
+		fun fromContainerState(containerState: ContainerState?): ServerState {
+			val status = if (containerState == null) {
+				ServerStatus.UNAVAILABLE
+			} else if (containerState.health?.status == "starting") {
+				ServerStatus.STARTING
+			} else if (containerState.restarting == true) {
+				ServerStatus.RESTARTING
+			} else if (containerState.running == true) {
+				ServerStatus.RUNNING
+			} else {
+				ServerStatus.STOPPED
+			}
+
 			return ServerState(
-				containerState.status,
-				containerState.running,
-				containerState.paused,
-				containerState.restarting,
-				containerState.oomKilled,
-				containerState.dead,
-				containerState.exitCodeLong,
-				containerState.error,
-				containerState.startedAt,
-				containerState.finishedAt,
-				containerState.health?.failingStreak,
+				status,
+				containerState != null,
+				containerState?.running == true,
+				containerState?.health?.status == "starting",
+				containerState?.startedAt,
+				containerState?.finishedAt,
 			)
 		}
 	}

@@ -13,6 +13,7 @@ import com.github.dockerjava.transport.DockerHttpClient
 import dev.quozul.authentication.User
 import dev.quozul.containerDirectory
 import dev.quozul.dockerClient
+import dev.quozul.servers.helpers.NameGenerator
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -46,15 +47,15 @@ fun findServerFromSubscription(subscriptionId: String): Server? =
 		}.firstOrNull()
 	}
 
-fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStatus, containerId: String? = null): Server {
+fun createOrUpdateServer(owner: User, subscriptionId: String, status: SubscriptionServerStatus, containerId: String? = null): Server {
 	return transaction {
 		Server.find {
 			Servers.subscriptionId eq subscriptionId
 		}.firstOrNull()?.let {
-			it.status = status
+			it.subscriptionStatus = status
 			it.containerId = containerId
 
-			if (status == ServerStatus.ENDED || status == ServerStatus.SUSPENDED) {
+			if (status == SubscriptionServerStatus.ENDED || status == SubscriptionServerStatus.SUSPENDED) {
 				it.deletionDate = LocalDateTime.now()
 			}
 
@@ -63,8 +64,10 @@ fun createOrUpdateServer(owner: User, subscriptionId: String, status: ServerStat
 			val server = Server.new {
 				this.owner = owner
 				this.subscriptionId = subscriptionId
-				this.status = status
+				this.subscriptionStatus = status
 				this.containerId = containerId
+				this.containerName = NameGenerator.getRandomName()
+				this.subscriptionProvider = SubscriptionProvider.STRIPE
 			}
 
 			Parameter.new {
@@ -84,7 +87,7 @@ suspend fun createContainer(
 	user: User,
 	subscriptionId: String,
 ) {
-	val server = createOrUpdateServer(user, subscriptionId, ServerStatus.ACTIVE)
+	val server = createOrUpdateServer(user, subscriptionId, SubscriptionServerStatus.ACTIVE)
 	createContainer(server)
 }
 
@@ -98,7 +101,7 @@ fun suspendContainer(user: User, subscriptionId: String) {
 		} catch (_: NotModifiedException) {
 		}
 
-		createOrUpdateServer(user, subscriptionId, ServerStatus.SUSPENDED, it)
+		createOrUpdateServer(user, subscriptionId, SubscriptionServerStatus.SUSPENDED, it)
 	}
 }
 
@@ -114,7 +117,7 @@ fun deleteContainer(user: User, subscriptionId: String) {
 
 		dockerClient.removeContainerCmd(it).exec()
 
-		createOrUpdateServer(user, subscriptionId, ServerStatus.ENDED, null)
+		createOrUpdateServer(user, subscriptionId, SubscriptionServerStatus.ENDED, null)
 		// TODO: Delete volume of container
 	}
 }
@@ -127,7 +130,6 @@ suspend fun createContainer(
 	image: String = "itzg/minecraft-server",
 	tag: String = "latest",
 	start: Boolean = false,
-	name: String? = null,
 ) = coroutineScope {
 	val parameters = transaction {
 		Parameter.find {
@@ -153,7 +155,7 @@ suspend fun createContainer(
 		val container = dockerClient.createContainerCmd("$image:$tag")
 			.withVolumes(volume)
 			.withEnv(parameters)
-			.withName(name)
+			.withName(server.id.toString())
 			.withHostConfig(
 				HostConfig
 					.newHostConfig()
@@ -189,7 +191,7 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 	}
 
 	// Try stopping then removing the previous container
-	val (wasRunning, previousName) = server.containerId?.let {
+	val wasRunning = server.containerId?.let {
 		val previousContainer = try {
 			dockerClient.inspectContainerCmd(it).exec()
 		} catch (_: NotFoundException) {
@@ -197,7 +199,6 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 		}
 
 		val wasRunning = previousContainer?.state?.running ?: false
-		val previousName = previousContainer?.name
 
 		try {
 			dockerClient.stopContainerCmd(it).exec()
@@ -210,10 +211,10 @@ suspend fun recreateServer(serverId: UUID): Boolean {
 		} catch (_: NotFoundException) {
 		}
 
-		Pair(wasRunning, previousName)
-	} ?: Pair(false, null)
+		wasRunning
+	} ?: false
 
-	createContainer(server, start = wasRunning, name = previousName)
+	createContainer(server, start = wasRunning)
 
 	return true
 }
