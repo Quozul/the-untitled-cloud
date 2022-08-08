@@ -35,3 +35,4 @@ export const loginMode: Writable<LoginMode> = writable(LoginMode.LOGIN);
 export const checkoutStep: Writable<CheckoutSteps | null> = writable(null);
 export const clientSecret: Writable<string | null> = writable(null);
 export const selectedTab: Writable<ServerTab> = writable(ServerTab.INFO);
+export const onProfilePage: Writable<boolean> = writable(false);

@@ -34,8 +34,4 @@
 		<ServerInfo/>
 		<ServerFtp/>
 	</div>
-
-	{#if $server}
-		<Parameters/>
-	{/if}
 {/if}

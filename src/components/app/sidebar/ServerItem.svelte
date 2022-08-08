@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { Server } from "$components/app/models";
-	import { selectedServer } from "$store/store";
+    import { onProfilePage, selectedServer } from "$store/store";
 	import { ServerSubscriptionStatus } from "$components/app/constants";
 	import SidebarItem from "./SidebarItem.svelte";
     import { refreshSelectedServer } from "$components/app/helpers";
+    import { goto } from "$app/navigation";
 
 	export let server: Server;
 	let iconName: string = "box";
@@ -33,6 +34,10 @@
 
     async function setServer() {
         $selectedServer = server;
+        if ($onProfilePage) {
+            $onProfilePage = false;
+            await goto("/app/");
+        }
         await refreshSelectedServer();
     }
 </script>

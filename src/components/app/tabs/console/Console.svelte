@@ -23,9 +23,9 @@
 			const blob = event.data as Blob;
 			const text = await blob.text();
 
+			// TODO: Stop using an external library
 			const parsed = parse(text);
 			for (const element of parsed) {
-				console.log(element);
 				if (element.css) {
 					logs += `<span style="${element.css}">${element.text}</span>`;
 				} else {
@@ -37,8 +37,8 @@
 
 		socket.onclose = function() {
 			logs = "";
-			input.innerText = "";
 			socket = null;
+			if (input) input.innerText = "";
 		};
 	}
 

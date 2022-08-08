@@ -39,5 +39,6 @@ export enum ServerType {
 export enum ServerTab {
 	INFO,
 	SUBSCRIPTION ,
+	PARAMETERS,
 	CONSOLE,
 }

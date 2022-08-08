@@ -16,7 +16,7 @@
 		if (isEnded && $selectedTab !== ServerTab.SUBSCRIPTION) {
 			goto("/app/subscription/");
 		} else if (isPending && $selectedTab === ServerTab.CONSOLE) {
-			goto("/app/information/");
+			goto("/app/");
 		}
 	}
 </script>
@@ -25,10 +25,19 @@
 	<a
 			class="nav-link"
 			class:active={$selectedTab === ServerTab.INFO}
-			href="/app/information/"
+			href="/app/"
 			disabled="{isEnded}"
 	>
 		Informations
+	</a>
+
+	<a
+			class="nav-link"
+			class:active={$selectedTab === ServerTab.PARAMETERS}
+			href="/app/parameters/"
+			disabled="{isPending || isEnded || isSuspended}"
+	>
+		Paramètres
 	</a>
 
 	<a

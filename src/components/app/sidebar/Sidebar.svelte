@@ -6,6 +6,7 @@
         fetchingServers,
         fetchServersError,
         servers,
+        onProfilePage,
     } from "$store/store";
 	import type { Paginate, Server } from "$components/app/models";
 	import Icon from "$components/icons/Icon.svelte";
@@ -122,6 +123,11 @@
 
         {#if $servers.data.length > 0}
             <div class="d-flex flex-column gap-3">
+                <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+                    <Icon/>
+                    Mes serveurs ({$servers.totalElements})
+                </h6>
+
                 {#each $servers.data as server}
                     <ServerItem server={server}/>
                 {/each}
@@ -154,7 +160,7 @@
             <div class="d-flex flex-column gap-3">
                 <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
                     <Icon/>
-                    Anciens serveurs
+                    Anciens serveurs ({endedServers.totalElements})
                 </h6>
 
                 {#each endedServers.data as server}
@@ -180,6 +186,10 @@
     <hr/>
 
     <ul class="nav flex-column gap-3">
+        <SidebarItem href="/app/profile/" iconName="person" className="btn-outline-dark {$onProfilePage && 'active'}">
+            Mon profil
+        </SidebarItem>
+
         <SidebarItem href="/" iconName="chevron-left" className="btn-outline-dark">
             Accueil
         </SidebarItem>

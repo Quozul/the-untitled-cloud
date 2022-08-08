@@ -1,7 +1,7 @@
 import {
 	fetchingServer,
 	fetchingServers, fetchServerError,
-	fetchServersError,
+	fetchServersError, onProfilePage,
 	selectedServer, server,
 	servers,
 } from "$store/store";
@@ -30,7 +30,10 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 		const response = await getAllServers(page);
 		if (page === 0) servers.set(response);
 		else servers.set(mergePaginate(get(servers), response));
-		await setDefaultSelectedServer();
+
+		if (!get(onProfilePage)) {
+			await setDefaultSelectedServer();
+		}
 	} catch (error: any) {
 		fetchServersError.set(error);
 	} finally {

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import InfoTab from "$components/app/InfoTab.svelte";
+	import Parameters from "$components/app/tabs/info/Parameters.svelte";
 	import { selectedTab } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
 
-	$selectedTab = ServerTab.INFO;
+	$selectedTab = ServerTab.PARAMETERS;
 </script>
 
-<InfoTab/>
+<Parameters/>
