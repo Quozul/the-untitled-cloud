@@ -10,6 +10,7 @@ import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";
 import { writable } from "svelte/store";
 import type { ApiError } from "$components/shared/models";
+import type { ServerParameters } from "$components/parameters/models";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
@@ -28,6 +29,9 @@ export const fetchServersError: Writable<ApiError | null> = writable(null);
 export const server: Writable<DetailedServer | null> = createStoreEntry("server", null, browser && sessionStorage);
 export const fetchingServer: Writable<boolean> = writable(false);
 export const fetchServerError: Writable<ApiError | null> = writable(null);
+
+// App server parameters store
+export const parameters: Writable<ServerParameters> = createStoreEntry("parameters", null, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

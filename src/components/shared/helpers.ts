@@ -123,6 +123,10 @@ export function mergePaginate<T extends Id>(a: Paginate<T>, b: Paginate<T>): Pag
 	}
 }
 
+export function capitalize(str: string) {
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase().replace("_", " ");
+}
+
 export async function getAddress(): Promise<Address> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
 	return await handleResponse(request) as Address;

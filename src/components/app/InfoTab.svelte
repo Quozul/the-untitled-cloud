@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ServerInfo from "$components/app/tabs/info/ServerInfo.svelte";
 	import ServerFtp from "$components/app/tabs/info/ServerFtp.svelte";
-	import Parameters from "$components/app/tabs/info/Parameters.svelte";
+	import Parameters from "../parameters/Parameters.svelte";
 	import Pending from "./tabs/info/errors/Pending.svelte";
 	import NotFound from "./tabs/info/errors/NotFound.svelte";
 	import { ServerSubscriptionStatus } from "./constants";

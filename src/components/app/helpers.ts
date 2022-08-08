@@ -5,7 +5,8 @@ import {
 	selectedServer, server,
 	servers,
 } from "$store/store";
-import type { DetailedServer, Paginate, Server, ServerParameters, SubscriptionInfo } from "./models";
+import type { DetailedServer, Paginate, Server, SubscriptionInfo } from "./models";
+import type { ServerParameters } from "$components/parameters/models";
 import { containId, getOptions, handleResponse, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
@@ -44,14 +45,13 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 export async function setDefaultSelectedServer(): Promise<void> {
 	const s = get(servers);
 
-	const hasServers: boolean = s.data.length > 0;
 	const contains = containId(s, get(selectedServer)?.id);
 
 	if (!contains) {
 		selectedServer.set(s.data[0]);
 		await refreshSelectedServer();
-	} else if (!hasServers) {
-		selectedServer.set(null);
+	} else {
+		selectedServer.set(contains);
 	}
 }
 
@@ -82,11 +82,6 @@ export async function refreshSelectedServer(): Promise<void> {
 export async function patchServer(selectedServer: string, action: string): Promise<void> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
 	await handleResponse(request);
-}
-
-export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<ServerParameters> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
-	return await handleResponse(request) as ServerParameters;
 }
 
 export async function getSubscription(selectedServer: string): Promise<SubscriptionInfo> {

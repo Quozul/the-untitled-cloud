@@ -1,6 +1,7 @@
 import type { Id } from "$shared/models";
 import type { DockerStatus } from "./constants";
 import type { ServerSubscriptionStatus } from "./constants";
+import type { ServerParameters } from "$components/parameters/models";
 
 export type Paginate<T extends Id> = {
 	data: T[],
@@ -43,24 +44,14 @@ export type ServerState = {
 	finishedAt: string | null,
 }
 
-export type ServerParameters = {
-	version: string,
-	eula: boolean,
-	serverType: string,
-	forgeVersion: string | null,
-	fabricLauncherVersion: string | null,
-	fabricLoaderVersion: string | null,
-	quiltLauncherVersion: string | null,
-	quiltLoaderVersion: string | null,
-	ftbModpackId: number | null,
-	ftbModpackVersionId: number | null,
-}
-
 export type DetailedServer = Id & {
 	subscriptionStatus: ServerSubscriptionStatus,
 	name: string | null,
 	port: string | null,
 	state: ServerState,
+	/**
+	 * @deprecated
+	 */
 	parameters: ServerParameters,
 }
 

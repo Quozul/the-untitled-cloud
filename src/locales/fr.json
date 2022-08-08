@@ -75,5 +75,7 @@
 	"server_status.running": "En marche",
 	"server_status.unavailable": "Non disponible",
 	"server_status.starting": "Démarre",
-	"server_status.stopped": "Éteint"
+	"server_status.stopped": "Éteint",
+	"latest_version": "Dernière",
+	"snapshot_version": "Snapshot"
 }

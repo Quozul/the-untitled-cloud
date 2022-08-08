@@ -1,31 +1,36 @@
 <script lang="ts">
-	import type { ServerParameters, Version } from "$components/app/models";
+	import type { Version } from "$components/app/models";
 	import { ServerType } from "$components/app/constants";
 	import { onMount } from "svelte";
 	import { VersionType } from "$components/app/models";
-    import { server } from "$store/store";
+    import { selectedServer, server } from "$store/store";
 	import Button from "$shared/Button.svelte";
-    import { putParameters, refreshSelectedServer } from "$components/app/helpers";
+    import { refreshSelectedServer } from "$components/app/helpers";
+    import type { ServerParameters } from "./models";
+    import { getParameters, putParameters } from "./helpers";
 
     let parameters: ServerParameters;
-	$: parameters = $server.parameters;
 
 	let versions: Version[] = [];
 
-	onMount(() => {
+	onMount(async () => {
 		// TODO: This will be called everytime a change to serverType or jdkVersion is made
 		fetch(`${import.meta.env.VITE_API_BASE_URL}versions`, { method: "GET" })
             .then(res => res.json())
             .then((json: Version[]) => {
 				versions = json;
             });
-    })
+
+        parameters = await getParameters($selectedServer.id);
+    });
 
 	async function submit() {
 		await putParameters($server.id, parameters);
         await refreshSelectedServer();
 	}
 </script>
+
+{#if parameters}
 
 <form class="bg-light p-4 d-flex element flex-column">
     <h4>Paramètres</h4>
@@ -100,3 +105,5 @@
         Sauvegarder
     </Button>
 </form>
+
+{/if}
