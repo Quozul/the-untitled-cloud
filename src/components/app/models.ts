@@ -1,5 +1,5 @@
 import type { Id } from "$shared/models";
-import type { ServerStatus } from "./constants";
+import type { DockerStatus } from "./constants";
 import type { ServerSubscriptionStatus } from "./constants";
 
 export type Paginate<T extends Id> = {
@@ -23,21 +23,24 @@ export const EmptyPaginate: Paginate<any> = {
 export type Server = Id & {
 	name: string,
 	subscriptionStatus: ServerSubscriptionStatus,
-	serverStatus: ServerStatus | null,
+	serverStatus: DockerStatus | null,
+}
+
+export enum ServerStatus {
+	RESTARTING = "RESTARTING",
+	RUNNING = "RUNNING",
+	UNAVAILABLE = "UNAVAILABLE",
+	STARTING = "STARTING",
+	STOPPED = "STOPPED",
 }
 
 export type ServerState = {
-	status: string | null,
-	running: boolean | null,
-	paused: boolean | null,
-	restarting: boolean | null,
-	oomKilled: boolean | null,
-	dead: boolean | null,
-	exitCode: number | null,
-	error: string | null,
+	status: ServerStatus,
+	created: boolean,
+	running: boolean,
+	starting: boolean,
 	startedAt: string | null,
 	finishedAt: string | null,
-	failingStreak: number | null,
 }
 
 export type ServerParameters = {
@@ -55,10 +58,9 @@ export type ServerParameters = {
 
 export type DetailedServer = Id & {
 	subscriptionStatus: ServerSubscriptionStatus,
-	serverCreated: boolean,
 	name: string | null,
 	port: string | null,
-	state: ServerState | null,
+	state: ServerState,
 	parameters: ServerParameters,
 }
 

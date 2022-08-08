@@ -104,23 +104,29 @@
 	}
 </style>
 
-{#if !socket}
-	<div class="d-flex justify-content-center align-items-center"><button class="btn btn-secondary btn-sm" on:click={connect}>Se connecter à la console</button></div>
-{:else}
-	<div class="console-container bg-dark text-white p-3 flex-grow-1">
-		<div class="align"></div>
-		<div class="console" bind:this={consoleElement}>
-			{@html logs}
-			<div contentEditable class="input" bind:this={input} on:keypress={submitCommand}></div>
-		</div>
-	</div>
-
+{#if $server.state.starting}
 	<div class="alert alert-info">
-		<h6 class="fw-bold d-flex align-items-center gap-2">
-			<Icon key="question"/>
-			Pourquoi je ne vois pas les logs dans la console ?
-		</h6>
-		Il s'agit d'une console de contrôle à distance, elle permet simplement d'exécuter des commandes sur le serveur.<br/>
-		Si vous souhaitez voir les logs, je vous invite à utiliser le FTP pour lire les fichiers de logs.
+		Votre serveur est en train de démarrer, veuillez patienter.
 	</div>
+{:else}
+	{#if !socket}
+		<div class="d-flex justify-content-center align-items-center"><button class="btn btn-secondary btn-sm" on:click={connect}>Se connecter à la console</button></div>
+	{:else}
+		<div class="console-container bg-dark text-white p-3 flex-grow-1">
+			<div class="align"></div>
+			<div class="console" bind:this={consoleElement}>
+				{@html logs}
+				<div contentEditable class="input" bind:this={input} on:keypress={submitCommand}></div>
+			</div>
+		</div>
+
+		<div class="alert alert-info">
+			<h6 class="fw-bold d-flex align-items-center gap-2">
+				<Icon key="question"/>
+				Pourquoi je ne vois pas les logs dans la console ?
+			</h6>
+			Il s'agit d'une console de contrôle à distance, elle permet simplement d'exécuter des commandes sur le serveur.<br/>
+			Si vous souhaitez voir les logs, je vous invite à utiliser le FTP pour lire les fichiers de logs.
+		</div>
+	{/if}
 {/if}

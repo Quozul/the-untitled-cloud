@@ -8,8 +8,6 @@
 	import fr from "$locales/fr.json";
 	import { defaultLocale } from "$shared/constants";
 
-	export const prerender = true;
-
 	/**
 	 * @type {import("@sveltejs/kit").Load}
 	 */

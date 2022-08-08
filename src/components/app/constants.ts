@@ -1,4 +1,4 @@
-export enum ServerStatus {
+export enum DockerStatus {
 	CREATED = "created",
 	RESTARTING = "restarting",
 	RUNNING = "running",

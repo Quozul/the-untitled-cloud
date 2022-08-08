@@ -51,14 +51,14 @@
 		<div class="separation">
 			<dt>Identifiant</dt>
 			<dd>
-				L'adresse mail que vous utilisez pour vous connecter aux site.
+				L'adresse mail que vous utilisez pour vous connecter au site.
 			</dd>
 		</div>
 
 		<div class="separation">
 			<dt>Mot de passe</dt>
 			<dd>
-				Le même que pour vous connecter aux site.
+				Le même que pour vous connecter au site.
 			</dd>
 		</div>
 

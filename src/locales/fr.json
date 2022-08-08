@@ -70,5 +70,10 @@
 	"error.stripe_error": "Une erreur est survenue lors du paiement.",
 	"error.fetch_failed": "Nous n'avons pas réussis à contacter notre service distant.",
 	"error.password_differ": "Les mots de passes doivent correspondrent.",
-	"error.empty": "Vide"
+	"error.empty": "Vide",
+	"server_status.restarting": "Redémarre",
+	"server_status.running": "En marche",
+	"server_status.unavailable": "Non disponible",
+	"server_status.starting": "Démarre",
+	"server_status.stopped": "Éteint"
 }

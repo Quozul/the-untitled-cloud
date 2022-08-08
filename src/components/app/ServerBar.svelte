@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
-	import { ServerStatus, ServerSubscriptionStatus } from "./constants";
+	import { DockerStatus, ServerSubscriptionStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "./helpers";
 	import { ButtonVariant } from "$shared/constants";
+	import { t } from "svelte-intl-precompile";
 
 	// State
 	let started: ZonedDateTime = null;
@@ -14,6 +15,7 @@
 	let duration: Duration = Duration.ZERO;
 	let formattedStartDate: string = "Jamais";
 	let name: string = "Chargement";
+	let menu: boolean = false;
 
 	// Constants
 	const formatter = DateTimeFormatter
@@ -21,17 +23,15 @@
 		.withLocale(Locale.FRANCE);
 
 	$: {
-		if ($server) {
-			if ($server.state) {
-				// Parse dates
-				started = ZonedDateTime.parse($server.state.startedAt);
-				stopped = ZonedDateTime.parse($server.state.finishedAt);
-				if (stopped.year() === 1) {
-					stopped = ZonedDateTime.now();
-				}
-				duration = Duration.between(started, stopped);
-				formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
+		if ($server && $server.state.created) {
+			// Parse dates
+			started = ZonedDateTime.parse($server.state.startedAt);
+			stopped = ZonedDateTime.parse($server.state.finishedAt);
+			if (stopped.year() === 1) {
+				stopped = ZonedDateTime.now();
 			}
+			duration = Duration.between(started, stopped);
+			formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
 		}
 	}
 
@@ -43,72 +43,98 @@
 		}
 		await refreshSelectedServer();
 	}
+
+	function toggleMenu() {
+		menu = !menu;
+	}
 </script>
+
+<style lang="scss">
+	.server-bar {
+		white-space: nowrap;
+	}
+
+	@include media-breakpoint-down(lg) {
+		.server-bar {
+			width: 100%;
+		}
+	}
+</style>
 
 {#if $server}
 <div class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
-	<Button
-			onClick={toggleServerState}
-			className="d-flex align-items-center"
-			disabled="{!$server.serverCreated || $server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
-			variant={ButtonVariant.LIGHT}
-	>
-		{#if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
-			<Icon key="hourglass" width="28" height="28"/>
+	<div class="d-flex justify-content-between server-bar">
+		<Button
+				onClick={toggleServerState}
+				className="d-flex align-items-center"
+				disabled="{!$server.state.created || $server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+				variant={ButtonVariant.LIGHT}
+		>
+			{#if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+				<Icon key="hourglass" width="28" height="28"/>
 
-			<h3 class="m-0">En attente</h3>
-		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
-			<Icon key="pause" width="28" height="28"/>
+				<h3 class="m-0">En attente</h3>
+			{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+				<Icon key="pause" width="28" height="28"/>
 
-			<h3 class="m-0">Suspendu</h3>
-		{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
-			<Icon key="archive" width="28" height="28"/>
+				<h3 class="m-0">Suspendu</h3>
+			{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+				<Icon key="archive" width="28" height="28"/>
 
-			<h3 class="m-0">Terminé</h3>
-		{:else if $server.serverCreated && $server.name}
-			{#if $server.state?.running}
-				<Icon key="play-fill" width="28" height="28"/>
-			{:else}
-				<Icon key="stop-fill" width="28" height="28"/>
-			{/if}
-
-			<h3 class="m-0">{$server.name}</h3>
-		{:else}
-			<Icon key="warning" width="28" height="28"/>
-
-			<h3 class="m-0">Introuvable</h3>
-		{/if}
-	</Button>
-
-	<dl class="m-0 d-flex flex-column flex-xl-row gap-3 gap-lg-5">
-		<div>
-			<dt>État</dt>
-			<dd class="m-0">
-				{#if $server.serverCreated}
-					{$server.state.status}
-				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
-					En attente
-				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
-					Suspendu
-				{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
-					Terminé
+				<h3 class="m-0">Terminé</h3>
+			{:else if $server.state.created}
+				{#if $server.state.running}
+					<Icon key="play-fill" width="28" height="28"/>
 				{:else}
-					Introuvable
+					<Icon key="stop-fill" width="28" height="28"/>
 				{/if}
-			</dd>
-		</div>
 
-		{#if $server?.serverCreated}
+				<h3 class="m-0">{$server.name}</h3>
+			{:else}
+				<Icon key="warning" width="28" height="28"/>
+
+				<h3 class="m-0">Introuvable</h3>
+			{/if}
+		</Button>
+
+		<button class="btn btn-light d-lg-none" type="button" on:click|preventDefault={toggleMenu}>
+			<Icon key="list" width="28" height="28"/>
+		</button>
+	</div>
+
+	<div class="collapse navbar-collapse d-lg-block" class:show={menu}>
+		<dl class="m-0 d-flex flex-column flex-xl-row gap-3 gap-lg-5">
 			<div>
-				<dt>Dernier démarrage</dt>
+				<dt>État</dt>
 				<dd class="m-0">
-					{#if $server.state?.status === ServerStatus.CREATED}
-						Jamais démarré
+					{#if $server.state.created && $server.state.running}
+						{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()} minutes)
+					{:else if $server.state.created}
+						{$t(`server_status.${$server.state.status.toLowerCase()}`)}
+					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+						En attente
+					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+						Suspendu
+					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+						Terminé
 					{:else}
-						{formattedStartDate}
+						Introuvable
 					{/if}
 				</dd>
 			</div>
+
+			{#if $server?.state}
+				<div>
+					<dt>Dernier démarrage</dt>
+					<dd class="m-0">
+						{#if $server.state?.status === DockerStatus.CREATED}
+							Jamais démarré
+						{:else}
+							{formattedStartDate}
+						{/if}
+					</dd>
+				</div>
+			{/if}
 
 			<div>
 				<dt>Adresse de connexion</dt>
@@ -120,8 +146,8 @@
 					{/if}
 				</dd>
 			</div>
-		{/if}
-	</dl>
+		</dl>
+	</div>
 </div>
 {:else}
 	<div class="placeholder-glow bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
