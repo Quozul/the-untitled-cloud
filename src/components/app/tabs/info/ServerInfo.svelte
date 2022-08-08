@@ -68,7 +68,7 @@
 <div class="bg-light p-4 d-flex flex-column element">
     <h4>Actions</h4>
 
-    {#if $server?.serverCreated}
+    {#if $server?.state.created}
         <div class="d-flex gap-3 flex-wrap">
             {#if !$server.state.running}
                 <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="play" onClick={startServer}>

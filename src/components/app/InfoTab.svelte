@@ -17,7 +17,7 @@
 	$: {
 		isPending = $server?.subscriptionStatus === ServerSubscriptionStatus.PENDING;
 		isSuspended = $server?.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED;
-		containerNotFound = $server?.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !$server?.serverCreated;
+		containerNotFound = $server?.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !$server?.state.created;
 	}
 </script>
 
