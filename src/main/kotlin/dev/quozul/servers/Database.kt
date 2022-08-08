@@ -34,7 +34,7 @@ object Servers : UUIDTable("servers") {
 	val containerId = char("container_id", 64).nullable() // External foreign key to Docker
 	val subscriptionStatus = enumeration<SubscriptionServerStatus>("subscription_status") // Status of the subscription
 	val containerTag = varchar("container_tag", 255).default("latest") // Not used yet
-	val containerName = varchar("container_name", 255).nullable() // Not used yet
+	val containerName = varchar("container_name", 255) // Not used yet
 	val creationDate = datetime("creationDate").defaultExpression(CurrentDateTime())
 	val deletionDate = datetime("deletionDate").nullable()
 	val subscriptionProvider = enumeration<SubscriptionProvider>("subscription_provider").default(SubscriptionProvider.STRIPE)
@@ -86,6 +86,8 @@ object Parameters : IntIdTable("parameters") {
 	val version = varchar("version", 8).default("LATEST")
 	val eula = bool("eula").default(false)
 	val serverType = enumeration<ServerType>("server_type").default(ServerType.VANILLA)
+	val useAikar = bool("use_aikar").default(true)
+	val jvmFlags = varchar("jvm_flags", 1024).nullable()
 
 	// Type specific parameters
 
@@ -113,6 +115,8 @@ class Parameter(id: EntityID<Int>) : IntEntity(id) {
 	var version by Parameters.version
 	var eula by Parameters.eula
 	var serverType by Parameters.serverType
+	var useAikar by Parameters.useAikar
+	var jvmFlags by Parameters.jvmFlags
 
 	var forgeVersion by Parameters.forgeVersion
 	var fabricLauncherVersion by Parameters.fabricLauncherVersion

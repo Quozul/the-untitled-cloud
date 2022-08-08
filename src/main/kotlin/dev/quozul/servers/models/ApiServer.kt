@@ -55,5 +55,4 @@ data class DetailedApiServer(
 	val name: String?,
 	val port: String?,
 	val state: ServerState,
-	val parameters: ServerParameters,
 )

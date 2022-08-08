@@ -5,8 +5,6 @@ import com.github.dockerjava.api.exception.NotModifiedException
 import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.dockerClient
-import dev.quozul.servers.Parameter
-import dev.quozul.servers.Parameters
 import dev.quozul.servers.Server
 import dev.quozul.servers.models.*
 import dev.quozul.servers.recreateServer
@@ -46,12 +44,6 @@ fun Route.configureServerRoutes() {
 			null
 		}
 
-		val parameters = transaction {
-			Parameter.find {
-				Parameters.server eq serverId
-			}.first()
-		}
-
 		val exposedPort = ExposedPort.tcp(25565)
 		val port = container?.let { it.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
 		val state = ServerState.fromContainerState(container?.state)
@@ -62,7 +54,6 @@ fun Route.configureServerRoutes() {
 			server.containerName,
 			port,
 			state,
-			ServerParameters.fromParameterEntity(parameters),
 		)
 
 		call.respond(response)

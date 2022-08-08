@@ -23,6 +23,7 @@ fun Route.configureServersRoutes() {
 		val page = (call.request.queryParameters["page"] ?: "0").toInt()
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
 		val status = call.request.queryParameters["status"]
+		val offset = (page * size).toLong();
 
 		val (servers, count) = transaction {
 			val servers = when (status) {
@@ -30,18 +31,16 @@ fun Route.configureServersRoutes() {
 					Server.find {
 						(Servers.owner eq uuid) and (Servers.subscriptionStatus eq SubscriptionServerStatus.ENDED)
 					}
-						.limit(size, (page * size).toLong())
 				}
 
 				else -> {
 					Server.find {
 						(Servers.owner eq uuid) and (Servers.subscriptionStatus neq SubscriptionServerStatus.ENDED)
 					}
-						.limit(size, (page * size).toLong())
 				}
 			}
 
-			Pair(servers.map { ApiServer.fromServer(it) }, servers.count())
+			Pair(servers.limit(size, offset).map { ApiServer.fromServer(it) }, servers.count())
 		}
 
 		val lastPage = count <= (page + 1) * size
