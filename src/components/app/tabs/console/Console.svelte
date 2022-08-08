@@ -104,13 +104,21 @@
 	}
 </style>
 
-{#if $server.state.starting}
+{#if $server?.state?.starting}
 	<div class="alert alert-info">
 		Votre serveur est en train de démarrer, veuillez patienter.
 	</div>
+{:else if !$server?.state?.running}
+	<div class="alert alert-info">
+		Votre serveur doit être démarré pour pouvoir accéder à la console.
+	</div>
 {:else}
 	{#if !socket}
-		<div class="d-flex justify-content-center align-items-center"><button class="btn btn-secondary btn-sm" on:click={connect}>Se connecter à la console</button></div>
+		<div class="d-flex justify-content-center align-items-center">
+			<button class="btn btn-secondary" on:click={connect}>
+				Se connecter à la console
+			</button>
+		</div>
 	{:else}
 		<div class="console-container bg-dark text-white p-3 flex-grow-1">
 			<div class="align"></div>

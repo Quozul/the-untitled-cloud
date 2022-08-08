@@ -5,12 +5,8 @@
 	import { onMount } from "svelte";
 	import NoServer from "$components/app/tabs/info/errors/NoServer.svelte";
 	import ServerBar from "$components/app/ServerBar.svelte";
-	import { ServerTab } from "$components/app/constants";
-	import SubscriptionInfo from "$components/app/tabs/sub/SubscriptionInfo.svelte";
 	import { refreshSelectedServer, refreshAllServers } from "$components/app/helpers";
 	import Tabs from "$components/app/Tabs.svelte";
-	import InfoTab from "$components/app/InfoTab.svelte";
-	import Console from "$components/app/tabs/console/Console.svelte";
 	import InternalError from "$components/app/tabs/info/errors/InternalError.svelte";
 
 	// State
@@ -50,13 +46,7 @@
 
 			<Tabs/>
 
-			{#if $selectedTab === ServerTab.INFO}
-				<InfoTab/>
-			{:else if $selectedTab === ServerTab.CONSOLE}
-				<Console/>
-			{:else if $selectedTab === ServerTab.SUBSCRIPTION}
-				<SubscriptionInfo/>
-			{/if}
+			<slot/>
 		{:else if $fetchServersError}
 			<InternalError refresh={refreshAllServers}/>
 		{:else}

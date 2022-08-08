@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { selectedTab, server } from "$store/store";
 	import { ServerSubscriptionStatus, ServerTab } from "$components/app/constants";
+	import { goto } from "$app/navigation";
 
 	let isPending: boolean;
 	let isEnded: boolean;
@@ -13,41 +14,37 @@
 
 		// Set default tabs
 		if (isEnded && $selectedTab !== ServerTab.SUBSCRIPTION) {
-			$selectedTab = ServerTab.SUBSCRIPTION;
+			goto("/app/subscription/");
 		} else if (isPending && $selectedTab === ServerTab.CONSOLE) {
-			$selectedTab = ServerTab.INFO;
+			goto("/app/information/");
 		}
-	}
-
-	async function changeTab(newTab: ServerTab) {
-		$selectedTab = newTab;
 	}
 </script>
 
 <nav class="nav nav-pills nav-fill flex-column flex-lg-row">
-	<button
+	<a
 			class="nav-link"
 			class:active={$selectedTab === ServerTab.INFO}
-			on:click|preventDefault={() => changeTab(ServerTab.INFO)}
+			href="/app/information/"
 			disabled="{isEnded}"
 	>
 		Informations
-	</button>
+	</a>
 
-	<button
+	<a
 			class="nav-link"
 			class:active={$selectedTab === ServerTab.CONSOLE}
-			on:click|preventDefault={() => changeTab(ServerTab.CONSOLE)}
+			href="/app/console/"
 			disabled="{isPending || isEnded || isSuspended}"
 	>
 		Console
-	</button>
+	</a>
 
-	<button
+	<a
 			class="nav-link"
 			class:active={$selectedTab === ServerTab.SUBSCRIPTION}
-			on:click|preventDefault={() => changeTab(ServerTab.SUBSCRIPTION)}
+			href="/app/subscription/"
 	>
 		Abonnement
-	</button>
+	</a>
 </nav>
