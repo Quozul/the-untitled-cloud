@@ -6,7 +6,6 @@ import {
 	servers,
 } from "$store/store";
 import type { DetailedServer, Paginate, Server, SubscriptionInfo } from "./models";
-import type { ServerParameters } from "$components/parameters/models";
 import { containId, getOptions, handleResponse, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
@@ -18,7 +17,7 @@ export async function getAllServers(page: number = 0, ended: boolean = false): P
 		params.set("status", "ENDED");
 	}
 
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server?${params.toString()}`, getOptions("GET"))
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription?${params.toString()}`, getOptions("GET"))
 	return await handleResponse(request) as Paginate<Server>;
 }
 
