@@ -1,8 +1,7 @@
 package dev.quozul.plugins
 
-import dev.quozul.authentication.Users
-import dev.quozul.servers.Parameters
-import dev.quozul.servers.Servers
+import dev.quozul.database.models.*
+import dev.quozul.payments.provider.stripe.ProductPrices
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -18,12 +17,20 @@ fun Application.configureDatabase() {
     )
 
     transaction {
-        SchemaUtils.create(Users)
+        SchemaUtils.create(Containers)
+        SchemaUtils.create(Options)
+        SchemaUtils.create(Products)
         SchemaUtils.create(Servers)
-        SchemaUtils.create(Parameters)
+        SchemaUtils.create(Subscriptions)
+        SchemaUtils.create(SubscriptionItems)
+        SchemaUtils.create(Users)
 
-        println(SchemaUtils.statementsRequiredToActualizeScheme(Users))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Containers))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Options))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Products))
         println(SchemaUtils.statementsRequiredToActualizeScheme(Servers))
-        println(SchemaUtils.statementsRequiredToActualizeScheme(Parameters))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Subscriptions))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(SubscriptionItems))
+        println(SchemaUtils.statementsRequiredToActualizeScheme(Users))
     }
 }

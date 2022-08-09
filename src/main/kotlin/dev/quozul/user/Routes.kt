@@ -2,7 +2,7 @@ package dev.quozul.user
 
 import dev.quozul.payments.provider.stripe.models.Address
 import com.stripe.param.CustomerUpdateParams
-import dev.quozul.authentication.User
+import dev.quozul.database.models.User
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import io.ktor.http.*
 import io.ktor.server.application.*

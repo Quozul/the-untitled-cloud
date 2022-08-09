@@ -1,20 +1,21 @@
 package dev.quozul.payments.provider.stripe.routes
 
 import com.stripe.exception.StripeException
-import com.stripe.model.Invoice
 import com.stripe.model.PaymentIntent
-import com.stripe.model.Subscription
+import com.stripe.model.Subscription as StripeSubscription
+import com.stripe.param.PaymentIntentRetrieveParams
 import com.stripe.param.SubscriptionCreateParams
-import dev.quozul.authentication.User
 import dev.quozul.authentication.models.AuthenticationErrors
+import dev.quozul.database.enums.SubscriptionProvider
+import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.models.Subscription
+import dev.quozul.database.models.User
+import dev.quozul.database.models.getProductFromStripeId
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
-import dev.quozul.servers.SubscriptionServerStatus
-import dev.quozul.servers.createOrUpdateServer
-import dev.quozul.servers.findServerFromSubscription
-import dev.quozul.servers.models.ApiServer
+import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -23,10 +24,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
+import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-fun Route.configureSubscriptionRoutes() {
+fun Route.configureServerSubscriptionRoutes() {
 	// Subscription intent
 	post("") {
 		// We have only one product, so no input is expected
@@ -47,6 +49,7 @@ fun Route.configureSubscriptionRoutes() {
 				.setSaveDefaultPaymentMethod(SubscriptionCreateParams.PaymentSettings.SaveDefaultPaymentMethod.ON_SUBSCRIPTION)
 				.build()
 
+			// TODO: User should provide Product.id, search for priceId in database
 			val item = SubscriptionCreateParams.Item.builder()
 				.setPrice(ProductPrices.MINECRAFT_SERVER_BASIC.priceId)
 				.build()
@@ -60,7 +63,7 @@ fun Route.configureSubscriptionRoutes() {
 				.build()
 
 			val subscription = try {
-				Subscription.create(subCreateParams)
+				StripeSubscription.create(subCreateParams)
 			} catch (_: StripeException) {
 				call.response.status(HttpStatusCode.InternalServerError)
 				call.respond(AuthenticationErrors.STRIPE_ERROR.toHashMap(true))
@@ -96,19 +99,34 @@ fun Route.configureSubscriptionRoutes() {
 			return@put
 		}
 
-		val invoice = try {
-			val paymentIntent = PaymentIntent.retrieve(body.paymentIntentId)
-			Invoice.retrieve(paymentIntent.invoice)
-		} catch (_: StripeException) {
-			call.response.status(HttpStatusCode.BadRequest)
+		val paymentIntent = try {
+			val params = PaymentIntentRetrieveParams.builder()
+				.addAllExpand(listOf("invoice", "invoice.subscription"))
+				.build()
+			PaymentIntent.retrieve(body.paymentIntentId, params, null)
+		} catch (e: StripeException) {
+			e.printStackTrace()
+			call.response.status(HttpStatusCode.InternalServerError)
 			return@put
 		}
 
-		if (invoice.subscription != null) {
-			val server = findServerFromSubscription(invoice.subscription) ?: createOrUpdateServer(user, invoice.subscription, SubscriptionServerStatus.PENDING)
-			call.respond(ApiServer.fromServer(server))
-		} else {
-			call.response.status(HttpStatusCode.NotFound)
+		val stripeId = paymentIntent.invoiceObject.subscription
+
+		val subscription = transaction {
+			val products = paymentIntent.invoiceObject.subscriptionObject.items.data.mapNotNull {
+				getProductFromStripeId(it.price.id)
+			}
+
+			Subscription.new {
+				owner = user
+				subscriptionStatus = SubscriptionStatus.PENDING
+				subscriptionProvider = SubscriptionProvider.STRIPE
+				this.stripeId = stripeId
+				this.products = SizedCollection(products)
+				name = NameGenerator.getRandomName()
+			}
 		}
+
+		call.respond(subscription.toApiSubscription())
 	}
 }

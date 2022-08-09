@@ -1,11 +1,11 @@
 package dev.quozul.servers.routes
 
-import dev.quozul.servers.Parameter
-import dev.quozul.servers.Parameters
-import dev.quozul.servers.Server
+import dev.quozul.database.helpers.ApiServer
+import dev.quozul.database.models.Container
+import dev.quozul.database.models.Subscription
+import dev.quozul.database.models.findServerFromContainer
 import dev.quozul.servers.helpers.NameGenerator
 import dev.quozul.servers.models.ServerName
-import dev.quozul.servers.models.ServerParameters
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -25,11 +25,9 @@ fun Route.configureParametersRoutes() {
 			return@get
 		}
 
-		try {
-			call.respond(ServerParameters.fromServerId(serverId));
-		} catch (_: NoSuchElementException) {
-			call.response.status(HttpStatusCode.NotFound)
-		}
+		ApiServer.findFromContainerId(serverId)?.let {
+			call.respond(it)
+		} ?: call.response.status(HttpStatusCode.NotFound)
 	}
 
 	put("/name") {
@@ -48,8 +46,8 @@ fun Route.configureParametersRoutes() {
 		}
 
 		transaction {
-			val server = Server.findById(serverId)!!
-			server.containerName = name.name ?: NameGenerator.getRandomName()
+			val subscription = Subscription.findById(serverId)!!
+			subscription.name = name.name ?: NameGenerator.getRandomName()
 		}
 
 		call.response.status(HttpStatusCode.OK)
@@ -64,35 +62,32 @@ fun Route.configureParametersRoutes() {
 		}
 
 		val parameters = try {
-			call.receive<ServerParameters>()
+			call.receive<ApiServer>()
 		} catch (e: SerializationException) {
 			call.response.status(HttpStatusCode.BadRequest)
 			return@put
 		}
 
 		transaction {
-			val server = Server.findById(serverId)!!
+			val container = Container.findById(serverId)!!
 
-			server.containerName = parameters.name
-			server.containerTag = parameters.tag
+//			container.subscription.name = parameters.name
+//			container.containerTag = parameters.tag
 
-			// TODO: Create if not exists
-			val parameter = Parameter.find {
-				Parameters.server eq serverId
-			}.first()
-
-			parameter.version = parameters.version
-			parameter.eula = parameters.eula
-			parameter.serverType = parameters.serverType
-			parameter.forgeVersion = parameters.forgeVersion
-			parameter.fabricLauncherVersion = parameters.fabricLauncherVersion
-			parameter.fabricLoaderVersion = parameters.fabricLoaderVersion
-			parameter.quiltLauncherVersion = parameters.quiltLauncherVersion
-			parameter.quiltLoaderVersion = parameters.quiltLoaderVersion
-			parameter.ftbModpackId = parameters.ftbModpackId
-			parameter.ftbModpackVersionId = parameters.ftbModpackVersionId
-			parameter.useAikar = parameters.useAikar
-			parameter.jvmFlags = parameters.jvmFlags
+			// TODO: Verify container.product is a Minecraft Server
+			findServerFromContainer(container)?.let {
+				it.version = parameters.version
+				it.serverType = parameters.serverType
+				it.forgeVersion = parameters.forgeVersion
+				it.fabricLauncherVersion = parameters.fabricLauncherVersion
+				it.fabricLoaderVersion = parameters.fabricLoaderVersion
+				it.quiltLauncherVersion = parameters.quiltLauncherVersion
+				it.quiltLoaderVersion = parameters.quiltLoaderVersion
+				it.ftbModpackId = parameters.ftbModpackId
+				it.ftbModpackVersionId = parameters.ftbModpackVersionId
+				it.useAikar = parameters.useAikar
+				it.jvmFlags = parameters.jvmFlags
+			}
 		}
 
 		call.response.status(HttpStatusCode.OK)

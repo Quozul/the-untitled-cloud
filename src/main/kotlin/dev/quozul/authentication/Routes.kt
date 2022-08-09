@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.authentication.models.SignInCredentials
 import dev.quozul.authentication.models.SignUpCredentials
+import dev.quozul.database.models.User
+import dev.quozul.database.models.Users
 import dev.quozul.user.sendEmail
 import io.ktor.http.*
 import io.ktor.server.application.*

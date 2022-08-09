@@ -3,8 +3,8 @@ package dev.quozul.payments.provider.stripe
 import com.stripe.exception.InvalidRequestException
 import com.stripe.model.Customer
 import com.stripe.param.CustomerCreateParams
-import dev.quozul.authentication.User
-import dev.quozul.authentication.Users
+import dev.quozul.database.models.User
+import dev.quozul.database.models.Users
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 

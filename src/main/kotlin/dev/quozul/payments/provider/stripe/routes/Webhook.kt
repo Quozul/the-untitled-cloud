@@ -1,20 +1,23 @@
 package dev.quozul.payments.provider.stripe.routes
 
 import com.stripe.exception.SignatureVerificationException
-import com.stripe.exception.StripeException
 import com.stripe.model.*
 import com.stripe.net.Webhook
-import com.stripe.param.InvoiceRetrieveParams
-import com.stripe.param.InvoiceVoidInvoiceParams
-import dev.quozul.payments.provider.stripe.getUserFromStripeId
-import dev.quozul.servers.createContainer
-import dev.quozul.servers.deleteContainer
-import dev.quozul.servers.suspendContainer
+import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.helpers.DockerContainer
+import dev.quozul.database.models.Container
+import dev.quozul.database.models.Server
+import dev.quozul.database.models.Subscriptions
+import dev.quozul.database.models.getSubscriptionFromStripeId
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.configureStripeWebhook() {
 	val endpointSecret = environment!!.config.property("payments.stripe.endpointSecret").getString()
@@ -27,6 +30,7 @@ fun Route.configureStripeWebhook() {
 		val event: Event = try {
 			Webhook.constructEvent(payload, sigHeader, endpointSecret)
 		} catch (e: SignatureVerificationException) {
+			e.printStackTrace()
 			// Invalid signature
 			call.response.status(HttpStatusCode.BadRequest)
 			return@post
@@ -47,32 +51,59 @@ fun Route.configureStripeWebhook() {
 			"invoice.paid" -> {
 				stripeObject as Invoice
 
-				getUserFromStripeId(stripeObject.customer)?.let {
-					// TODO: Support other products and options
-					createContainer(it, stripeObject.subscription)
-					call.response.status(HttpStatusCode.OK)
-				} ?: call.response.status(HttpStatusCode.BadRequest)
+				newSuspendedTransaction {
+					dev.quozul.database.models.Subscription.find {
+						Subscriptions.stripeId eq stripeObject.subscription
+					}.firstOrNull()?.let { subscription ->
+						subscription.products.forEach { product ->
+							val dockerContainer = DockerContainer.new(product.dockerImage)
+
+							val container = Container.new {
+								containerId = dockerContainer?.containerId
+								this.product = product
+								this.subscription = subscription
+							}
+
+							Server.new {
+								this.container = container
+							}
+						}
+
+						subscription.subscriptionStatus = SubscriptionStatus.ACTIVE
+					}
+				}
+
+				call.response.status(HttpStatusCode.OK)
 			}
 
 			"invoice.payment_failed" -> {
 				stripeObject as Invoice
 
-				getUserFromStripeId(stripeObject.customer)?.let {
-					suspendContainer(it, stripeObject.subscription)
-					call.response.status(HttpStatusCode.OK)
-				} ?: call.response.status(HttpStatusCode.BadRequest)
+				getSubscriptionFromStripeId(stripeObject.id)?.let { subscription ->
+					transaction {
+						subscription.subscriptionStatus = SubscriptionStatus.SUSPENDED
+					}
+
+					// TODO: Stop containers
+				}
+
+				call.response.status(HttpStatusCode.OK)
 			}
 
 			"customer.subscription.deleted" -> {
 				stripeObject as Subscription
 
-				getUserFromStripeId(stripeObject.customer)?.let {
-					deleteContainer(it, stripeObject.id)
-					call.response.status(HttpStatusCode.OK)
-				} ?: run {
-					call.respondText("Cannot find user")
-					call.response.status(HttpStatusCode.BadRequest)
+				getSubscriptionFromStripeId(stripeObject.id)?.let { subscription ->
+					transaction {
+						subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
+					}
+
+					subscription.containers.forEach { container ->
+						container.dockerContainer?.remove()
+					}
 				}
+
+				call.response.status(HttpStatusCode.OK)
 			}
 
 			else -> {

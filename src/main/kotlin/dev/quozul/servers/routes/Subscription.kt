@@ -1,13 +1,14 @@
 package dev.quozul.servers.routes
 
 import com.stripe.exception.StripeException
-import com.stripe.model.Subscription
+import com.stripe.model.Subscription as StripeSubscription
 import com.stripe.param.SubscriptionCancelParams
 import com.stripe.param.SubscriptionRetrieveParams
 import com.stripe.param.SubscriptionUpdateParams
 import dev.quozul.authentication.models.AuthenticationErrors
-import dev.quozul.servers.Server
-import dev.quozul.servers.SubscriptionServerStatus
+import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.models.Container
+import dev.quozul.database.models.Subscription
 import dev.quozul.servers.models.ApiInvoice
 import dev.quozul.servers.models.CancelMode
 import dev.quozul.servers.models.SubscriptionInfo
@@ -27,7 +28,7 @@ fun Route.configureServerSubscriptionRoutes() {
 			val server = try {
 				val serverId = UUID.fromString(call.parameters["serverId"]!!)
 				transaction {
-					Server.findById(serverId)!!
+					Subscription.findById(serverId)!!
 				}
 			} catch (e: NullPointerException) {
 				call.response.status(HttpStatusCode.BadRequest)
@@ -37,7 +38,7 @@ fun Route.configureServerSubscriptionRoutes() {
 			try {
 				val params = SubscriptionRetrieveParams.builder()
 					.addAllExpand(listOf("default_payment_method", "latest_invoice")).build()
-				val subscription = Subscription.retrieve(server.subscriptionId, params, null)
+				val subscription = StripeSubscription.retrieve(server.stripeId, params, null)
 				val paymentMethod = subscription.defaultPaymentMethodObject
 				val invoice = subscription.latestInvoiceObject
 
@@ -75,7 +76,7 @@ fun Route.configureServerSubscriptionRoutes() {
 			val server = try {
 				val serverId = UUID.fromString(call.parameters["serverId"]!!)
 				transaction {
-					Server.findById(serverId)!!
+					Container.findById(serverId)!!
 				}
 			} catch (e: NullPointerException) {
 				call.response.status(HttpStatusCode.BadRequest)
@@ -94,7 +95,7 @@ fun Route.configureServerSubscriptionRoutes() {
 					.addExpand("latest_invoice")
 					.build()
 
-				Subscription.retrieve(server.subscriptionId, params, null)
+				StripeSubscription.retrieve(server.subscription.stripeId, params, null)
 			} catch (_: StripeException) {
 				call.response.status(HttpStatusCode.NotFound)
 				return@delete
@@ -127,7 +128,7 @@ fun Route.configureServerSubscriptionRoutes() {
 				}
 
 				transaction {
-					server.subscriptionStatus = SubscriptionServerStatus.SUSPENDED
+					server.subscription.subscriptionStatus = SubscriptionStatus.SUSPENDED
 				}
 
 				call.response.status(HttpStatusCode.NoContent)
