@@ -17,7 +17,7 @@ export async function getAllServers(page: number = 0, ended: boolean = false): P
 		params.set("status", "ENDED");
 	}
 
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription?${params.toString()}`, getOptions("GET"))
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service?${params.toString()}`, getOptions("GET"))
 	return await handleResponse(request) as Paginate<Server>;
 }
 
@@ -55,7 +55,7 @@ export async function setDefaultSelectedServer(): Promise<void> {
 }
 
 export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("GET"))
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}`, getOptions("GET"))
 	return await handleResponse(request) as DetailedServer;
 }
 
