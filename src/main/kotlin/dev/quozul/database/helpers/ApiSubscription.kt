@@ -1,6 +1,7 @@
 package dev.quozul.database.helpers
 
 import com.stripe.param.SubscriptionRetrieveParams
+import com.stripe.model.Subscription as StripeSubscription
 import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.Subscription
@@ -8,15 +9,11 @@ import dev.quozul.database.models.Subscriptions
 import dev.quozul.database.models.User
 import dev.quozul.servers.models.ApiInvoice
 import dev.quozul.servers.models.SubscriptionInfo
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
 
 @Serializable
 data class ApiSubscription(
@@ -26,11 +23,6 @@ data class ApiSubscription(
 	val creationDate: LocalDateTime,
 	val deletionDate: LocalDateTime?,
 	val name: String?,
-
-	// Expandable fields
-	var products: List<ApiProduct>? = null,
-	var containers: List<ApiContainer>? = null,
-	var details: SubscriptionInfo? = null,
 ) {
 	companion object {
 		fun fromOwner(owner: User): List<ApiSubscription> = transaction {
@@ -41,21 +33,13 @@ data class ApiSubscription(
 					it.toApiSubscription()
 				}
 		}
-	}
 
-	fun expandDetails(): ApiSubscription {
-		details = try {
-			val uid = UUID.fromString(id)
-			println(uid)
-			val stripeId = transaction {
-				Subscription.findById(uid)!!.stripeId
-			}
-
+		fun getDetails(subscription: Subscription) = try {
 			val params = SubscriptionRetrieveParams.builder()
 				.addAllExpand(listOf("default_payment_method", "latest_invoice")).build()
-			val subscription = com.stripe.model.Subscription.retrieve(stripeId, params, null)
-			val paymentMethod = subscription.defaultPaymentMethodObject
-			val invoice = subscription.latestInvoiceObject
+			val stripeSubscription = StripeSubscription.retrieve(subscription.stripeId, params, null)
+			val paymentMethod = stripeSubscription.defaultPaymentMethodObject
+			val invoice = stripeSubscription.latestInvoiceObject
 
 			val latestInvoice = ApiInvoice(
 				Instant.fromEpochSeconds(invoice.periodStart),
@@ -69,12 +53,12 @@ data class ApiSubscription(
 			)
 
 			SubscriptionInfo(
-				Instant.fromEpochSeconds(subscription.startDate),
-				Instant.fromEpochSeconds(subscription.currentPeriodStart),
-				Instant.fromEpochSeconds(subscription.currentPeriodEnd),
-				subscription.canceledAt?.let { Instant.fromEpochSeconds(subscription.canceledAt) },
-				subscription.status,
-				subscription.cancelAtPeriodEnd,
+				Instant.fromEpochSeconds(stripeSubscription.startDate),
+				Instant.fromEpochSeconds(stripeSubscription.currentPeriodStart),
+				Instant.fromEpochSeconds(stripeSubscription.currentPeriodEnd),
+				stripeSubscription.canceledAt?.let { Instant.fromEpochSeconds(stripeSubscription.canceledAt) },
+				stripeSubscription.status,
+				stripeSubscription.cancelAtPeriodEnd,
 				paymentMethod.type,
 				paymentMethod.card?.last4 ?: paymentMethod.sepaDebit?.last4,
 				latestInvoice,
@@ -82,7 +66,5 @@ data class ApiSubscription(
 		} catch (e: SerializationException) {
 			null
 		}
-
-		return this
 	}
 }

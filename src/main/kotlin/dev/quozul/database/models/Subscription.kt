@@ -3,7 +3,9 @@ package dev.quozul.database.models
 import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiContainer
+import dev.quozul.database.helpers.ApiProduct
 import dev.quozul.database.helpers.ApiSubscription
+import dev.quozul.servers.models.Paginate
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -54,8 +56,44 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 			LocalDateTime.parse(creationDate.toString()),
 			deletionDate?.let { LocalDateTime.parse(it.toString()) },
 			name,
-			products.map { it.toApiProduct() },
-			containers.map { it.toApiContainer() },
+		)
+	}
+
+	fun toApiProducts() = transaction {
+		products.map { it.toApiProduct() }
+	}
+
+	fun toApiContainers() = transaction {
+		containers.map { it.toApiContainer() }
+	}
+
+	fun toPaginatedApiProducts(page: Int, size: Int) = transaction {
+		val offset = (page * size).toLong();
+		val count = products.count()
+		val lastPage = count <= (page + 1) * size
+
+		Paginate(
+			products.limit(size, offset).map { it.toApiProduct() },
+			page == 0,
+			lastPage,
+			count / size,
+			count,
+			page,
+		)
+	}
+
+	fun toPaginatedApiContainers(page: Int, size: Int) = transaction {
+		val offset = (page * size).toLong();
+		val count = containers.count()
+		val lastPage = count <= (page + 1) * size
+
+		Paginate(
+			containers.limit(size, offset).map { it.toApiContainer() },
+			page == 0,
+			lastPage,
+			count / size,
+			count,
+			page,
 		)
 	}
 }
@@ -66,6 +104,17 @@ fun getSubscriptionFromStripeId(stripeId: String) = transaction {
 	}.firstOrNull()
 }
 
+@Deprecated("Unsafe, use findSubscriptionWithOwnership", replaceWith = ReplaceWith("findSubscriptionWithOwnership()"))
 fun getSubscriptionFromId(id: UUID) = transaction {
 	Subscription.findById(id)
+}
+
+fun findSubscriptionWithOwnership(id: UUID, owner: UUID) = transaction {
+	Subscription.findById(id)?.let {
+		if (it.owner.id.value != owner) {
+			null
+		} else {
+			it
+		}
+	}
 }

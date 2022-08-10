@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-object Servers : UUIDTable("servers") {
+object Servers : UUIDTable("server") {
 	val container = reference("container", Containers)
 
 	val version = Servers.varchar("version", 8).default("LATEST")

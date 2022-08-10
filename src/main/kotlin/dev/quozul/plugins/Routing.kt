@@ -6,7 +6,8 @@ import dev.quozul.payments.provider.stripe.routes.configureServerSubscriptionRou
 import dev.quozul.products.configureProductsRoutes
 import dev.quozul.servers.configureServersRoutes
 import dev.quozul.servers.routes.configureConsoleWebsocket
-import dev.quozul.subscriptions.configureSubscriptionRoutes
+import dev.quozul.service.configureServiceRoutes
+import dev.quozul.subscription.configureSubscriptionRoutes
 import dev.quozul.user.configureUserRoutes
 import dev.quozul.versions.configureVersionRoutes
 import io.ktor.server.routing.*
@@ -16,6 +17,7 @@ import io.ktor.server.response.*
 
 fun Application.configureRouting() {
 	routing {
+		// Routes v1
 		get("/health") {
 			call.respondText("Ok")
 		}
@@ -24,18 +26,8 @@ fun Application.configureRouting() {
 			configureAuthenticationRoutes()
 		}
 
-		route("/products") {
-			configureProductsRoutes()
-		}
-
 		route("/user") {
 			configureUserRoutes()
-		}
-
-		route("/subscription") {
-			authenticate {
-				configureSubscriptionRoutes()
-			}
 		}
 
 		route("/payment") {
@@ -59,6 +51,21 @@ fun Application.configureRouting() {
 
 		route("/versions") {
 			configureVersionRoutes()
+		}
+
+		// Routes v2
+		route("/product") {
+			configureProductsRoutes()
+		}
+
+		authenticate {
+			route("/subscription") {
+				configureSubscriptionRoutes()
+			}
+
+			route("/service") {
+				configureServiceRoutes()
+			}
 		}
 	}
 }

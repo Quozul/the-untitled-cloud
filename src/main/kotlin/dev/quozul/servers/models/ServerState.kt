@@ -49,7 +49,7 @@ data class ServerState(
 				containerState != null,
 				containerState?.running == true,
 				containerState?.health?.status == "starting",
-				containerState?.startedAt,
+				containerState?.startedAt, // TODO: Replace startedAt and finishedAt with null
 				containerState?.finishedAt,
 			)
 		}

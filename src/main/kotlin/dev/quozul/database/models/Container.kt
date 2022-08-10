@@ -44,12 +44,13 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 		val state = ServerState.fromContainerState(dockerContainer?.state)
 
 		return ApiContainer(
-			server,
-			product.toApiProduct(),
 			id.toString(),
+			product.id.toString(),
+			subscription.id.toString(),
 			containerTag,
 			port,
 			state,
+			server,
 		)
 	}
 
@@ -57,8 +58,19 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 		get() = containerId?.let { DockerContainer(it) }
 }
 
+@Deprecated("Unsafe, use findContainerWithOwnership", replaceWith = ReplaceWith("findContainerWithOwnership()"))
 fun findContainerFromId(id: UUID) = transaction {
 	Container.findById(id)
+}
+
+fun findContainerWithOwnership(id: UUID, owner: UUID) = transaction {
+	Container.findById(id)?.let {
+		if (it.subscription.owner.id.value != owner) {
+			null
+		} else {
+			it
+		}
+	}
 }
 
 fun findWithOwner(owner: UUID, status: SubscriptionStatus = SubscriptionStatus.ACTIVE) = transaction {

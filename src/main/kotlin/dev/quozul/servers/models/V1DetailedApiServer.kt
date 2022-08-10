@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Deprecated("Use Container.toApiContainer() instead")
 @Serializable
 data class V1DetailedApiServer(
-	val id: String,
+	val id: String?,
 	val subscriptionStatus: SubscriptionStatus,
 	val name: String?,
 	val port: String?,
