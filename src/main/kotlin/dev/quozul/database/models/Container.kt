@@ -37,20 +37,17 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 	var containerTag by Containers.containerTag
 
 	fun toApiContainer(): ApiContainer {
-		val server = ApiServer.findFromContainer(this)
-
 		val exposedPort = ExposedPort.tcp(25565)
 		val port = dockerContainer?.let { dc -> dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
 		val state = ServerState.fromContainerState(dockerContainer?.state)
 
 		return ApiContainer(
 			id.toString(),
-			product.id.toString(),
-			subscription.id.toString(),
+			product.toApiProduct(),
 			containerTag,
 			port,
 			state,
-			server,
+			subscription.toApiSubscription(),
 		)
 	}
 

@@ -18,8 +18,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Serializable
 data class ApiSubscription(
 	val id: String,
-	val subscriptionStatus: SubscriptionStatus,
-	val subscriptionProvider: SubscriptionProvider,
+	val status: SubscriptionStatus,
+	val provider: SubscriptionProvider,
 	val creationDate: LocalDateTime,
 	val deletionDate: LocalDateTime?,
 	val name: String?,

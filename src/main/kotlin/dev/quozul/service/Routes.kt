@@ -1,11 +1,15 @@
 package dev.quozul.service
 
 import com.github.dockerjava.api.exception.NotModifiedException
+import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.authentication.models.AuthenticationErrors
+import dev.quozul.database.helpers.ApiContainer
+import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.models.*
 import dev.quozul.servers.models.Action
 import dev.quozul.servers.models.Paginate
 import dev.quozul.servers.models.ServerActionRequest
+import dev.quozul.servers.models.ServerState
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,16 +32,46 @@ fun Route.configureServiceRoutes() {
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
 		val offset = (page * size).toLong();
 
+		// TODO: Add filter
+
+		// Get all the services a customer has
+		// If a service is not created yet, or has the PENDING status, it must be returned as well
 		val (services, count) = transaction {
-			val query = Containers.innerJoin(Subscriptions)
-				.innerJoin(Users)
-				.slice(Containers.columns)
-				.select { (Users.id eq uuid) }
+			val query = SubscriptionItems.innerJoin(Products)
+				.innerJoin(Subscriptions)
+				.leftJoin(Containers)
+				.slice(
+					Containers.id,
+					Products.id,
+					Subscriptions.id,
+					Subscriptions.subscriptionStatus,
+					Containers.containerTag,
+					Containers.containerId,
+					Subscriptions.name
+				)
+				.select { Subscriptions.owner eq uuid }
 				.withDistinct()
 
-			val services = Container.wrapRows(query)
+			val response = query.limit(size, offset).map { row ->
+				val dockerContainer: DockerContainer? = row.getOrNull(Containers.containerId)?.let { DockerContainer(it) }
+				val product: Product = Product.findById(row[Products.id])!! // This should never be null, but if it happens, I'm screwed
+				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
-			Pair(services.limit(size, offset).map { it.toApiContainer() }, services.count())
+				val exposedPort = ExposedPort.tcp(25565)
+				val port = dockerContainer?.let { dc -> dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
+				val state = ServerState.fromContainerState(dockerContainer?.state)
+
+				ApiContainer(
+					id = row.getOrNull(Containers.id)?.toString(),
+					product = product.toApiProduct(),
+					tag = row.getOrNull(Containers.containerTag),
+					port,
+					state,
+					subscription.toApiSubscription(),
+				)
+			}
+
+			Pair(response, query.count())
 		}
 
 		val lastPage = count <= (page + 1) * size

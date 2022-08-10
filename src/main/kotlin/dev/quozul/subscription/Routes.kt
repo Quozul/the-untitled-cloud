@@ -167,6 +167,7 @@ fun Route.configureSubscriptionRoutes() {
 	}
 
 	delete("{subscriptionId}") {
+		// TODO: Update this endpoint
 		val server = try {
 			val serverId = UUID.fromString(call.parameters["serverId"]!!)
 			transaction {

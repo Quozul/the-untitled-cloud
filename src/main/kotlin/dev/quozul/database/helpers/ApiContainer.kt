@@ -10,17 +10,16 @@ import java.util.*
 
 @Serializable
 data class ApiContainer(
-	val id: String,
-	val product: String,
-	val subscription: String,
-	val tag: String,
+	val id: String?,
+	val product: ApiProduct,
+	val tag: String?,
 
 	// Docker details
 	val port: String?,
 	val state: ServerState?,
 
-	// Expandable fields
-	val server: ApiServer? = null,
+	// Expendable fields
+	val subscription: ApiSubscription?,
 ) {
 	companion object {
 		fun fromContainerId(containerId: UUID) = transaction {
