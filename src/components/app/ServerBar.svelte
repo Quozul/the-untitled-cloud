@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
-	import { DockerStatus, ServerSubscriptionStatus } from "./constants";
+	import { DockerStatus, SubscriptionStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
@@ -67,18 +67,18 @@
 		<Button
 				onClick={toggleServerState}
 				className="d-flex align-items-center"
-				disabled="{!$server.state.created || $server?.subscriptionStatus !== ServerSubscriptionStatus.ACTIVE}"
+				disabled="{!$server.state.created || $server?.subscriptionStatus !== SubscriptionStatus.ACTIVE}"
 				variant={ButtonVariant.LIGHT}
 		>
-			{#if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+			{#if $server.subscriptionStatus === SubscriptionStatus.PENDING}
 				<Icon key="hourglass" width="28" height="28"/>
 
 				<h3 class="m-0">En attente</h3>
-			{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+			{:else if $server.subscriptionStatus === SubscriptionStatus.SUSPENDED}
 				<Icon key="pause" width="28" height="28"/>
 
 				<h3 class="m-0">Suspendu</h3>
-			{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+			{:else if $server.subscriptionStatus === SubscriptionStatus.ENDED}
 				<Icon key="archive" width="28" height="28"/>
 
 				<h3 class="m-0">Terminé</h3>
@@ -111,11 +111,11 @@
 						{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()} minutes)
 					{:else if $server.state.created}
 						{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.PENDING}
+					{:else if $server.subscriptionStatus === SubscriptionStatus.PENDING}
 						En attente
-					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED}
+					{:else if $server.subscriptionStatus === SubscriptionStatus.SUSPENDED}
 						Suspendu
-					{:else if $server.subscriptionStatus === ServerSubscriptionStatus.ENDED}
+					{:else if $server.subscriptionStatus === SubscriptionStatus.ENDED}
 						Terminé
 					{:else}
 						Introuvable

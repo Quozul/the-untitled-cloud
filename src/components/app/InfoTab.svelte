@@ -4,7 +4,7 @@
 	import Parameters from "../parameters/Parameters.svelte";
 	import Pending from "./tabs/info/errors/Pending.svelte";
 	import NotFound from "./tabs/info/errors/NotFound.svelte";
-	import { ServerSubscriptionStatus } from "./constants";
+	import { SubscriptionStatus } from "./constants";
 	import Suspended from "./tabs/info/errors/Suspended.svelte";
 	import { server, fetchServerError } from "$store/store";
 	import InternalError from "./tabs/info/errors/InternalError.svelte";
@@ -15,9 +15,9 @@
 	let containerNotFound: boolean
 
 	$: {
-		isPending = $server?.subscriptionStatus === ServerSubscriptionStatus.PENDING;
-		isSuspended = $server?.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED;
-		containerNotFound = $server?.subscriptionStatus === ServerSubscriptionStatus.ACTIVE && !$server?.state.created;
+		isPending = $server?.subscriptionStatus === SubscriptionStatus.PENDING;
+		isSuspended = $server?.subscriptionStatus === SubscriptionStatus.SUSPENDED;
+		containerNotFound = $server?.subscriptionStatus === SubscriptionStatus.ACTIVE && !$server?.state.created;
 	}
 </script>
 

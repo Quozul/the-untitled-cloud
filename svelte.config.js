@@ -37,6 +37,8 @@ const config = {
 			$store: "src/store",
 			$locales: "src/locales",
 			$root: "src",
+			$enums: "src/components/api/enums",
+			$models: "src/components/api/models",
 		},
 	},
 };

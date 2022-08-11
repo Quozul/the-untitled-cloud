@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Server } from "$components/app/models";
     import { onProfilePage, selectedServer } from "$store/store";
-	import { ServerSubscriptionStatus } from "$components/app/constants";
+	import { SubscriptionStatus } from "$components/app/constants";
 	import SidebarItem from "./SidebarItem.svelte";
     import { refreshSelectedServer } from "$components/app/helpers";
     import { goto } from "$app/navigation";
@@ -12,15 +12,15 @@
 	let className: string = "btn-outline-primary";
 	let classes: string = "";
 
-    if (server.subscriptionStatus === ServerSubscriptionStatus.PENDING) {
+    if (server.subscriptionStatus === SubscriptionStatus.PENDING) {
         iconName = "hourglass";
         text = "En attente";
         className = "btn-outline-info";
-    } else if (server.subscriptionStatus === ServerSubscriptionStatus.ENDED) {
+    } else if (server.subscriptionStatus === SubscriptionStatus.ENDED) {
 		iconName = "archive";
 		text = "Terminé";
 		className = "btn-outline-info";
-    } else if (server.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED) {
+    } else if (server.subscriptionStatus === SubscriptionStatus.SUSPENDED) {
 		iconName = "pause";
 		text = "Suspendu";
 		className = "btn-outline-info";

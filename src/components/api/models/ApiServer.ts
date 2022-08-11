@@ -1,9 +1,4 @@
-/**
- * @deprecated Use ApiServer instead
- */
-export type ServerParameters = {
-	name: string,
-	tag: string,
+export type ApiServer = {
 	version: string,
 	eula: boolean,
 	serverType: string,
@@ -17,4 +12,4 @@ export type ServerParameters = {
 	quiltLoaderVersion: string | null,
 	ftbModpackId: number | null,
 	ftbModpackVersionId: number | null,
-}
+};

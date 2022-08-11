@@ -12,7 +12,7 @@ import type { ClassNames } from "./models";
 /**
  * Build request's options
  */
-export function getOptions(method: string = "POST", raw: Object | null = null): RequestInit {
+export function getOptions(method: string = "POST", raw: {[key: string]: any} | null = null): RequestInit {
 	const jwt = get(token) || "";
 
 	const headers = new Headers();
@@ -32,7 +32,7 @@ export function getOptions(method: string = "POST", raw: Object | null = null): 
 /**
  * Handle API response
  */
-export async function handleResponse(response: Promise<Response>): Promise<Object | null> {
+export async function handleRequest(response: Promise<Response>): Promise<Object | null> {
 	return new Promise((resolve, reject) => {
 		response.then((response) => {
 			if (!response.ok) {
@@ -71,6 +71,10 @@ export async function handleResponse(response: Promise<Response>): Promise<Objec
 				reject(error);
 			});
 	});
+}
+
+export function api(uri: string, options: RequestInit): Promise<Response> {
+	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
 }
 
 export function containId<T extends Id>(paginate: Paginate<T>, id: string | undefined): T | null {
@@ -129,10 +133,10 @@ export function capitalize(str: string) {
 
 export async function getAddress(): Promise<Address> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
-	return await handleResponse(request) as Address;
+	return await handleRequest(request) as Address;
 }
 
 export async function setAddress(address: Address): Promise<void> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("POST", address));
-	await handleResponse(request);
+	await handleRequest(request);
 }

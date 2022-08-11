@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { selectedTab, server } from "$store/store";
-	import { ServerSubscriptionStatus, ServerTab } from "$components/app/constants";
+	import { SubscriptionStatus, ServerTab } from "$components/app/constants";
 	import { goto } from "$app/navigation";
 
 	let isPending: boolean;
@@ -8,9 +8,9 @@
 	let isSuspended: boolean;
 
 	$: {
-		isPending = $server?.subscriptionStatus === ServerSubscriptionStatus.PENDING;
-		isEnded = $server?.subscriptionStatus === ServerSubscriptionStatus.ENDED;
-		isSuspended = $server?.subscriptionStatus === ServerSubscriptionStatus.SUSPENDED;
+		isPending = $server?.subscriptionStatus === SubscriptionStatus.PENDING;
+		isEnded = $server?.subscriptionStatus === SubscriptionStatus.ENDED;
+		isSuspended = $server?.subscriptionStatus === SubscriptionStatus.SUSPENDED;
 
 		// Set default tabs
 		if (isEnded && $selectedTab !== ServerTab.SUBSCRIPTION) {

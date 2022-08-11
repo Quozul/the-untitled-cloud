@@ -1,8 +1,12 @@
 import type { Id } from "$shared/models";
 import type { DockerStatus } from "./constants";
-import type { ServerSubscriptionStatus } from "./constants";
 import type { ServerParameters } from "$components/parameters/models";
+import type { ApiServiceStatus } from "../api/enums/ApiServiceStatus";
+import type { ApiSubscriptionStatus } from "../api/enums/ApiSubscriptionStatus";
 
+/**
+ * @deprecated Use ApiPaginate instead
+ */
 export type Paginate<T extends Id> = {
 	data: T[],
 	firstPage: boolean,
@@ -21,22 +25,20 @@ export const EmptyPaginate: Paginate<any> = {
 	page: 0,
 }
 
+/**
+ * @deprecated Use ApiService instead
+ */
 export type Server = Id & {
 	name: string,
-	subscriptionStatus: ServerSubscriptionStatus,
+	subscriptionStatus: ApiSubscriptionStatus,
 	serverStatus: DockerStatus | null,
 }
 
-export enum ServerStatus {
-	RESTARTING = "RESTARTING",
-	RUNNING = "RUNNING",
-	UNAVAILABLE = "UNAVAILABLE",
-	STARTING = "STARTING",
-	STOPPED = "STOPPED",
-}
-
+/**
+ * @deprecated Use ServiceState instead
+ */
 export type ServerState = {
-	status: ServerStatus,
+	status: ApiServiceStatus,
 	created: boolean,
 	running: boolean,
 	starting: boolean,
@@ -44,8 +46,11 @@ export type ServerState = {
 	finishedAt: string | null,
 }
 
+/**
+ * @deprecated Use ApiService instead
+ */
 export type DetailedServer = Id & {
-	subscriptionStatus: ServerSubscriptionStatus,
+	subscriptionStatus: ApiSubscriptionStatus,
 	name: string | null,
 	port: string | null,
 	state: ServerState,
@@ -64,6 +69,9 @@ export type Version = Id & {
 	type: VersionType,
 }
 
+/**
+ * @deprecated Use ApiSubscriptionDetails instead
+ */
 export type SubscriptionInfo = {
 	startDate: string,
 	currentPeriodStart: string,
@@ -76,6 +84,9 @@ export type SubscriptionInfo = {
 	latestInvoice: Invoice,
 }
 
+/**
+ * @deprecated Use ApiInvoice instead
+ */
 export type Invoice = {
 	periodStart: string,
 	periodEnd: string,

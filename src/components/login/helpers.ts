@@ -1,6 +1,6 @@
 import type { ApiError } from "$shared/models";
 import type { Token } from "./models/Token";
-import { getOptions, handleResponse } from "$shared/helpers";
+import { getOptions, handleRequest } from "$shared/helpers";
 
 /**
  * Registers a new user
@@ -14,7 +14,7 @@ export async function signUp(email: string, password: string, language: string, 
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
 		getOptions("POST", { email, password, language, acceptTos }),
 	)
-	return await handleResponse(request) as ApiError;
+	return await handleRequest(request) as ApiError;
 }
 
 /**
@@ -28,7 +28,7 @@ export async function signIn(email: string, password: string, code: string | nul
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
 		getOptions("POST", { email, password, code }),
 	);
-	return await handleResponse(request) as Token;
+	return await handleRequest(request) as Token;
 }
 
 /**
@@ -40,7 +40,7 @@ export async function sendVerificationCode(email: string): Promise<ApiError> {
 		`${import.meta.env.VITE_API_BASE_URL}authentication/code/${email}`,
 		getOptions("POST"),
 	);
-	return await handleResponse(request) as ApiError;
+	return await handleRequest(request) as ApiError;
 }
 
 /**
@@ -54,5 +54,5 @@ export async function changePassword(email: string, password: string, code: stri
 		`${import.meta.env.VITE_API_BASE_URL}authentication/password`,
 		getOptions("POST", { email, password, code }),
 	);
-	return await handleResponse(request) as Token;
+	return await handleRequest(request) as Token;
 }

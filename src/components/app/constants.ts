@@ -7,13 +7,6 @@ export enum DockerStatus {
 	DEAD = "dead",
 }
 
-export enum ServerSubscriptionStatus {
-	PENDING = "PENDING",
-	ACTIVE = "ACTIVE",
-	SUSPENDED = "SUSPENDED",
-	ENDED = "ENDED",
-}
-
 export enum ServerType {
 	VANILLA = "VANILLA",
 	FORGE = "FORGE",
