@@ -43,6 +43,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 
 	var products by Product via SubscriptionItems
 	val containers by Container referrersOn Containers.subscription
+	val items by SubscriptionItem referrersOn SubscriptionItems.subscription
 
 	fun toApiSubscription(): ApiSubscription {
 		return ApiSubscription(
@@ -59,7 +60,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 	}
 
 	fun toApiContainers() = transaction {
-		containers.map { it.toApiContainer() }
+		items.map { it.toApiContainer() }
 	}
 
 	fun toPaginatedApiProducts(page: Int, size: Int) = transaction {
@@ -83,7 +84,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 		val lastPage = count <= (page + 1) * size
 
 		Paginate(
-			containers.limit(size, offset).map { it.toApiContainer() },
+			items.limit(size, offset).map { it.toApiContainer() },
 			page == 0,
 			lastPage,
 			count / size,

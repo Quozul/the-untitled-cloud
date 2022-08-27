@@ -19,6 +19,7 @@ import java.util.*
  * A container can also be called a Service.
  */
 
+// TODO: This table can be auto increment
 object Containers : UUIDTable("container") {
 	val subscription = reference("subscription", Subscriptions)
 	val product = reference("product", Products)
@@ -38,7 +39,7 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 	var containerTag by Containers.containerTag
 	var name by Containers.name
 
-	fun toApiContainer(): ApiContainer {
+	fun toApiContainer(id: UUID): ApiContainer {
 		return ApiContainer(
 			id.toString(),
 			product.toApiProduct(),
@@ -85,22 +86,13 @@ fun findContainerFromId(id: UUID) = transaction {
 	Container.findById(id)
 }
 
-fun findContainerWithOwnership(id: UUID, owner: UUID) = transaction {
-	Container.findById(id)?.let {
+@Deprecated("Can return null, use findItemWithOwnership", replaceWith = ReplaceWith("findItemWithOwnership()"))
+fun findContainerFromItemWithOwnership(id: UUID, owner: UUID) = transaction {
+	SubscriptionItem.findById(id)?.let {
 		if (it.subscription.owner.id.value != owner) {
 			null
 		} else {
-			it
+			it.container
 		}
 	}
-}
-
-fun findWithOwner(owner: UUID, status: SubscriptionStatus = SubscriptionStatus.ACTIVE) = transaction {
-	val query = Containers.innerJoin(Users)
-		.innerJoin(Subscriptions)
-		.slice(Containers.columns)
-		.select { (Users.id eq owner) and (Subscriptions.subscriptionStatus eq status) }
-		.withDistinct()
-
-	Container.wrapRows(query)
 }

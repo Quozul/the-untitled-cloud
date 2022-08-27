@@ -2,7 +2,7 @@ package dev.quozul.service
 
 import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
-import com.github.dockerjava.api.model.ExposedPort
+import com.typesafe.config.ConfigException.Null
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiContainer
@@ -35,7 +35,7 @@ fun Route.configureServiceRoutes() {
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
 		val status = call.request.queryParameters["status"]?.let {
 			try {
-				SubscriptionStatus.valueOf(it ?: "ACTIVE")
+				SubscriptionStatus.valueOf(it)
 			} catch (_: IllegalArgumentException) {
 				SubscriptionStatus.ACTIVE
 			}
@@ -43,15 +43,15 @@ fun Route.configureServiceRoutes() {
 
 		val offset = (page * size).toLong();
 
-		// TODO: Add filter
-
 		// Get all the services a customer has
 		// If a service is not created yet, or has the PENDING status, it must be returned as well
+		// TODO: Simplify this transaction
 		val (services, count) = transaction {
 			val query = SubscriptionItems.innerJoin(Products)
 				.innerJoin(Subscriptions)
 				.leftJoin(Containers)
 				.slice(
+					SubscriptionItems.id,
 					Containers.id,
 					Products.id,
 					Subscriptions.id,
@@ -75,7 +75,6 @@ fun Route.configureServiceRoutes() {
 					Product.findById(row[Products.id])!! // This should never be null, but if it happens, I'm screwed
 
 				val container: Container? = row.getOrNull(Containers.id)?.let {
-					println(it)
 					Container.findById(it)
 				}
 
@@ -90,13 +89,13 @@ fun Route.configureServiceRoutes() {
 				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
 				ApiContainer(
-					id = row.getOrNull(Containers.id)?.toString(),
+					id = row[SubscriptionItems.id].toString(),
 					product = product.toApiProduct(),
 					tag = row.getOrNull(Containers.containerTag),
 					name = row.getOrNull(Containers.name),
-					container?.port,
-					state,
-					subscription.toApiSubscription(),
+					port = container?.port,
+					state = state,
+					subscription = subscription.toApiSubscription(),
 				)
 			}
 
@@ -128,7 +127,7 @@ fun Route.configureServiceRoutes() {
 		val principal = call.principal<JWTPrincipal>()
 		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
 
-		findContainerWithOwnership(serviceId, ownerId)?.let {
+		findItemWithOwnership(serviceId, ownerId)?.let {
 			call.respond(
 				transaction {
 					it.toApiContainer()
@@ -156,7 +155,7 @@ fun Route.configureServiceRoutes() {
 		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
 
 		try {
-			findContainerWithOwnership(serviceId, ownerId)?.let {
+			findItemWithOwnership(serviceId, ownerId)?.let {
 				when (action) {
 					Action.START -> {
 						it.dockerContainer?.start()
@@ -172,25 +171,11 @@ fun Route.configureServiceRoutes() {
 
 					Action.RECREATE -> {
 						try {
-							it.dockerContainer?.recreate()
+							it.dockerContainer!!.recreate()
 						} catch (_: NotFoundException) {
-							val product = transaction {
-								it.product
-							}
-
-							val server = transaction {
-								findServerFromContainer(it)
-							}
-
-							val container = DockerContainer.new(
-								image = product.dockerImage,
-								tag = it.containerTag,
-								env = server?.toEnvironmentVariables(),
-							)
-
-							transaction {
-								it.dockerContainer = container
-							}
+							it.createContainer()
+						} catch (_: NullPointerException) {
+							it.createContainer()
 						}
 					}
 
@@ -198,12 +183,13 @@ fun Route.configureServiceRoutes() {
 						it.dockerContainer?.reset()
 					}
 				}
-				call.response.status(HttpStatusCode.NoContent)
 			}
+			call.response.status(HttpStatusCode.NoContent)
 		} catch (_: NotModifiedException) {
 			call.response.status(HttpStatusCode.InternalServerError)
 			call.respond(AuthenticationErrors.NOT_MODIFIED.toHashMap(true))
-		} catch (_: NullPointerException) {
+		} catch (e: NullPointerException) {
+			e.printStackTrace()
 			call.response.status(HttpStatusCode.NotFound)
 			call.respond(AuthenticationErrors.NO_CONTAINER.toHashMap(true))
 		}

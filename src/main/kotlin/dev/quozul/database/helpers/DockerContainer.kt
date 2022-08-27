@@ -17,7 +17,7 @@ class DockerContainer(var containerId: String) {
 		suspend fun new(
 			image: String,
 			name: String? = null,
-			tag: String = "latest",
+			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
 			volumes: List<Volume>? = null
@@ -28,7 +28,7 @@ class DockerContainer(var containerId: String) {
 		suspend fun createContainer(
 			image: String,
 			name: String? = null,
-			tag: String = "latest",
+			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
 			volumes: List<Volume>? = null
@@ -36,6 +36,7 @@ class DockerContainer(var containerId: String) {
 			dockerClient.pullImageCmd(image)
 				.withTag(tag)
 				.exec(PullImageResultCallback())
+				.awaitCompletion()
 
 			val command = dockerClient.createContainerCmd("$image:$tag")
 				.withImage("$image:$tag")
