@@ -32,7 +32,7 @@
 		className = "btn-outline-danger";
     }
 
-	$: classes = className + (compareServices($server, service) ? " active" : "");
+	$: classes = className + (!$onProfilePage && $server?.id === service?.id ? " active" : "");
 
     async function setServer() {
         $server = service;

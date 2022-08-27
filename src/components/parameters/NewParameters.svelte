@@ -1,66 +1,59 @@
 <script lang="ts">
 	import ServerType from "./ServerType.svelte";
-	import { parameters, selectedServer } from "$store/store";
-	import { onDestroy, onMount } from "svelte";
-	import { getParameters, putName } from "./helpers";
+	import { parameters, server } from "$store/store";
+	import { getParameters, putService } from "./helpers";
 	import Button from "$shared/Button.svelte";
 	import { putParameters } from "./helpers.js";
 	import { patchServer, refreshAllServers, refreshSelectedServer } from "../app/helpers";
 	import { ButtonVariant } from "$shared/constants";
 	import AdvancedParameters from "./AdvancedParameters.svelte";
-	import type { Unsubscriber } from "svelte/store";
-	import type { Server } from "../app/models";
 	import Icon from "../icons/Icon.svelte";
+	import type { ApiService } from "$models/ApiService";
 
-	let unsubscribe: Unsubscriber;
+	$: fetchParameters($server)
 
-	onMount(async () => {
-		selectedServer.subscribe(fetchParameters)
-		await fetchParameters();
-	});
-
-	onDestroy(() => {
-		unsubscribe?.();
-	});
-
-	async function fetchParameters(server: Server = $selectedServer) {
-		$parameters = await getParameters(server.id);
+	async function fetchParameters(s: ApiService = $server) {
+		$parameters = await getParameters(s.id);
 	}
 
 	async function saveParameters() {
-		await putParameters($selectedServer.id, $parameters);
-
-		// Perform refresh if name is different
-		if ($parameters.name != $selectedServer.name) {
-			await refreshAllServers();
-			await refreshSelectedServer();
-		}
+		await putParameters($server.id, $parameters);
+		await putService($server, $server.name, $server.tag);
 	}
 
-	async function saveAndApplyParameters() {
-		await putParameters($selectedServer.id, $parameters);
-		await patchServer($selectedServer.id, "RESTART");
+	async function fullRefresh() {
+		fetchParameters();
+		refreshAllServers();
+		refreshSelectedServer();
 	}
 
-	async function setNameToNull() {
-		await putName($selectedServer.id, null);
+	async function handleSave() {
+		await saveParameters();
+		await fullRefresh();
+	}
+
+	async function handleApply() {
+		await saveParameters();
+		await patchServer($server, "RECREATE");
+		await fullRefresh();
+	}
+
+	async function handleRandomName() {
+		await putService($server, null, $server.tag);
 
 		// Perform global refresh
-		await fetchParameters();
-		await refreshAllServers();
-		await refreshSelectedServer();
+		await fullRefresh();
 	}
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column gap-3">
-	<h4 class="mb-0">Paramètres</h4>
-
-	{#if $parameters && $selectedServer}
+	<h4 class="mb-0">Paramètres du service</h4>
+	{#if $parameters && $server}
 		<div>
 			<label for="serverName" class="form-label">Nom du serveur</label>
 			<div class="input-group">
-				<input id="serverName" maxlength="32" class="form-control" placeholder={$selectedServer?.name} bind:value={$parameters.name}>
-				<button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" on:click={setNameToNull}>
+				<input id="serverName" maxlength="32" class="form-control" placeholder={$server?.name} bind:value={$server.name}>
+				<button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" on:click={handleRandomName}>
 					<Icon key="shuffle"/>
 					Nom aléatoire
 				</button>
@@ -68,6 +61,18 @@
 		</div>
 	{/if}
 
+	<div>
+		<label for="tag" class="form-label">Environnement</label>
+		<select class="form-select" id="tag" bind:value={$server.tag}>
+			<option value="latest">Dernière</option>
+			<option value="java17">Java 17</option>
+			<option value="java17-graalvm-ce">GraalVM 17</option>
+			<option value="java11">Java 11</option>
+			<option value="java8-multiarch">Java 8</option>
+		</select>
+	</div>
+
+	<h4 class="mb-0">Paramètres du serveur</h4>
 	<div class="d-flex align-items-stretch gap-3">
 		{#if $parameters}
 			<ServerType/>
@@ -76,11 +81,11 @@
 	</div>
 
 	<div class="d-flex gap-3 mt-3">
-		<Button onClick={saveParameters}>
+		<Button onClick={handleSave}>
 			Sauvegarder
 		</Button>
 
-		<Button onClick={saveAndApplyParameters}>
+		<Button onClick={handleApply}>
 			Sauvegarder et appliquer les changements
 		</Button>
 

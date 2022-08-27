@@ -12,17 +12,6 @@
 	</div>
 
 	<div class="d-flex gap-3">
-		<div>
-			<label for="tag" class="form-label">Environnement</label>
-			<select class="form-select" id="tag" bind:value={$parameters.tag}>
-				<option value="latest">Dernière</option>
-				<option value="java17">Java 17</option>
-				<option value="java17-graalvm-ce">GraalVM 17</option>
-				<option value="java11">Java 11</option>
-				<option value="java8-multiarch">Java 8</option>
-			</select>
-		</div>
-
 		{#if !$parameters.useAikar}
 			<div>
 				<label for="jvmFlags" class="form-label">Flags JVM</label>

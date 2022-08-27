@@ -11,6 +11,7 @@ import { EmptyPaginate } from "./models";
 import type { ApiService } from "$models/ApiService";
 import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
+import type { ApiProduct } from "$models/ApiProduct";
 
 export async function getAllServers(page: number = 0, ended: boolean = false): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
@@ -84,25 +85,24 @@ export async function refreshSelectedServer(): Promise<void> {
 	} finally {
 		fetchingServer.set(false);
 	}
-
 }
 
 export async function patchServer(service: ApiService, action: string): Promise<void> {
-	if (service.id) {
-		const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("PATCH", {action}));
-		await handleRequest(request);
-	} else {
-		const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/product/${service.product.id}`, getOptions("PATCH", {action}));
-		await handleRequest(request);
-	}
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("PATCH", {action}));
+	await handleRequest(request);
 }
 
-export async function getSubscription(service: ApiService): Promise<ApiSubscriptionDetails> {
+export async function getSubscriptionProducts(service: ApiService): Promise<ApiPaginate<ApiProduct>> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/products`, getOptions("GET"));
+	return await handleRequest(request) as ApiPaginate<ApiProduct>;
+}
+
+export async function getSubscriptionDetails(service: ApiService): Promise<ApiSubscriptionDetails> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/details`, getOptions("GET"));
 	return await handleRequest(request) as ApiSubscriptionDetails;
 }
 
 export async function cancelSubscription(service: ApiService, now: boolean = true): Promise<ApiSubscriptionDetails> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/subscription`, getOptions("DELETE", { now }));
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`, getOptions("DELETE", { now }));
 	return await handleRequest(request) as ApiSubscriptionDetails;
 }

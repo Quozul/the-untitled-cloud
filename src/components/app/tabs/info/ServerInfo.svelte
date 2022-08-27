@@ -40,6 +40,11 @@
         await refreshSelectedServer();
 	}
 
+	async function recreateServer() {
+		await patchServer($server, "RECREATE");
+        await refreshSelectedServer();
+	}
+
 	async function restartServer() {
 		await patchServer($server, "RESTART");
         await refreshSelectedServer();
@@ -66,8 +71,24 @@
 </style>
 
 <div class="bg-light p-4 d-flex flex-column element">
-    <h4>Actions</h4>
+	<h4>Produit</h4>
+	<dl class="d-flex flex-column m-0 mb-3">
+		<div class="separation">
+			<dt>Nom</dt>
+			<dd>
+				{$server.product.name}
+			</dd>
+		</div>
 
+		<div class="separation">
+			<dt>Description</dt>
+			<dd>
+				{$server.product.description}
+			</dd>
+		</div>
+	</dl>
+
+    <h4>Actions</h4>
     {#if $server?.state.created}
         <div class="d-flex gap-3 flex-wrap">
             {#if !$server.state.running}
@@ -88,6 +109,10 @@
 
             <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={openModal}>
                 Réinitialiser
+            </Button>
+
+            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={recreateServer}>
+                Recréer
             </Button>
 
 			<Modal

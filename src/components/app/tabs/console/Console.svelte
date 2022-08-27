@@ -8,6 +8,8 @@
 	let logs: string = "";
 	let input: HTMLElement;
 	let consoleElement: HTMLElement;
+	let submitting: boolean = false;
+
 	const encoder = new TextEncoder();
 
 	function connect() {
@@ -20,6 +22,7 @@
 		};
 
 		socket.onmessage = async function(event: MessageEvent) {
+			submitting = false;
 			const blob = event.data as Blob;
 			const text = await blob.text();
 
@@ -48,6 +51,7 @@
 
 	function submitCommand(event: KeyboardEvent) {
 		if (event.key === "Enter") {
+			submitting = true;
 			const uint8Array = encoder.encode(input.textContent + "\n");
 			socket?.send(uint8Array);
 			input.innerText = "";
@@ -91,14 +95,9 @@
 					content: "Entrez une commande...";
 				}
 
-				/*&:before {
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					content: " ";
-				}*/
+				.spinner {
+					user-select: none;
+				}
 			}
 		}
 	}
@@ -124,7 +123,9 @@
 			<div class="align"></div>
 			<div class="console" bind:this={consoleElement}>
 				{@html logs}
-				<div contentEditable class="input" bind:this={input} on:keypress={submitCommand}></div>
+				<div contentEditable class="input" bind:this={input} on:keypress={submitCommand}>{#if submitting}
+					<span class="spinner-border spinner-border-sm spinner"></span>
+				{/if}</div>
 			</div>
 		</div>
 

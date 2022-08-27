@@ -11,7 +11,7 @@
 
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 	<Link href="/" className="d-flex align-items-center text-dark text-decoration-none">
-		<Icon key="box" width="40" height="40"/>
+		<Icon key="favicon" width="40" height="40"/>
 	</Link>
 
 	<ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0">

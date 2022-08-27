@@ -1,29 +1,18 @@
-import type { ServerParameters } from "./models";
 import { getOptions, handleRequest } from "$shared/helpers";
+import type { ApiServer } from "$models/ApiServer";
+import type { ApiService } from "$models/ApiService";
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function getParameters(selectedServer: string): Promise<ServerParameters> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("GET"));
-	return await handleRequest(request) as ServerParameters;
+export async function getParameters(selectedServer: string): Promise<ApiServer> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}/server`, getOptions("GET"));
+	return await handleRequest(request) as ApiServer;
 }
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function putParameters(selectedServer: string, parameters: ServerParameters): Promise<void> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/parameters`, getOptions("PUT", parameters));
+export async function putParameters(selectedServer: string, parameters: ApiServer): Promise<void> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}/server`, getOptions("PUT", parameters));
 	await handleRequest(request);
 }
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function putName(selectedServer: string, name: string): Promise<void> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/name`, getOptions("PUT", {name}));
+export async function putService(selectedServer: ApiService, name: string, tag: string = "latest"): Promise<void> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer.id}`, getOptions("PUT", {name, tag}));
 	await handleRequest(request);
 }

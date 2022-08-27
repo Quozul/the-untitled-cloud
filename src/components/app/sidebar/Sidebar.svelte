@@ -76,9 +76,9 @@
 
 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light sidebar shadow-sm" class:collapsed={$sidebarCollapsed}>
     <Link href="/" className="d-flex align-items-center me-md-auto link-dark text-decoration-none">
-        <Icon key="box" width="42" height="38" className={!$sidebarCollapsed && "me-2"}/>
+        <Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "me-2"}/>
         {#if !$sidebarCollapsed}
-            <span class="fs-4">Quozul.cloud</span>
+            <span class="fs-4">The Untitled Cloud</span>
         {/if}
     </Link>
 
