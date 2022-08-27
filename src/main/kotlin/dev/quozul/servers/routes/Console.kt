@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import com.github.dockerjava.api.async.ResultCallback
 import dev.quozul.database.models.Container
 import dev.quozul.database.models.Server
+import dev.quozul.database.models.SubscriptionItem
 import dev.quozul.dockerClient
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -31,7 +32,7 @@ class Console(serverId: UUID, private val socket: WebSocketSession) {
 
 	init {
 		containerId = transaction {
-			Container.findById(serverId)!!.containerId!!
+			SubscriptionItem.findById(serverId)!!.container!!.containerId!!
 		}
 
 		val callback = object : ResultCallback<DockerFrame> {

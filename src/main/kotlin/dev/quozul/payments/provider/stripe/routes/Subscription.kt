@@ -123,7 +123,6 @@ fun Route.configureServerSubscriptionRoutes() {
 				subscriptionProvider = SubscriptionProvider.STRIPE
 				this.stripeId = stripeId
 				this.products = SizedCollection(products)
-				name = NameGenerator.getRandomName()
 			}
 		}
 

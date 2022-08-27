@@ -8,7 +8,6 @@ import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiSubscription
 import dev.quozul.database.models.*
-import dev.quozul.servers.models.Action
 import dev.quozul.servers.models.CancelMode
 import dev.quozul.servers.models.Paginate
 import dev.quozul.servers.models.ServerActionRequest
@@ -199,10 +198,10 @@ fun Route.configureSubscriptionRoutes() {
 
 	delete("{subscriptionId}") {
 		// TODO: Update this endpoint
-		val server = try {
-			val serverId = UUID.fromString(call.parameters["serverId"]!!)
+		val subscription = try {
+			val subscriptionId = UUID.fromString(call.parameters["subscriptionId"]!!)
 			transaction {
-				Container.findById(serverId)!!
+				Subscription.findById(subscriptionId)!!
 			}
 		} catch (e: NullPointerException) {
 			call.response.status(HttpStatusCode.BadRequest)
@@ -216,18 +215,18 @@ fun Route.configureSubscriptionRoutes() {
 			return@delete
 		}
 
-		val subscription = try {
+		val stripeSubscription = try {
 			val params = SubscriptionRetrieveParams.builder()
 				.addExpand("latest_invoice")
 				.build()
 
-			com.stripe.model.Subscription.retrieve(server.subscription.stripeId, params, null)
-		} catch (_: StripeException) {
+			com.stripe.model.Subscription.retrieve(subscription.stripeId, params, null)
+		} catch (e: StripeException) {
 			call.response.status(HttpStatusCode.NotFound)
 			return@delete
 		}
 
-		if (subscription.latestInvoiceObject.paid) {
+		if (!stripeSubscription.latestInvoiceObject.paid) {
 			call.response.status(HttpStatusCode.BadRequest)
 			call.respond(AuthenticationErrors.NOT_PAID.toHashMap(true))
 			return@delete
@@ -240,21 +239,21 @@ fun Route.configureSubscriptionRoutes() {
 					.build()
 
 				// Delete invoice if it hasn't been paid
-				if (!subscription.latestInvoiceObject.paid) {
-					subscription.latestInvoiceObject.voidInvoice()
+				if (!stripeSubscription.latestInvoiceObject.paid) {
+					stripeSubscription.latestInvoiceObject.voidInvoice()
 				}
 
-				subscription.cancel(params)
+				stripeSubscription.cancel(params)
 			} else {
 				val params = SubscriptionUpdateParams.builder()
 					.setCancelAtPeriodEnd(true)
 					.build()
 
-				subscription.update(params)
+				stripeSubscription.update(params)
 			}
 
 			transaction {
-				server.subscription.subscriptionStatus = SubscriptionStatus.SUSPENDED
+				subscription.subscriptionStatus = SubscriptionStatus.SUSPENDED
 			}
 
 			call.response.status(HttpStatusCode.NoContent)

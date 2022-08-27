@@ -27,7 +27,7 @@ fun Route.configureServerRoutes() {
 			val response = V1DetailedApiServer(
 				container?.id.toString(),
 				it.subscriptionStatus,
-				it.name,
+				container?.name,
 				container?.dockerContainer?.getPort(),
 				ServerState.fromContainerState(container?.dockerContainer?.state),
 			)

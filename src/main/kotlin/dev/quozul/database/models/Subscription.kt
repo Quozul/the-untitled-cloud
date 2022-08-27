@@ -12,6 +12,7 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.dao.load
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,7 +20,7 @@ import java.util.*
 
 object Subscriptions : UUIDTable("subscription") {
 	// Foreign keys
-	val owner = reference("owner", Users)
+	val owner = reference("owner", Users, onDelete = ReferenceOption.CASCADE)
 
 	val subscriptionStatus = enumeration<SubscriptionStatus>("status")
 		.default(SubscriptionStatus.REGISTERED) // Status of the subscription
@@ -42,7 +43,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 	var deletionDate by Subscriptions.deletionDate
 
 	var products by Product via SubscriptionItems
-	val containers by Container referrersOn Containers.subscription
+	var containers by Container via SubscriptionItems
 	val items by SubscriptionItem referrersOn SubscriptionItems.subscription
 
 	fun toApiSubscription(): ApiSubscription {

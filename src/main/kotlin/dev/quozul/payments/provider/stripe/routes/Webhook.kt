@@ -56,8 +56,7 @@ fun Route.configureStripeWebhook() {
 					}.firstOrNull()?.let { subscription ->
 						subscription.products.forEach { product ->
 							val container = Container.new {
-								this.product = product
-								this.subscription = subscription
+								this.name = NameGenerator.getRandomName()
 							}
 
 							val server = Server.new {

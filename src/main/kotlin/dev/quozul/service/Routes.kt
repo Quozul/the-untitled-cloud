@@ -2,12 +2,13 @@ package dev.quozul.service
 
 import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
-import com.typesafe.config.ConfigException.Null
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiContainer
-import dev.quozul.database.helpers.DockerContainer
+import dev.quozul.database.helpers.ApiServer
+import dev.quozul.database.helpers.ApiServiceUpdate
 import dev.quozul.database.models.*
+import dev.quozul.servers.helpers.NameGenerator
 import dev.quozul.servers.models.Action
 import dev.quozul.servers.models.Paginate
 import dev.quozul.servers.models.ServerActionRequest
@@ -41,15 +42,15 @@ fun Route.configureServiceRoutes() {
 			}
 		}
 
-		val offset = (page * size).toLong();
+		val offset = (page * size).toLong()
 
 		// Get all the services a customer has
 		// If a service is not created yet, or has the PENDING status, it must be returned as well
 		// TODO: Simplify this transaction
 		val (services, count) = transaction {
-			val query = SubscriptionItems.innerJoin(Products)
-				.innerJoin(Subscriptions)
-				.leftJoin(Containers)
+			val query = SubscriptionItems.rightJoin(Products)
+				.rightJoin(Subscriptions)
+				.innerJoin(Containers)
 				.slice(
 					SubscriptionItems.id,
 					Containers.id,
@@ -65,14 +66,15 @@ fun Route.configureServiceRoutes() {
 							(Subscriptions.owner eq uuid) and (Subscriptions.subscriptionStatus eq status)
 						}
 					} ?: it.select {
-							(Subscriptions.owner eq uuid) and (Subscriptions.subscriptionStatus neq SubscriptionStatus.CANCELLED)
-						}
+						(Subscriptions.owner eq uuid) and (Subscriptions.subscriptionStatus neq SubscriptionStatus.CANCELLED)
+					}
 				}
 				.withDistinct()
 
 			val response = query.limit(size, offset).map { row ->
-				val product: Product =
-					Product.findById(row[Products.id])!! // This should never be null, but if it happens, I'm screwed
+				// This should never be null, but if it happens, I'm screwed
+				val product: Product = Product.findById(row[Products.id])!!
+				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
 				val container: Container? = row.getOrNull(Containers.id)?.let {
 					Container.findById(it)
@@ -85,8 +87,6 @@ fun Route.configureServiceRoutes() {
 						null
 					}
 				)
-
-				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
 				ApiContainer(
 					id = row[SubscriptionItems.id].toString(),
@@ -136,6 +136,38 @@ fun Route.configureServiceRoutes() {
 		} ?: call.response.status(HttpStatusCode.NotFound)
 	}
 
+	put("{serviceId}") {
+		val serviceId = try {
+			UUID.fromString(call.parameters["serviceId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val update = try {
+			call.receive<ApiServiceUpdate>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val principal = call.principal<JWTPrincipal>()
+		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
+
+		findItemWithOwnership(serviceId, ownerId)?.let {
+			transaction {
+				if (update.name == null) {
+					it.container?.name = NameGenerator.getRandomName()
+				} else {
+					it.container?.name = update.name
+				}
+
+				it.container?.containerTag = update.tag
+			}
+			call.response.status(HttpStatusCode.NoContent)
+		} ?: call.response.status(HttpStatusCode.NotFound)
+	}
+
 	patch("{serviceId}") {
 		val action = try {
 			call.receive<ServerActionRequest>().action
@@ -171,7 +203,7 @@ fun Route.configureServiceRoutes() {
 
 					Action.RECREATE -> {
 						try {
-							it.dockerContainer!!.recreate()
+							it.recreate()
 						} catch (_: NotFoundException) {
 							it.createContainer()
 						} catch (_: NullPointerException) {
@@ -192,6 +224,64 @@ fun Route.configureServiceRoutes() {
 			e.printStackTrace()
 			call.response.status(HttpStatusCode.NotFound)
 			call.respond(AuthenticationErrors.NO_CONTAINER.toHashMap(true))
+		}
+	}
+
+	get("{serviceId}/server") {
+		val serviceId = try {
+			UUID.fromString(call.parameters["serviceId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@get
+		}
+
+		val principal = call.principal<JWTPrincipal>()
+		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
+
+		transaction {
+			val item = findItemWithOwnership(serviceId, ownerId)
+			item?.container?.let { findServerFromContainer(it)?.toApiServer() }
+		}?.let {
+			call.respond(it)
+		} ?: call.response.status(HttpStatusCode.NotFound)
+	}
+
+	put("{serviceId}/server") {
+		val serviceId = try {
+			UUID.fromString(call.parameters["serviceId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val parameters = try {
+			call.receive<ApiServer>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@put
+		}
+
+		val principal = call.principal<JWTPrincipal>()
+		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
+
+		transaction {
+			val item = findItemWithOwnership(serviceId, ownerId)
+
+			item?.container?.let { findServerFromContainer(it) }?.let {
+				it.version = parameters.version
+				it.serverType = parameters.serverType
+				it.forgeVersion = parameters.forgeVersion
+				it.fabricLauncherVersion = parameters.fabricLauncherVersion
+				it.fabricLoaderVersion = parameters.fabricLoaderVersion
+				it.quiltLauncherVersion = parameters.quiltLauncherVersion
+				it.quiltLoaderVersion = parameters.quiltLoaderVersion
+				it.ftbModpackId = parameters.ftbModpackId
+				it.ftbModpackVersionId = parameters.ftbModpackVersionId
+				it.useAikar = parameters.useAikar
+				it.jvmFlags = parameters.jvmFlags
+
+				call.response.status(HttpStatusCode.NoContent)
+			} ?: call.response.status(HttpStatusCode.NotFound)
 		}
 	}
 }

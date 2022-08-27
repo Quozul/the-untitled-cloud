@@ -6,11 +6,12 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 object Servers : UUIDTable("server") {
-	val container = reference("container", Containers)
+	val container = reference("container", Containers, onDelete = ReferenceOption.CASCADE)
 
 	val version = Servers.varchar("version", 8).default("LATEST")
 	val serverType = Servers.enumeration<ServerType>("server_type").default(ServerType.VANILLA)

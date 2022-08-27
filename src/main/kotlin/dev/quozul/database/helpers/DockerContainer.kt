@@ -3,7 +3,6 @@ package dev.quozul.database.helpers
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
 import com.github.dockerjava.api.command.PullImageResultCallback
-import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.NetworkSettings
@@ -20,7 +19,7 @@ class DockerContainer(var containerId: String) {
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: List<Volume>? = null
+			volumes: Volume? = null
 		) = createContainer(image, name, tag, env, hostConfig, volumes)?.let {
 			DockerContainer(it.id)
 		}
@@ -31,22 +30,22 @@ class DockerContainer(var containerId: String) {
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: List<Volume>? = null
+			volumes: Volume? = null
 		): CreateContainerResponse? = coroutineScope {
 			dockerClient.pullImageCmd(image)
 				.withTag(tag)
 				.exec(PullImageResultCallback())
 				.awaitCompletion()
 
-			val command = dockerClient.createContainerCmd("$image:$tag")
+			dockerClient.createContainerCmd("$image:$tag")
 				.withImage("$image:$tag")
-
-			volumes?.let { command.withVolumes(it) }
-			name?.let { command.withName(it) }
-			hostConfig?.let { command.withHostConfig(it) }
-			env?.let { command.withEnv(it) }
-
-			command.exec()
+				.apply {
+					volumes?.let { withVolumes(it) }
+					env?.let { withEnv(it) }
+					name?.let { withName(it) }
+					hostConfig?.let { withHostConfig(it) }
+				}
+				.exec()
 		}
 	}
 
@@ -80,26 +79,5 @@ class DockerContainer(var containerId: String) {
 	// TODO: Remove all volumes and recreate
 	fun reset() {
 		TODO("Not implemented")
-	}
-
-	suspend fun recreate() = coroutineScope {
-		launch {
-			val previous = inspect()
-
-			// If container is running, stop it
-			if (previous.state.running == true) {
-				stop()
-			}
-
-			remove() // Remove previous container
-
-			createContainer(previous.name)?.let {
-				containerId = it.id
-
-				if (previous.state.running == true) {
-					start()
-				}
-			} ?: throw Exception("Container not recreated")
-		}
 	}
 }
