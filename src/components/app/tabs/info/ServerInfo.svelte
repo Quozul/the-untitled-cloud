@@ -31,17 +31,17 @@
 	});
 
 	async function startServer() {
-		await patchServer($server.id, "START");
+		await patchServer($server, "START");
         await refreshSelectedServer();
 	}
 
 	async function stopServer() {
-		await patchServer($server.id, "STOP");
+		await patchServer($server, "STOP");
         await refreshSelectedServer();
 	}
 
 	async function restartServer() {
-		await patchServer($server.id, "RESTART");
+		await patchServer($server, "RESTART");
         await refreshSelectedServer();
 	}
 
@@ -51,7 +51,7 @@
 
 	async function reset() {
 		try {
-			await patchServer($server.id, "RESET");
+			await patchServer($server, "RESET");
 			await refreshSelectedServer();
 		} finally {
 			modalVisible = false;

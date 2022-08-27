@@ -1,7 +1,6 @@
 import type { Writable } from "svelte/store";
 import type { Cart } from "$components/cart/models";
 import type { CheckoutSteps } from "$components/checkout/constants";
-import type { DetailedServer, Paginate, Server } from "$components/app/models";
 import type { Credentials } from "$components/login/models/Credentials";
 import { createStoreEntry } from "./helpers";
 import { browser } from "$app/env";
@@ -10,28 +9,33 @@ import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";
 import { writable } from "svelte/store";
 import type { ApiError } from "$components/shared/models";
-import type { ServerParameters } from "$components/parameters/models";
+import type { ApiPaginate } from "$models/ApiPaginate";
+import type { ApiService } from "$models/ApiService";
+import type { ApiServer } from "$models/ApiServer";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
 
 // Session store
-export const selectedServer: Writable<Server | null> = createStoreEntry("selectedServer", null, browser && sessionStorage);
+/**
+ * @deprecated Use $server instead
+ */
+export const selectedServer: Writable<ApiService | null> = createStoreEntry("selectedServer", null, browser && sessionStorage);
 export const cart: Writable<Cart> = createStoreEntry("cart", null, browser && sessionStorage);
 export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarCollapsed", false, browser && sessionStorage);
 
 // App active servers stores
-export const servers: Writable<Paginate<Server>> = createStoreEntry("servers", EmptyPaginate, browser && sessionStorage);
+export const servers: Writable<ApiPaginate<ApiService>> = createStoreEntry("servers", EmptyPaginate, browser && sessionStorage);
 export const fetchingServers: Writable<boolean> = writable(false);
 export const fetchServersError: Writable<ApiError | null> = writable(null);
 
 // App current selected server stores
-export const server: Writable<DetailedServer | null> = createStoreEntry("server", null, browser && sessionStorage);
+export const server: Writable<ApiService | null> = createStoreEntry("server", null, browser && sessionStorage);
 export const fetchingServer: Writable<boolean> = writable(false);
 export const fetchServerError: Writable<ApiError | null> = writable(null);
 
 // App server parameters store
-export const parameters: Writable<ServerParameters> = createStoreEntry("parameters", null, browser && sessionStorage);
+export const parameters: Writable<ApiServer> = createStoreEntry("parameters", null, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

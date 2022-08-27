@@ -8,11 +8,13 @@ import { defaultLocale } from "./constants";
 import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
 import { t } from "svelte-intl-precompile";
 import type { ClassNames } from "./models";
+import type { ApiPaginate } from "$models/ApiPaginate";
+import type { ApiService } from "$models/ApiService";
 
 /**
  * Build request's options
  */
-export function getOptions(method: string = "POST", raw: {[key: string]: any} | null = null): RequestInit {
+export function getOptions(method: string = "POST", raw: { [key: string]: any } | null = null): RequestInit {
 	const jwt = get(token) || "";
 
 	const headers = new Headers();
@@ -41,7 +43,7 @@ export async function handleRequest(response: Promise<Response>): Promise<Object
 						reject({
 							...err,
 							translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
-						})
+						});
 					})
 					.catch(() => {
 						// The json does not exist, just return the HTTP error
@@ -116,7 +118,7 @@ export async function redirect(fallback: string = "/") {
 	await goto(redirect);
 }
 
-export function mergePaginate<T extends Id>(a: Paginate<T>, b: Paginate<T>): Paginate<T> {
+export function mergePaginate<T>(a: ApiPaginate<T>, b: ApiPaginate<T>): ApiPaginate<T> {
 	return {
 		data: [...a.data, ...b.data],
 		firstPage: a.firstPage,
@@ -124,19 +126,61 @@ export function mergePaginate<T extends Id>(a: Paginate<T>, b: Paginate<T>): Pag
 		totalElements: b.totalElements,
 		totalPage: b.totalPage,
 		page: b.page,
-	}
+	};
 }
 
 export function capitalize(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase().replace("_", " ");
 }
 
+// TODO: Move this function
 export async function getAddress(): Promise<Address> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
 	return await handleRequest(request) as Address;
 }
 
+// TODO: Move this function
 export async function setAddress(address: Address): Promise<void> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("POST", address));
 	await handleRequest(request);
+}
+
+export function compareServices(service1: ApiService, service2: ApiService): boolean {
+	if (!service1 || !service2) {
+		return false;
+	}
+
+	if (service1.id && service2.id) {
+		return service1.id === service2.id;
+	}
+
+	return service1.subscription.id === service2.subscription.id && service1.product.id === service2.product.id;
+}
+
+// This is expensive
+export function deepEqual(object1: { [key: string]: any }, object2: { [key: string]: any }): boolean {
+	if (!object1 || !object2) {
+		return false;
+	}
+	const keys1 = Object.keys(object1);
+	const keys2 = Object.keys(object2);
+	if (keys1.length !== keys2.length) {
+		return false;
+	}
+	for (const key of keys1) {
+		const val1 = object1[key];
+		const val2 = object2[key];
+		const areObjects = isObject(val1) && isObject(val2);
+		if (
+			areObjects && !deepEqual(val1, val2) ||
+			!areObjects && val1 !== val2
+		) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function isObject(object: Object) {
+	return object != null && typeof object === "object";
 }

@@ -2,27 +2,25 @@ import {
 	fetchingServer,
 	fetchingServers, fetchServerError,
 	fetchServersError, onProfilePage,
-	selectedServer, server,
+	server,
 	servers,
 } from "$store/store";
-import type { DetailedServer, Paginate, Server, SubscriptionInfo } from "./models";
 import { containId, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
+import type { ApiService } from "$models/ApiService";
+import type { ApiPaginate } from "$models/ApiPaginate";
+import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 
-/**
- * @deprecated Deprecated response typing
- * TODO: Update typings
- */
-export async function getAllServers(page: number = 0, ended: boolean = false): Promise<Paginate<Server>> {
+export async function getAllServers(page: number = 0, ended: boolean = false): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
 	if (ended) {
-		params.set("status", "ENDED");
+		params.set("status", "CANCELLED");
 	}
 
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service?${params.toString()}`, getOptions("GET"))
-	return await handleRequest(request) as Paginate<Server>;
+	return await handleRequest(request) as ApiPaginate<ApiService>;
 }
 
 export async function refreshAllServers(page: number = 0): Promise<void> {
@@ -45,30 +43,33 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 	}
 }
 
+/**
+ * @deprecated Server does not always have an id anymore
+ */
 export async function setDefaultSelectedServer(): Promise<void> {
 	const s = get(servers);
 
-	const contains = containId(s, get(selectedServer)?.id);
+	const contains = containId(s, get(server)?.id);
 
 	if (!contains) {
-		selectedServer.set(s.data[0]);
+		server.set(s.data[0]);
 		await refreshSelectedServer();
 	} else {
-		selectedServer.set(contains);
+		server.set(contains);
 	}
 }
 
-/**
- * @deprecated Deprecated response typing
- * TODO: Update typings
- */
-export async function getServerInfo(selectedServer: string): Promise<DetailedServer> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}`, getOptions("GET"))
-	return await handleRequest(request) as DetailedServer;
+export async function getServerInfo(service: ApiService): Promise<ApiService> {
+	if (!service.id) {
+		return service;
+	}
+
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("GET"))
+	return await handleRequest(request) as ApiService;
 }
 
 export async function refreshSelectedServer(): Promise<void> {
-	const ss = get(selectedServer)?.id;
+	const ss = get(server);
 	server.set(null);
 	if (!ss) return;
 
@@ -86,29 +87,22 @@ export async function refreshSelectedServer(): Promise<void> {
 
 }
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function patchServer(selectedServer: string, action: string): Promise<void> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}`, getOptions("PATCH", { action }))
-	await handleRequest(request);
+export async function patchServer(service: ApiService, action: string): Promise<void> {
+	if (service.id) {
+		const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("PATCH", {action}));
+		await handleRequest(request);
+	} else {
+		const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/product/${service.product.id}`, getOptions("PATCH", {action}));
+		await handleRequest(request);
+	}
 }
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function getSubscription(selectedServer: string): Promise<SubscriptionInfo> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("GET"));
-	return await handleRequest(request) as SubscriptionInfo;
+export async function getSubscription(service: ApiService): Promise<ApiSubscriptionDetails> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/details`, getOptions("GET"));
+	return await handleRequest(request) as ApiSubscriptionDetails;
 }
 
-/**
- * @deprecated Deprecated route
- * TODO: Update route
- */
-export async function cancelSubscription(selectedServer: string, now: boolean = true): Promise<SubscriptionInfo> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}server/${selectedServer}/subscription`, getOptions("DELETE", { now }));
-	return await handleRequest(request) as SubscriptionInfo;
+export async function cancelSubscription(service: ApiService, now: boolean = true): Promise<ApiSubscriptionDetails> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/subscription`, getOptions("DELETE", { now }));
+	return await handleRequest(request) as ApiSubscriptionDetails;
 }

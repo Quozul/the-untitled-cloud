@@ -4,12 +4,12 @@
 		refreshAllServers,
 		refreshSelectedServer,
 	} from "$components/app/helpers";
-	import { selectedServer } from "$store/store";
+	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { ButtonVariant } from "$shared/constants";
 
 	async function recreate() {
-		await patchServer($selectedServer.id, "RECREATE");
+		await patchServer($server, "RECREATE");
 		refreshAllServers();
 		refreshSelectedServer();
 	}

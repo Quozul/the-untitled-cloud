@@ -1,39 +1,41 @@
 <script lang="ts">
-	import type { Server } from "$components/app/models";
-    import { onProfilePage, selectedServer } from "$store/store";
-	import { SubscriptionStatus } from "$components/app/constants";
+    import { onProfilePage, server } from "$store/store";
 	import SidebarItem from "./SidebarItem.svelte";
     import { refreshSelectedServer } from "$components/app/helpers";
     import { goto } from "$app/navigation";
+    import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
+    import type { ApiService } from "$models/ApiService";
+    import { ApiServiceStatus } from "$enums/ApiServiceStatus";
+    import { compareServices, deepEqual } from "$shared/helpers";
 
-	export let server: Server;
+	export let service: ApiService;
 	let iconName: string = "box";
-	let text: string = server.name;
+	let text: string = service.name ?? service.product.name;
 	let className: string = "btn-outline-primary";
 	let classes: string = "";
 
-    if (server.subscriptionStatus === SubscriptionStatus.PENDING) {
+    if (service.subscription.status === ApiSubscriptionStatus.PENDING) {
         iconName = "hourglass";
         text = "En attente";
         className = "btn-outline-info";
-    } else if (server.subscriptionStatus === SubscriptionStatus.ENDED) {
+    } else if (service.subscription.status === ApiSubscriptionStatus.CANCELLED) {
 		iconName = "archive";
 		text = "Terminé";
 		className = "btn-outline-info";
-    } else if (server.subscriptionStatus === SubscriptionStatus.SUSPENDED) {
+    } else if (service.subscription.status === ApiSubscriptionStatus.SUSPENDED) {
 		iconName = "pause";
 		text = "Suspendu";
 		className = "btn-outline-info";
-    } else if (!server.serverStatus) {
+    } else if (service.state.status === ApiServiceStatus.UNAVAILABLE) {
 		iconName = "warning";
 		text = "Serveur introuvable";
 		className = "btn-outline-danger";
     }
 
-	$: classes = className + ($selectedServer?.id === server.id ? " active" : "");
+	$: classes = className + (compareServices($server, service) ? " active" : "");
 
     async function setServer() {
-        $selectedServer = server;
+        $server = service;
         if ($onProfilePage) {
             $onProfilePage = false;
             await goto("/app/");

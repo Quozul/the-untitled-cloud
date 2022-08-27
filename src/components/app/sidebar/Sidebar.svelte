@@ -8,7 +8,6 @@
         servers,
         onProfilePage,
     } from "$store/store";
-	import type { Paginate, Server } from "$components/app/models";
 	import Icon from "$components/icons/Icon.svelte";
 	import { goto } from "$app/navigation";
 	import SidebarItem from "./SidebarItem.svelte";
@@ -16,9 +15,11 @@
     import { getAllServers, refreshAllServers } from "$components/app/helpers";
     import Link from "$shared/Link.svelte";
     import { mergePaginate } from "$shared/helpers";
+    import type { ApiService } from "$models/ApiService";
+    import type { ApiPaginate } from "$models/ApiPaginate";
 
 	// State
-	let endedServers: Paginate<Server>;
+	let endedServers: ApiPaginate<ApiService>;
 
     onMount(async () => {
         await refreshAllServers();
@@ -125,11 +126,11 @@
             <div class="d-flex flex-column gap-3">
                 <h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
                     <Icon/>
-                    Mes serveurs ({$servers.totalElements})
+                    Mes services ({$servers.totalElements})
                 </h6>
 
-                {#each $servers.data as server}
-                    <ServerItem server={server}/>
+                {#each $servers.data as service}
+                    <ServerItem service={service}/>
                 {/each}
 
                 {#if !$servers.lastPage}
@@ -164,7 +165,7 @@
                 </h6>
 
                 {#each endedServers.data as server}
-                    <ServerItem server={server}/>
+                    <ServerItem service={server}/>
                 {/each}
 
                 {#if !endedServers.lastPage}

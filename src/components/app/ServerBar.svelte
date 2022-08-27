@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
-	import { DockerStatus, SubscriptionStatus } from "./constants";
+	import { DockerStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "./helpers";
 	import { ButtonVariant } from "$shared/constants";
 	import { t } from "svelte-intl-precompile";
+	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 
 	// State
 	let started: ZonedDateTime = null;
@@ -37,9 +38,9 @@
 
 	async function toggleServerState() {
 		if ($server.state?.running) {
-			await patchServer($server.id, "STOP");
+			await patchServer($server, "STOP");
 		} else {
-			await patchServer($server.id, "START");
+			await patchServer($server, "START");
 		}
 		await refreshSelectedServer();
 	}
@@ -67,18 +68,18 @@
 		<Button
 				onClick={toggleServerState}
 				className="d-flex align-items-center"
-				disabled="{!$server.state.created || $server?.subscriptionStatus !== SubscriptionStatus.ACTIVE}"
+				disabled="{!$server.state.created || $server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}"
 				variant={ButtonVariant.LIGHT}
 		>
-			{#if $server.subscriptionStatus === SubscriptionStatus.PENDING}
+			{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
 				<Icon key="hourglass" width="28" height="28"/>
 
 				<h3 class="m-0">En attente</h3>
-			{:else if $server.subscriptionStatus === SubscriptionStatus.SUSPENDED}
+			{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
 				<Icon key="pause" width="28" height="28"/>
 
 				<h3 class="m-0">Suspendu</h3>
-			{:else if $server.subscriptionStatus === SubscriptionStatus.ENDED}
+			{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
 				<Icon key="archive" width="28" height="28"/>
 
 				<h3 class="m-0">Terminé</h3>
@@ -89,7 +90,7 @@
 					<Icon key="stop-fill" width="28" height="28"/>
 				{/if}
 
-				<h3 class="m-0">{$server.name}</h3>
+				<h3 class="m-0">{$server.name ?? $server.product.name}</h3>
 			{:else}
 				<Icon key="warning" width="28" height="28"/>
 
@@ -111,11 +112,11 @@
 						{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()} minutes)
 					{:else if $server.state.created}
 						{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-					{:else if $server.subscriptionStatus === SubscriptionStatus.PENDING}
+					{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING}
 						En attente
-					{:else if $server.subscriptionStatus === SubscriptionStatus.SUSPENDED}
+					{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
 						Suspendu
-					{:else if $server.subscriptionStatus === SubscriptionStatus.ENDED}
+					{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
 						Terminé
 					{:else}
 						Introuvable

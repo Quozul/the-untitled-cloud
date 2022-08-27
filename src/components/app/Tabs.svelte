@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { selectedTab, server } from "$store/store";
-	import { SubscriptionStatus, ServerTab } from "$components/app/constants";
+	import { ServerTab } from "$components/app/constants";
 	import { goto } from "$app/navigation";
+	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 
 	let isPending: boolean;
 	let isEnded: boolean;
 	let isSuspended: boolean;
 
 	$: {
-		isPending = $server?.subscriptionStatus === SubscriptionStatus.PENDING;
-		isEnded = $server?.subscriptionStatus === SubscriptionStatus.ENDED;
-		isSuspended = $server?.subscriptionStatus === SubscriptionStatus.SUSPENDED;
+		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
+		isEnded = $server?.subscription.status === ApiSubscriptionStatus.CANCELLED;
+		isSuspended = $server?.subscription.status === ApiSubscriptionStatus.SUSPENDED;
 
 		// Set default tabs
 		if (isEnded && $selectedTab !== ServerTab.SUBSCRIPTION) {

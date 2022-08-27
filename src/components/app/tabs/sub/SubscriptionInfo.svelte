@@ -1,18 +1,19 @@
 <script lang="ts">
-	import type { Server, SubscriptionInfo } from "$components/app/models";
 	import { ZonedDateTime } from "@js-joda/core";
 	import Button from "$shared/Button.svelte";
 	import { cancelSubscription, getSubscription, refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
-	import { selectedServer } from "$store/store";
+	import { server } from "$store/store";
 	import type { ApiError } from "$shared/models";
 	import { ButtonVariant } from "$shared/constants";
 	import { formatter, shortDate } from "$shared/constants";
 	import Invoices from "./Invoices.svelte";
 	import Modal from "$components/modal/Modal.svelte";
 	import InternalError from "../info/errors/InternalError.svelte";
+	import type { ApiService } from "$models/ApiService";
+	import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 
 	// State
-	let subscription: SubscriptionInfo | null = null;
+	let subscription: ApiSubscriptionDetails | null = null;
 	let error: ApiError = null;
 	let modalVisible: boolean = false;
 	let cancelError: ApiError = null;
@@ -22,10 +23,10 @@
 	let currentPeriodEnd: string;
 	let canceledAt: string;
 
-	async function fetchSubscription(server: Server = $selectedServer) {
+	async function fetchSubscription(s: ApiService = $server) {
 		try {
 			subscription = null;
-			subscription = await getSubscription(server.id);
+			subscription = await getSubscription(s);
 
 			startDate = subscription?.startDate && ZonedDateTime.parse(subscription.startDate).format(formatter);
 			currentPeriodStart = subscription?.currentPeriodStart && ZonedDateTime.parse(subscription.currentPeriodStart).format(shortDate);
@@ -36,7 +37,7 @@
 		}
 	}
 
-	$: fetchSubscription($selectedServer);
+	$: fetchSubscription($server);
 
 	function openModal() {
 		modalVisible = true;
@@ -45,7 +46,7 @@
 	async function cancel() {
 		try {
 			cancelError = null;
-			await cancelSubscription($selectedServer.id);
+			await cancelSubscription($server);
 			modalVisible = false;
 
 			// Toggle global refresh

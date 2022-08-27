@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { selectedServer, server, fetchServersError } from "$store/store";
+	import { server, fetchServersError } from "$store/store";
 	import NoServer from "$components/app/tabs/info/errors/NoServer.svelte";
 	import ServerBar from "$components/app/ServerBar.svelte";
 	import { refreshAllServers } from "$components/app/helpers";
@@ -14,7 +14,7 @@
 	};
 </script>
 
-{#if $selectedServer}
+{#if $server}
 	<ServerBar/>
 
 	<Tabs/>

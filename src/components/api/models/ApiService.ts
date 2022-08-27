@@ -7,6 +7,7 @@ export type ApiService = {
 	product: ApiProduct, // Product associated with the service
 	tag: string | null, // Container's tag
 	port: string | null, // Exposed port
+	name: string | null, // Container's name
 	state: ApiServiceState,
-	subscription: ApiSubscription | null, // Subscription associated with the service
+	subscription: ApiSubscription, // Subscription associated with the service
 }
