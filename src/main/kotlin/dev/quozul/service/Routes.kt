@@ -1,8 +1,10 @@
 package dev.quozul.service
 
+import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
 import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.authentication.models.AuthenticationErrors
+import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.models.*
@@ -18,6 +20,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
@@ -30,6 +33,14 @@ fun Route.configureServiceRoutes() {
 		val uuid = UUID.fromString(principal!!.payload.getClaim("id").asString())
 		val page = (call.request.queryParameters["page"] ?: "0").toInt()
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
+		val status = call.request.queryParameters["status"]?.let {
+			try {
+				SubscriptionStatus.valueOf(it ?: "ACTIVE")
+			} catch (_: IllegalArgumentException) {
+				SubscriptionStatus.ACTIVE
+			}
+		}
+
 		val offset = (page * size).toLong();
 
 		// TODO: Add filter
@@ -47,25 +58,43 @@ fun Route.configureServiceRoutes() {
 					Subscriptions.subscriptionStatus,
 					Containers.containerTag,
 					Containers.containerId,
-					Subscriptions.name
-				)
-				.select { Subscriptions.owner eq uuid }
+					Containers.name,
+				).let {
+					status?.let { status ->
+						it.select {
+							(Subscriptions.owner eq uuid) and (Subscriptions.subscriptionStatus eq status)
+						}
+					} ?: it.select {
+							(Subscriptions.owner eq uuid) and (Subscriptions.subscriptionStatus neq SubscriptionStatus.CANCELLED)
+						}
+				}
 				.withDistinct()
 
 			val response = query.limit(size, offset).map { row ->
-				val dockerContainer: DockerContainer? = row.getOrNull(Containers.containerId)?.let { DockerContainer(it) }
-				val product: Product = Product.findById(row[Products.id])!! // This should never be null, but if it happens, I'm screwed
-				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
+				val product: Product =
+					Product.findById(row[Products.id])!! // This should never be null, but if it happens, I'm screwed
 
-				val exposedPort = ExposedPort.tcp(25565)
-				val port = dockerContainer?.let { dc -> dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec }
-				val state = ServerState.fromContainerState(dockerContainer?.state)
+				val container: Container? = row.getOrNull(Containers.id)?.let {
+					println(it)
+					Container.findById(it)
+				}
+
+				val state: ServerState = ServerState.fromContainerState(
+					try {
+						container?.dockerContainer?.state
+					} catch (_: NotFoundException) {
+						null
+					}
+				)
+
+				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
 				ApiContainer(
 					id = row.getOrNull(Containers.id)?.toString(),
 					product = product.toApiProduct(),
 					tag = row.getOrNull(Containers.containerTag),
-					port,
+					name = row.getOrNull(Containers.name),
+					container?.port,
 					state,
 					subscription.toApiSubscription(),
 				)
@@ -127,26 +156,46 @@ fun Route.configureServiceRoutes() {
 		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
 
 		try {
-			findContainerWithOwnership(serviceId, ownerId)?.dockerContainer?.let {
+			findContainerWithOwnership(serviceId, ownerId)?.let {
 				when (action) {
 					Action.START -> {
-						it.start()
+						it.dockerContainer?.start()
 					}
 
 					Action.STOP -> {
-						it.stop()
+						it.dockerContainer?.stop()
 					}
 
 					Action.RESTART -> {
-						it.restart()
+						it.dockerContainer?.restart()
 					}
 
 					Action.RECREATE -> {
-						it.recreate()
+						try {
+							it.dockerContainer?.recreate()
+						} catch (_: NotFoundException) {
+							val product = transaction {
+								it.product
+							}
+
+							val server = transaction {
+								findServerFromContainer(it)
+							}
+
+							val container = DockerContainer.new(
+								image = product.dockerImage,
+								tag = it.containerTag,
+								env = server?.toEnvironmentVariables(),
+							)
+
+							transaction {
+								it.dockerContainer = container
+							}
+						}
 					}
 
 					Action.RESET -> {
-						it.reset()
+						it.dockerContainer?.reset()
 					}
 				}
 				call.response.status(HttpStatusCode.NoContent)

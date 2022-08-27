@@ -3,6 +3,7 @@ package dev.quozul.database.helpers
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
 import com.github.dockerjava.api.command.PullImageResultCallback
+import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.NetworkSettings

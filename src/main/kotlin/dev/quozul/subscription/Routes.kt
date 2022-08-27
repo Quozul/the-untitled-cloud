@@ -8,8 +8,10 @@ import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiSubscription
 import dev.quozul.database.models.*
+import dev.quozul.servers.models.Action
 import dev.quozul.servers.models.CancelMode
 import dev.quozul.servers.models.Paginate
+import dev.quozul.servers.models.ServerActionRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -164,6 +166,35 @@ fun Route.configureSubscriptionRoutes() {
 		findSubscriptionWithOwnership(subscriptionId, ownerId)?.let {
 			call.respond(it.toPaginatedApiProducts(page, size))
 		} ?: call.response.status(HttpStatusCode.NotFound)
+	}
+
+	/**
+	 * Used to create a service
+	 */
+	patch("{subscriptionId}/product/{productId}") {
+		val subscriptionId = try {
+			UUID.fromString(call.parameters["subscriptionId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@patch
+		}
+
+		val productId = try {
+			UUID.fromString(call.parameters["productId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@patch
+		}
+
+		val action = try {
+			call.receive<ServerActionRequest>().action
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@patch
+		}
+
+		val principal = call.principal<JWTPrincipal>()
+		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
 	}
 
 	delete("{subscriptionId}") {

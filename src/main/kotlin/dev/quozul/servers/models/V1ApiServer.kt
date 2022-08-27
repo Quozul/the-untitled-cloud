@@ -17,13 +17,13 @@ data class V1ApiServer(
 	companion object {
 		@Deprecated("Use Container.toApiContainer() instead")
 		fun fromContainer(container: Container, status: SubscriptionStatus): V1ApiServer {
-			val name = container.subscription.name
+			val name = container.name
 
 			// Generate a random name if the servers does not have one
 			// TODO: This should not be happening here
 			if (name == null) {
 				transaction {
-					container.subscription.name = NameGenerator.getRandomName()
+					container.name = NameGenerator.getRandomName()
 				}
 			}
 

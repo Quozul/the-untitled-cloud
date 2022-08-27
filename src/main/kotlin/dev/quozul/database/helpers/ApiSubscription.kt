@@ -22,7 +22,6 @@ data class ApiSubscription(
 	val provider: SubscriptionProvider,
 	val creationDate: LocalDateTime,
 	val deletionDate: LocalDateTime?,
-	val name: String?,
 ) {
 	companion object {
 		fun fromOwner(owner: User): List<ApiSubscription> = transaction {

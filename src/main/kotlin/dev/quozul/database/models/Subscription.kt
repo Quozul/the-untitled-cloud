@@ -28,9 +28,6 @@ object Subscriptions : UUIDTable("subscription") {
 	val stripeId = char("stripe_id", 64).uniqueIndex().nullable()
 	val creationDate = datetime("creationDate").defaultExpression(CurrentDateTime())
 	val deletionDate = datetime("deletionDate").nullable()
-
-	// TODO: Make name unique
-	val name = varchar("name", 32).nullable() // User given name of their product
 }
 
 class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -43,7 +40,6 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 	var stripeId by Subscriptions.stripeId
 	var creationDate by Subscriptions.creationDate
 	var deletionDate by Subscriptions.deletionDate
-	var name by Subscriptions.name
 
 	var products by Product via SubscriptionItems
 	val containers by Container referrersOn Containers.subscription
@@ -55,7 +51,6 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 			subscriptionProvider,
 			LocalDateTime.parse(creationDate.toString()),
 			deletionDate?.let { LocalDateTime.parse(it.toString()) },
-			name,
 		)
 	}
 

@@ -2,13 +2,12 @@ package dev.quozul.payments.provider.stripe.routes
 
 import com.stripe.exception.SignatureVerificationException
 import com.stripe.model.*
+import com.stripe.model.Subscription
 import com.stripe.net.Webhook
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.DockerContainer
-import dev.quozul.database.models.Container
-import dev.quozul.database.models.Server
-import dev.quozul.database.models.Subscriptions
-import dev.quozul.database.models.getSubscriptionFromStripeId
+import dev.quozul.database.models.*
+import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -56,16 +55,22 @@ fun Route.configureStripeWebhook() {
 						Subscriptions.stripeId eq stripeObject.subscription
 					}.firstOrNull()?.let { subscription ->
 						subscription.products.forEach { product ->
-							val dockerContainer = DockerContainer.new(product.dockerImage)
-
 							val container = Container.new {
-								containerId = dockerContainer?.containerId
 								this.product = product
 								this.subscription = subscription
 							}
 
-							Server.new {
+							val server = Server.new {
 								this.container = container
+							}
+
+							val dockerContainer = DockerContainer.new(
+								image = product.dockerImage,
+								env = server.toEnvironmentVariables(),
+							)
+
+							transaction {
+								container.dockerContainer = dockerContainer
 							}
 						}
 
