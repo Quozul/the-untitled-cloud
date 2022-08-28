@@ -1,5 +1,6 @@
 package dev.quozul.database.models
 
+import com.stripe.model.Invoice
 import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiContainer
@@ -13,6 +14,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -99,6 +101,43 @@ fun getSubscriptionFromStripeId(stripeId: String) = transaction {
 	Subscription.find {
 		Subscriptions.stripeId eq stripeId
 	}.firstOrNull()
+}
+
+fun getOrCreateSubscriptionFromInvoice(
+	invoice: Invoice,
+	user: User,
+	status: SubscriptionStatus = SubscriptionStatus.PENDING,
+	provider: SubscriptionProvider = SubscriptionProvider.STRIPE
+) = transaction {
+	getSubscriptionFromStripeId(invoice.subscription)?.let { subscription ->
+		// There are missing products
+		// TODO: Verify all products are correctly registered
+		if (subscription.items.count() == 0L) {
+			val products = invoice.lines.data.mapNotNull {
+				// TODO: Add support for `it.quantity`
+				getProductFromStripeId(it.price.id)
+			}
+
+			subscription.products = SizedCollection(products)
+		}
+
+		subscription.subscriptionStatus = status
+
+		subscription
+	} ?: run {
+		// Subscription is not created
+		val products = invoice.lines.data.mapNotNull {
+			getProductFromStripeId(it.price.id)
+		}
+
+		Subscription.new {
+			owner = user
+			subscriptionStatus = status
+			subscriptionProvider = provider
+			this.stripeId = stripeId
+			this.products = SizedCollection(products)
+		}
+	}
 }
 
 @Deprecated("Unsafe, use findSubscriptionWithOwnership", replaceWith = ReplaceWith("findSubscriptionWithOwnership()"))

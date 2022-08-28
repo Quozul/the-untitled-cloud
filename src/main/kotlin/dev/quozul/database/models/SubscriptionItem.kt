@@ -72,7 +72,6 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 				}
 
 				val env = server.toEnvironmentVariables()
-				println(env)
 
 				// TODO: Get exposed port from product configuration
 				val exposedPort = ExposedPort.tcp(25565)

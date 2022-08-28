@@ -42,10 +42,8 @@ fun getOrCreateStripeCustomer(user: User): Customer {
  * The user should never be null at this point.
  * But it could happen.
  */
-fun getUserFromStripeId(id: String): User? {
-	return transaction {
-		User.find {
-			Users.stripeId eq id
-		}.firstOrNull()
-	}
+fun getUserFromStripeId(id: String): User? = transaction {
+	User.find {
+		Users.stripeId eq id
+	}.firstOrNull()
 }

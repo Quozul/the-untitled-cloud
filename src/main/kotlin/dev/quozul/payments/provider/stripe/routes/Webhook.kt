@@ -8,11 +8,13 @@ import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.models.*
 import dev.quozul.database.models.SubscriptionItem
+import dev.quozul.payments.provider.stripe.getUserFromStripeId
 import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -53,16 +55,21 @@ fun Route.configureStripeWebhook() {
 			"invoice.paid" -> {
 				stripeObject as Invoice
 
-				newSuspendedTransaction {
-					// Find subscription from Stripe Id
-					getSubscriptionFromStripeId(stripeObject.subscription)?.let { subscription ->
-						// Create containers for all products
+				// Find subscription from Stripe Id
+				val subscription = try {
+					val user = getUserFromStripeId(stripeObject.customer)!!
+					getOrCreateSubscriptionFromInvoice(stripeObject, user, SubscriptionStatus.ACTIVE)
+				} catch (_: NullPointerException) {
+					call.response.status(HttpStatusCode.BadRequest)
+					return@post
+				}
+
+				// Create containers for all products
+				runBlocking {
+					newSuspendedTransaction {
 						subscription.items.forEach { item ->
 							item.createContainer()
 						}
-
-						// Set subscription as active
-						subscription.subscriptionStatus = SubscriptionStatus.ACTIVE
 					}
 				}
 

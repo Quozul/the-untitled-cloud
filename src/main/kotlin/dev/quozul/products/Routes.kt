@@ -22,14 +22,16 @@ fun Route.configureProductsRoutes() {
 
 		val lastPage = count <= (page + 1) * size
 
-		call.respond(Paginate(
-			products,
-			firstPage = page == 0,
-			lastPage = lastPage,
-			totalPages = count / size,
-			totalElements = count,
-			page = page,
-		))
+		call.respond(
+			Paginate(
+				products,
+				firstPage = page == 0,
+				lastPage = lastPage,
+				totalPages = count / size,
+				totalElements = count,
+				page = page,
+			)
+		)
 	}
 
 	get("{productId}") {

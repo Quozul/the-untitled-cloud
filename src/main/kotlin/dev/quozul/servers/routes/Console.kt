@@ -5,8 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.interfaces.DecodedJWT
 import com.github.dockerjava.api.async.ResultCallback
-import dev.quozul.database.models.Container
-import dev.quozul.database.models.Server
 import dev.quozul.database.models.SubscriptionItem
 import dev.quozul.dockerClient
 import io.ktor.server.routing.*
