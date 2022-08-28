@@ -10,6 +10,7 @@ import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.Subscription
 import dev.quozul.database.models.User
+import dev.quozul.database.models.getOrCreateSubscriptionFromInvoice
 import dev.quozul.database.models.getProductFromStripeId
 import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
@@ -101,7 +102,7 @@ fun Route.configureServerSubscriptionRoutes() {
 
 		val paymentIntent = try {
 			val params = PaymentIntentRetrieveParams.builder()
-				.addAllExpand(listOf("invoice", "invoice.subscription"))
+				.addAllExpand(listOf("invoice"))
 				.build()
 			PaymentIntent.retrieve(body.paymentIntentId, params, null)
 		} catch (e: StripeException) {
@@ -110,23 +111,7 @@ fun Route.configureServerSubscriptionRoutes() {
 			return@put
 		}
 
-		val stripeId = paymentIntent.invoiceObject.subscription
-
-		val subscription = transaction {
-			// Get a list of products associated with the Stripe subscription
-			val products = paymentIntent.invoiceObject.subscriptionObject.items.data.mapNotNull {
-				getProductFromStripeId(it.price.id)
-			}
-
-			// Create subscription with associated products
-			Subscription.new {
-				owner = user
-				subscriptionStatus = SubscriptionStatus.PENDING
-				subscriptionProvider = SubscriptionProvider.STRIPE
-				this.stripeId = stripeId
-				this.products = SizedCollection(products)
-			}
-		}
+		val subscription = getOrCreateSubscriptionFromInvoice(paymentIntent.invoiceObject, user)
 
 		call.respond(subscription.toApiSubscription())
 	}

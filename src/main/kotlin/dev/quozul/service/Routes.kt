@@ -48,9 +48,9 @@ fun Route.configureServiceRoutes() {
 		// If a service is not created yet, or has the PENDING status, it must be returned as well
 		// TODO: Simplify this transaction
 		val (services, count) = transaction {
-			val query = SubscriptionItems.rightJoin(Products)
-				.rightJoin(Subscriptions)
-				.innerJoin(Containers)
+			val query = SubscriptionItems.leftJoin(Products)
+				.leftJoin(Subscriptions)
+				.fullJoin(Containers)
 				.slice(
 					SubscriptionItems.id,
 					Containers.id,

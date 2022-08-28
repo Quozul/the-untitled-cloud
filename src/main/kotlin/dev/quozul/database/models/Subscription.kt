@@ -103,10 +103,17 @@ fun getSubscriptionFromStripeId(stripeId: String) = transaction {
 	}.firstOrNull()
 }
 
+/**
+ * Get, update or create a subscription
+ * Sets the products according to the invoice
+ * Update the status if provided is null
+ * Default status is PENDING upon creation only
+ * If products weren't registered, register them
+ */
 fun getOrCreateSubscriptionFromInvoice(
 	invoice: Invoice,
 	user: User,
-	status: SubscriptionStatus = SubscriptionStatus.PENDING,
+	status: SubscriptionStatus? = null,
 	provider: SubscriptionProvider = SubscriptionProvider.STRIPE
 ) = transaction {
 	getSubscriptionFromStripeId(invoice.subscription)?.let { subscription ->
@@ -121,7 +128,9 @@ fun getOrCreateSubscriptionFromInvoice(
 			subscription.products = SizedCollection(products)
 		}
 
-		subscription.subscriptionStatus = status
+		if (status !== null) {
+			subscription.subscriptionStatus = status
+		}
 
 		subscription
 	} ?: run {
@@ -132,7 +141,7 @@ fun getOrCreateSubscriptionFromInvoice(
 
 		Subscription.new {
 			owner = user
-			subscriptionStatus = status
+			subscriptionStatus = status ?: SubscriptionStatus.PENDING
 			subscriptionProvider = provider
 			this.stripeId = stripeId
 			this.products = SizedCollection(products)
