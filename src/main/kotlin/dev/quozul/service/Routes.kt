@@ -156,12 +156,7 @@ fun Route.configureServiceRoutes() {
 
 		findItemWithOwnership(serviceId, ownerId)?.let {
 			transaction {
-				if (update.name == null) {
-					it.container?.name = NameGenerator.getRandomName()
-				} else {
-					it.container?.name = update.name
-				}
-
+				it.container?.name = update.name ?: NameGenerator.getRandomName()
 				it.container?.containerTag = update.tag
 			}
 			call.response.status(HttpStatusCode.NoContent)
@@ -188,6 +183,16 @@ fun Route.configureServiceRoutes() {
 
 		try {
 			findItemWithOwnership(serviceId, ownerId)?.let {
+				val subscriptionStatus = transaction {
+					it.subscription.subscriptionStatus
+				}
+
+				if (subscriptionStatus != SubscriptionStatus.ACTIVE) {
+					call.response.status(HttpStatusCode.Forbidden)
+					call.respond(AuthenticationErrors.ACTION_NOT_ALLOWED.toHashMap(true))
+					return@patch
+				}
+
 				when (action) {
 					Action.START -> {
 						it.dockerContainer?.start()

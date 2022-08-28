@@ -113,10 +113,12 @@ fun Route.configureServerSubscriptionRoutes() {
 		val stripeId = paymentIntent.invoiceObject.subscription
 
 		val subscription = transaction {
+			// Get a list of products associated with the Stripe subscription
 			val products = paymentIntent.invoiceObject.subscriptionObject.items.data.mapNotNull {
 				getProductFromStripeId(it.price.id)
 			}
 
+			// Create subscription with associated products
 			Subscription.new {
 				owner = user
 				subscriptionStatus = SubscriptionStatus.PENDING

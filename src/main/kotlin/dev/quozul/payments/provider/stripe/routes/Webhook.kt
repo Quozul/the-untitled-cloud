@@ -7,6 +7,7 @@ import com.stripe.net.Webhook
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.models.*
+import dev.quozul.database.models.SubscriptionItem
 import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,9 +15,11 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
+import dev.quozul.database.models.Subscription.Companion as ModelsSubscription
 
 fun Route.configureStripeWebhook() {
 	val endpointSecret = environment!!.config.property("payments.stripe.endpointSecret").getString()
@@ -51,28 +54,14 @@ fun Route.configureStripeWebhook() {
 				stripeObject as Invoice
 
 				newSuspendedTransaction {
-					dev.quozul.database.models.Subscription.find {
-						Subscriptions.stripeId eq stripeObject.subscription
-					}.firstOrNull()?.let { subscription ->
-						subscription.products.forEach { product ->
-							val container = Container.new {
-								this.name = NameGenerator.getRandomName()
-							}
-
-							val server = Server.new {
-								this.container = container
-							}
-
-							val dockerContainer = DockerContainer.new(
-								image = product.dockerImage,
-								env = server.toEnvironmentVariables(),
-							)
-
-							transaction {
-								container.dockerContainer = dockerContainer
-							}
+					// Find subscription from Stripe Id
+					getSubscriptionFromStripeId(stripeObject.subscription)?.let { subscription ->
+						// Create containers for all products
+						subscription.items.forEach { item ->
+							item.createContainer()
 						}
 
+						// Set subscription as active
 						subscription.subscriptionStatus = SubscriptionStatus.ACTIVE
 					}
 				}
@@ -88,7 +77,10 @@ fun Route.configureStripeWebhook() {
 						subscription.subscriptionStatus = SubscriptionStatus.SUSPENDED
 					}
 
-					// TODO: Stop containers
+					// Stop all containers
+					subscription.containers.forEach { container ->
+						container.dockerContainer?.stop()
+					}
 				}
 
 				call.response.status(HttpStatusCode.OK)
@@ -102,6 +94,7 @@ fun Route.configureStripeWebhook() {
 						subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
 					}
 
+					// Remove all containers
 					subscription.containers.forEach { container ->
 						container.dockerContainer?.remove()
 					}

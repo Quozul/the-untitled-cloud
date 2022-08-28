@@ -10,10 +10,10 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-object Products: UUIDTable("product") {
+object Products : UUIDTable("product") {
 	val name = varchar("name", 32)
 	val description = varchar("description", 1024)
-	val stripeId = varchar("stripe_id", 32)
+	val stripeId = varchar("stripe_id", 32).uniqueIndex()
 	val dockerImage = varchar("docker_image", 64) // Default image of the container
 	// TODO: Add default containers' limits?
 }
@@ -35,10 +35,8 @@ class Product(id: EntityID<UUID>) : UUIDEntity(id) {
 	}
 }
 
-fun getProductFromStripeId(stripeId: String): Product? {
-	return transaction {
-		Product.find {
-			Products.stripeId eq stripeId
-		}.firstOrNull()
-	}
+fun getProductFromStripeId(stripeId: String): Product? = transaction {
+	Product.find {
+		Products.stripeId eq stripeId
+	}.firstOrNull()
 }

@@ -19,6 +19,7 @@ enum class AuthenticationErrors(private val message: String) {
 	STRIPE_ERROR("Stripe error"),
 	NOT_PAID("Not paid invoices cannot be cancelled"),
 	NOT_MODIFIED("Not modified"),
+	ACTION_NOT_ALLOWED("Not allowed to make action"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {
