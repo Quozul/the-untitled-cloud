@@ -5,6 +5,7 @@
 	import { refreshAllServers } from "$components/app/helpers";
 	import Tabs from "$components/app/Tabs.svelte";
 	import InternalError from "$components/app/tabs/info/errors/InternalError.svelte";
+	import { fetchingServer } from "$store/store";
 
 	// State
 	let showDebug: boolean = false;
@@ -16,12 +17,13 @@
 
 {#if $server}
 	<ServerBar/>
-
 	<Tabs/>
-
 	<slot/>
 {:else if $fetchServersError}
 	<InternalError refresh={refreshAllServers}/>
+{:else if $fetchingServer}
+	<ServerBar/>
+	<Tabs/>
 {:else}
 	<NoServer/>
 {/if}

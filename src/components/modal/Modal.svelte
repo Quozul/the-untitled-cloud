@@ -7,7 +7,7 @@
 	export let icon: string = "";
 	export let title: string = "Confirmation";
 	export let closeText: string = "Fermer";
-	export let okText: string = "Valider";
+	export let okText: string = null;
 	export let onClick: VoidFunction = null;
 	export let variant: ButtonVariant = ButtonVariant.PRIMARY;
 
@@ -51,8 +51,13 @@
 			</div>
 
 			<div class="modal-footer">
-				<Button variant={ButtonVariant.SECONDARY} onClick={hide}>{closeText}</Button>
-				<Button {variant} onClick={onClick}>{okText}</Button>
+				{#if closeText !== null}
+					<Button variant={ButtonVariant.SECONDARY} onClick={hide}>{closeText}</Button>
+				{/if}
+
+				{#if okText !== null}
+					<Button {variant} onClick={onClick}>{okText}</Button>
+				{/if}
 			</div>
 		</div>
 	</div>

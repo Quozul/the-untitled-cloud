@@ -12,6 +12,7 @@ import type { ApiError } from "$components/shared/models";
 import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiService } from "$models/ApiService";
 import type { ApiServer } from "$models/ApiServer";
+import type { ApiUser } from "$models/ApiUser";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
@@ -36,6 +37,9 @@ export const fetchServerError: Writable<ApiError | null> = writable(null);
 
 // App server parameters store
 export const parameters: Writable<ApiServer> = createStoreEntry("parameters", null, browser && sessionStorage);
+
+// App current user
+export const user: Writable<ApiUser> = createStoreEntry("user", null, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

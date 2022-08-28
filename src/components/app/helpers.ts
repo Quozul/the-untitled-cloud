@@ -12,6 +12,7 @@ import type { ApiService } from "$models/ApiService";
 import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
+import type { ApiUser } from "$models/ApiUser";
 
 export async function getAllServers(page: number = 0, ended: boolean = false): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
@@ -105,4 +106,14 @@ export async function getSubscriptionDetails(service: ApiService): Promise<ApiSu
 export async function cancelSubscription(service: ApiService, now: boolean = true): Promise<ApiSubscriptionDetails> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`, getOptions("DELETE", { now }));
 	return await handleRequest(request) as ApiSubscriptionDetails;
+}
+
+export async function updateDiscordAccount(code: string, redirectUri: string) {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/discord`, getOptions("POST", { code, redirectUri }));
+	await handleRequest(request);
+}
+
+export async function getUser(): Promise<ApiUser> {
+	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user`, getOptions("GET"));
+	return await handleRequest(request) as ApiUser;
 }
