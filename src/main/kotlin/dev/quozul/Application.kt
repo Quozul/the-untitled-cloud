@@ -4,10 +4,22 @@ import io.ktor.server.application.*
 import dev.quozul.plugins.*
 import dev.quozul.servers.getDockerClient
 import dev.quozul.user.configureSmtp
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import javax.mail.Session
 
 
 val dockerClient = getDockerClient()
+val client = HttpClient(CIO) {
+	install(ContentNegotiation) {
+		json(Json {
+			ignoreUnknownKeys = true
+		})
+	}
+}
 lateinit var smtpSession: Session
 lateinit var containerDirectory: String
 

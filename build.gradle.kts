@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-	// Ktor
+	// Ktor server
 	implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
 	implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
 	implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
@@ -38,6 +38,12 @@ dependencies {
 	implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 	implementation("io.ktor:ktor-server-websockets:$ktor_version")
 	implementation("ch.qos.logback:logback-classic:$logback_version")
+
+	// Ktor client
+	implementation("io.ktor:ktor-client-core:$ktor_version")
+	implementation("io.ktor:ktor-client-cio:$ktor_version")
+	implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+	implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
 	// Exposed
 	implementation("org.jetbrains.exposed:exposed-core:$exposed_version")

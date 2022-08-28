@@ -26,10 +26,6 @@ fun Application.configureRouting() {
 			configureAuthenticationRoutes()
 		}
 
-		route("/user") {
-			configureUserRoutes()
-		}
-
 		route("/payment") {
 			route("/stripe") {
 				route("/subscription") {
@@ -65,6 +61,11 @@ fun Application.configureRouting() {
 
 			route("/service") {
 				configureServiceRoutes()
+			}
+
+			// Routes v1
+			route("/user") {
+				configureUserRoutes()
 			}
 		}
 	}

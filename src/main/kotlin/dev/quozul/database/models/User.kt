@@ -17,6 +17,7 @@ object Users: UUIDTable("user") {
 	val verificationCodeValidDate = datetime("verification_code_valid_date")
 	val communicationLanguage = char("communication_language", 2)
 	val emailVerified = bool("email_verified").default(false)
+	val discordId = varchar("discord_id", 20).nullable()
 }
 
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -30,4 +31,5 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
 	var verificationCodeValidDate by Users.verificationCodeValidDate
 	var communicationLanguage by Users.communicationLanguage
 	var emailVerified by Users.emailVerified
+	var discordId by Users.discordId
 }

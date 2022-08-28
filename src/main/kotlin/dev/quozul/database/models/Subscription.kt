@@ -141,6 +141,7 @@ fun getOrCreateSubscriptionFromInvoice(
 
 		Subscription.new {
 			owner = user
+			stripeId = invoice.subscription
 			subscriptionStatus = status ?: SubscriptionStatus.PENDING
 			subscriptionProvider = provider
 			this.stripeId = stripeId

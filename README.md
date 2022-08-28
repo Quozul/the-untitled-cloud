@@ -27,6 +27,11 @@ SMTP_FROM_NAME=No reply
 JWT_SECRET=secret
 SALT=salt # For stronger password hashing
 PEPPER=pepper
+
+# Discord
+TOKEN=xxx
+CLIENT_SECRET=yyy
+CLIENT_ID=123
 ```
 
 ## Run
