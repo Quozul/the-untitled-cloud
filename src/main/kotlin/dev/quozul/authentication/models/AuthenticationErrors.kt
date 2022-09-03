@@ -21,6 +21,7 @@ enum class AuthenticationErrors(private val message: String) {
 	NOT_MODIFIED("Not modified"),
 	ACTION_NOT_ALLOWED("Not allowed to make action"),
 	ALREADY_EXISTS("An account already exists"),
+	INVALID_PROMO_CODE("Invalid promotion code"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {

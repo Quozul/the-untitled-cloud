@@ -3,7 +3,8 @@ package dev.quozul.payments.provider.stripe.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiCart(
-	val cart: List<String>,
-	val promo: String?,
+data class ApiPromoCode(
+	val code: String,
+	val amountOff: Int?,
+	val percentOff: Int?,
 )

@@ -23,7 +23,7 @@ data class SubscriptionInfo(
 	val canceledAt: Instant?,
 	val status: String,
 	val cancelAtPeriodEnd: Boolean,
-	val paymentMethodType: String,
+	val paymentMethodType: String?,
 	val paymentMethodLast4: String?,
 	val latestInvoice: ApiInvoice,
 )

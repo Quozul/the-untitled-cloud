@@ -1,9 +1,14 @@
 package dev.quozul.payments.provider.stripe.routes
 
+import com.stripe.exception.InvalidRequestException
 import com.stripe.exception.StripeException
+import com.stripe.model.Coupon
 import com.stripe.model.PaymentIntent
+import com.stripe.model.PromotionCode
 import com.stripe.model.Subscription as StripeSubscription
 import com.stripe.param.PaymentIntentRetrieveParams
+import com.stripe.param.PromotionCodeListParams
+import com.stripe.param.PromotionCodeRetrieveParams
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.models.Product
@@ -12,6 +17,7 @@ import dev.quozul.database.models.getOrCreateSubscriptionFromInvoice
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.ApiCart
+import dev.quozul.payments.provider.stripe.models.ApiPromoCode
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -59,9 +65,21 @@ fun Route.configureServerSubscriptionRoutes() {
 				}
 			}
 
+			val promotionCode = body.promo?.let {
+				val params = PromotionCodeListParams.builder()
+					.setCode(body.promo)
+					.addExpand("data.coupon")
+					.setLimit(1)
+					.setActive(true)
+					.build()
+
+				PromotionCode.list(params).data.firstOrNull()?.id
+			}
+
 			val subCreateParams = SubscriptionCreateParams.builder()
 				.setCustomer(customer.id)
 				.addAllItem(priceIds)
+				.setPromotionCode(promotionCode)
 				.setPaymentSettings(paymentSettings)
 				.setPaymentBehavior(SubscriptionCreateParams.PaymentBehavior.DEFAULT_INCOMPLETE)
 				.addAllExpand(listOf("latest_invoice.payment_intent"))
@@ -69,6 +87,20 @@ fun Route.configureServerSubscriptionRoutes() {
 
 			val subscription = try {
 				StripeSubscription.create(subCreateParams)
+			} catch (e: InvalidRequestException) {
+				when (e.param) {
+					"promotion_code" -> {
+						call.response.status(HttpStatusCode.BadRequest)
+						call.respond(AuthenticationErrors.INVALID_PROMO_CODE.toHashMap(true))
+					}
+					else -> {
+						e.printStackTrace()
+						call.response.status(HttpStatusCode.InternalServerError)
+						call.respond(AuthenticationErrors.STRIPE_ERROR.toHashMap(true))
+					}
+				}
+
+				return@post
 			} catch (e: StripeException) {
 				e.printStackTrace()
 				call.response.status(HttpStatusCode.InternalServerError)
@@ -120,5 +152,38 @@ fun Route.configureServerSubscriptionRoutes() {
 		val subscription = getOrCreateSubscriptionFromInvoice(paymentIntent.invoiceObject, user)
 
 		call.respond(subscription.toApiSubscription())
+	}
+
+	get("promoCode/{promoCode}") {
+		val promoCode = try {
+			call.parameters["promoCode"]!!
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@get
+		}
+
+		try {
+			val params = PromotionCodeListParams.builder()
+				.setCode(promoCode)
+				.addExpand("data.coupon")
+				.setLimit(1)
+				.setActive(true)
+				.build()
+			val code = PromotionCode.list(params).data[0].coupon
+
+			call.respond(
+				ApiPromoCode(
+					promoCode,
+					code.amountOff?.toInt(),
+					code.percentOff?.toInt(),
+				)
+			)
+		} catch (e: StripeException) {
+			call.response.status(HttpStatusCode.NotFound)
+			call.respond(AuthenticationErrors.INVALID_PROMO_CODE.toHashMap(true))
+		} catch (e: IndexOutOfBoundsException) {
+			call.response.status(HttpStatusCode.NotFound)
+			call.respond(AuthenticationErrors.INVALID_PROMO_CODE.toHashMap(true))
+		}
 	}
 }

@@ -58,8 +58,8 @@ data class ApiSubscription(
 				stripeSubscription.canceledAt?.let { Instant.fromEpochSeconds(stripeSubscription.canceledAt) },
 				stripeSubscription.status,
 				stripeSubscription.cancelAtPeriodEnd,
-				paymentMethod.type,
-				paymentMethod.card?.last4 ?: paymentMethod.sepaDebit?.last4,
+				paymentMethod?.type,
+				paymentMethod?.card?.last4 ?: paymentMethod?.sepaDebit?.last4,
 				latestInvoice,
 			)
 		} catch (e: SerializationException) {
