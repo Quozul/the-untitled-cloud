@@ -16,3 +16,9 @@ data class SignUpCredentials(
     val language: String,
     val acceptTos: Boolean,
 )
+
+@Serializable
+data class VerificationCredentials(
+    val password: String,
+    val code: String,
+)

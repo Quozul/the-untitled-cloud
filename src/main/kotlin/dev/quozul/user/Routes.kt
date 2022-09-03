@@ -2,12 +2,11 @@ package dev.quozul.user
 
 import dev.quozul.payments.provider.stripe.models.Address
 import com.stripe.param.CustomerUpdateParams
-import dev.quozul.authentication.models.ApiDiscordCode
-import dev.quozul.authentication.models.ApiDiscordUser
-import dev.quozul.authentication.models.DiscordToken
-import dev.quozul.authentication.models.DiscordUser
+import dev.quozul.authentication.hashString
+import dev.quozul.authentication.models.*
 import dev.quozul.client
 import dev.quozul.database.models.User
+import dev.quozul.database.models.Users
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.user.models.ApiUser
 import io.ktor.client.call.*
@@ -20,6 +19,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -28,6 +28,8 @@ fun Route.configureUserRoutes() {
 	val token = this@configureUserRoutes.environment!!.config.property("discord.token").getString()
 	val clientSecret = this@configureUserRoutes.environment!!.config.property("discord.client_secret").getString()
 	val clientId = this@configureUserRoutes.environment!!.config.property("discord.client_id").getString()
+	val salt = environment!!.config.property("passwords.salt").getString()
+	val pepper = environment!!.config.property("passwords.pepper").getString()
 
 	// Authenticated requests
 	// TODO: Add renew token
@@ -65,6 +67,31 @@ fun Route.configureUserRoutes() {
 
 		sendEmail(email, "subject", "content")
 		call.response.status(HttpStatusCode.NoContent)
+	}
+
+	delete {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val credentials = try {
+			call.receive<VerificationCredentials>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@delete
+		}
+
+		val hash = hashString("SHA-256", salt + credentials.password + pepper)
+
+		transaction {
+			User.find {
+				(Users.id eq UUID.fromString(id)) and (Users.verificationCode eq credentials.code) and (Users.password eq hash)
+			}.firstOrNull()
+		}?.let { user ->
+			call.response.status(HttpStatusCode.NoContent)
+		} ?: run {
+			call.response.status(HttpStatusCode.Unauthorized)
+			call.respond(AuthenticationErrors.INVALID_CREDENTIALS.toHashMap(true))
+		}
 	}
 
 	post("/discord") {
