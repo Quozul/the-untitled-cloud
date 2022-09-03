@@ -20,6 +20,7 @@ enum class AuthenticationErrors(private val message: String) {
 	NOT_PAID("Not paid invoices cannot be cancelled"),
 	NOT_MODIFIED("Not modified"),
 	ACTION_NOT_ALLOWED("Not allowed to make action"),
+	ALREADY_EXISTS("An account already exists"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {

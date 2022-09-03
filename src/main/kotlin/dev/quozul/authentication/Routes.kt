@@ -61,6 +61,7 @@ fun Route.configureAuthenticationRoutes() {
 
 		if (previousUser != null) {
 			call.response.status(HttpStatusCode.Conflict)
+			call.respond(AuthenticationErrors.ALREADY_EXISTS.toHashMap())
 			return@post
 		}
 
@@ -123,7 +124,7 @@ fun Route.configureAuthenticationRoutes() {
 				user
 			}
 		} catch (e: NoSuchElementException) {
-			call.response.status(HttpStatusCode.NotFound)
+			call.response.status(HttpStatusCode.NoContent)
 			return@post
 		}
 
