@@ -6,7 +6,7 @@
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "./helpers";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 	import { t } from "svelte-intl-precompile";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 
@@ -69,7 +69,7 @@
 				onClick={toggleServerState}
 				className="d-flex align-items-center"
 				disabled="{!$server.state.created || $server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}"
-				variant={ButtonVariant.LIGHT}
+				variant={Variant.LIGHT}
 		>
 			{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
 				<Icon key="hourglass" width="28" height="28"/>

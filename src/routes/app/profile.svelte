@@ -2,12 +2,13 @@
 	import { onProfilePage, server, token, user } from "$store/store";
 	import Icon from "$components/icons/Icon.svelte";
 	import Button from "$shared/Button.svelte";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 	import * as UAParser from "ua-parser-js";
 	import { onMount } from "svelte";
 	import { getUser, updateDiscordAccount } from "$components/app/helpers";
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
+	import DeleteAccount from "$components/profile/DeleteAccount.svelte";
 
 	$server = null;
 	$onProfilePage = true;
@@ -91,7 +92,7 @@
 		{/if}
 
 		<Button disabled>Télécharger mes données</Button>
-		<Button variant={ButtonVariant.DANGER} disabled>Supprimer mon compte</Button>
+		<DeleteAccount/>
 	</div>
 </div>
 
@@ -127,7 +128,7 @@
 			<td>---</td>
 			<td>---</td>
 			<td>
-				<Button variant={ButtonVariant.DANGER} className="btn-sm" disabled>Déconnecter</Button>
+				<Button variant={Variant.DANGER} className="btn-sm" disabled>Déconnecter</Button>
 			</td>
 		</tr>
 		</tbody>

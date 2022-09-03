@@ -6,7 +6,7 @@
 	import { Locale } from "@js-joda/locale_fr";
 	import Button from "$shared/Button.svelte";
     import { patchServer, refreshSelectedServer } from "$components/app/helpers";
-    import { ButtonVariant } from "$shared/constants";
+    import { Variant } from "$shared/constants";
     import Modal from "../../../modal/Modal.svelte";
 
 	let started: ZonedDateTime = null;
@@ -92,26 +92,26 @@
     {#if $server?.state.created}
         <div class="d-flex gap-3 flex-wrap">
             {#if !$server.state.running}
-                <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="play" onClick={startServer}>
+                <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="play" onClick={startServer}>
                     Démarrer
                 </Button>
             {:else}
-                <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="stop" onClick={stopServer}>
+                <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="stop" onClick={stopServer}>
                     Arrêter
                 </Button>
             {/if}
 
-            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={restartServer}>
+            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={restartServer}>
                 Redémarrer
             </Button>
 
             <Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
 
-            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={openModal}>
+            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={openModal}>
                 Réinitialiser
             </Button>
 
-            <Button variant={ButtonVariant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={recreateServer}>
+            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={recreateServer}>
                 Recréer
             </Button>
 
@@ -122,7 +122,7 @@
 				title="Réinitialisation"
 				okText="Réinitialiser"
 				closeText="Annuler"
-				variant={ButtonVariant.DANGER}
+				variant={Variant.DANGER}
 			>
 				<p>
 					Vous êtes sur le point de réinitialiser votre serveur.

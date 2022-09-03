@@ -10,7 +10,7 @@
 	} from "$components/app/helpers";
 	import { server } from "$store/store";
 	import type { ApiError } from "$shared/models";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 	import { formatter, shortDate } from "$shared/constants";
 	import Invoices from "./Invoices.svelte";
 	import Modal from "$components/modal/Modal.svelte";
@@ -139,7 +139,7 @@
 				<div class="d-flex flex-wrap gap-3">
 					<Button
 							loading={!subscription}
-							variant={ButtonVariant.DANGER}
+							variant={Variant.DANGER}
 							onClick={openModal}
 							disabled="{!subscription.latestInvoice.paid}">
 						Annuler mon abonnement
@@ -152,7 +152,7 @@
 								title="Annulation"
 								okText="Annuler mon abonnement"
 								closeText="Annuler"
-								variant={ButtonVariant.DANGER}
+								variant={Variant.DANGER}
 						>
 							<p>
 								Vous êtes sur le point de d'annuler votre abonnement.

@@ -6,7 +6,7 @@
 	} from "$components/app/helpers";
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 
 	async function recreate() {
 		await patchServer($server, "RECREATE");
@@ -22,7 +22,7 @@
 		Essayez de le recréer.
 	</p>
 
-	<Button variant={ButtonVariant.DANGER} onClick={recreate}>
+	<Button variant={Variant.DANGER} onClick={recreate}>
 		Recréer
 	</Button>
 </div>

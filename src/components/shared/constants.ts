@@ -11,7 +11,7 @@ export const shortDate = DateTimeFormatter
 	.ofPattern("d MMMM")
 	.withLocale(Locale.FRANCE);
 
-export enum ButtonVariant {
+export enum Variant {
 	NONE = "",
 	PRIMARY = "primary",
 	SECONDARY = "secondary",

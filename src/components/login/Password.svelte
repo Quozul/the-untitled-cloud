@@ -6,9 +6,9 @@
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { credentials, loginMode, token } from "$store/store";
 	import { LoginMode } from "./models/LoginMode";
-	import { changePassword, sendVerificationCode } from "./helpers";
-    import { ButtonVariant } from "$shared/constants";
+	import { changePassword } from "./helpers";
     import Icon from "$components/icons/Icon.svelte";
+    import Code from "$components/login/Code.svelte";
 
 	// Props
 	export let redirectTo: string;
@@ -22,7 +22,6 @@
 	// States
 	let error: AuthenticationErrors | null = null;
 	let errorMessage: string | null = null;
-	let codeSend: boolean = false;
 
 	async function submit() {
 		if (password !== confirmPassword) {
@@ -40,18 +39,6 @@
 			errorMessage = e.message;
 		}
 	}
-
-	async function getCode() {
-		try {
-			codeSend = false;
-			error = null;
-			await sendVerificationCode(email);
-			codeSend = true;
-		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
-		}
-    }
 
     function back() {
         $loginMode = LoginMode.LOGIN;
@@ -81,17 +68,7 @@
         <input id="confirm" type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
     </div>
 
-    <div class="mb-3">
-        <label for="code" class="form-label">{$t("verification_code")}</label>
-        <div class="input-group mb-3">
-            <input id="code" type="text" name="code" class="form-control" placeholder="123456" bind:value={code} maxlength="6">
-            <Button variant={ButtonVariant.SECONDARY} onClick={getCode}>{$t("get_code")}</Button>
-        </div>
-    </div>
-
-    <div class:visually-hidden={!codeSend} class="text-muted mb-3">
-        {$t("code_sent_check_mailbox")}
-    </div>
+    <Code email={email} bind:code={code}/>
 
     <div class:visually-hidden={!error} class="text-danger mb-3">
         Erreur : {errorMessage}

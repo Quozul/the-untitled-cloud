@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 	import Button from "../shared/Button.svelte";
 
 	export let visible: boolean = false;
@@ -9,7 +9,7 @@
 	export let closeText: string = "Fermer";
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
-	export let variant: ButtonVariant = ButtonVariant.PRIMARY;
+	export let variant: Variant = Variant.PRIMARY;
 
 	function hide() {
 		visible = false;
@@ -52,7 +52,7 @@
 
 			<div class="modal-footer">
 				{#if closeText !== null}
-					<Button variant={ButtonVariant.SECONDARY} onClick={hide}>{closeText}</Button>
+					<Button variant={Variant.SECONDARY} onClick={hide}>{closeText}</Button>
 				{/if}
 
 				{#if okText !== null}

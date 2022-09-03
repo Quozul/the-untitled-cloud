@@ -5,7 +5,7 @@
 	import Button from "$shared/Button.svelte";
 	import { putParameters } from "./helpers.js";
 	import { patchServer, refreshAllServers, refreshSelectedServer } from "../app/helpers";
-	import { ButtonVariant } from "$shared/constants";
+	import { Variant } from "$shared/constants";
 	import AdvancedParameters from "./AdvancedParameters.svelte";
 	import Icon from "../icons/Icon.svelte";
 	import type { ApiService } from "$models/ApiService";
@@ -89,7 +89,7 @@
 			Sauvegarder et appliquer les changements
 		</Button>
 
-		<Button variant={ButtonVariant.SECONDARY} onClick={fetchParameters}>
+		<Button variant={Variant.SECONDARY} onClick={fetchParameters}>
 			Annuler les changements
 		</Button>
 	</div>

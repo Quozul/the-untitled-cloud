@@ -3,7 +3,7 @@
 	import { sidebarCollapsed } from "$store/store";
 	import Link from "$shared/Link.svelte";
 	import Button from "$shared/Button.svelte";
-	import { ButtonVariant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants.js";
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;
@@ -36,7 +36,7 @@
 		{/if}
 	</Link>
 {:else}
-	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={ButtonVariant.NONE}>
+	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={Variant.NONE}>
 		{#if !$sidebarCollapsed}
 			<slot/>
 		{/if}

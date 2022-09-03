@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { ButtonVariant } from "./constants";
+    import { Variant } from "./constants";
     import Icon from "$components/icons/Icon.svelte";
     import { classNames } from "./helpers";
 
-    export let variant: ButtonVariant = ButtonVariant.PRIMARY;
+    export let variant: Variant = Variant.PRIMARY;
     export let outline: boolean = false;
     export let className: string = "";
 	export let disabled: boolean = false;
