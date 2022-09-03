@@ -6,17 +6,13 @@ import com.stripe.model.Subscription as StripeSubscription
 import com.stripe.param.PaymentIntentRetrieveParams
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.models.AuthenticationErrors
-import dev.quozul.database.enums.SubscriptionProvider
-import dev.quozul.database.enums.SubscriptionStatus
-import dev.quozul.database.models.Subscription
+import dev.quozul.database.models.Product
 import dev.quozul.database.models.User
 import dev.quozul.database.models.getOrCreateSubscriptionFromInvoice
-import dev.quozul.database.models.getProductFromStripeId
-import dev.quozul.payments.provider.stripe.ProductPrices
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
+import dev.quozul.payments.provider.stripe.models.ApiCart
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
-import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -25,7 +21,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
-import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -33,6 +28,12 @@ fun Route.configureServerSubscriptionRoutes() {
 	// Subscription intent
 	post("") {
 		// We have only one product, so no input is expected
+		val body = try {
+			call.receive<ApiCart>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@post
+		}
 
 		// Get the user from the JWT
 		val principal = call.principal<JWTPrincipal>()
@@ -50,14 +51,17 @@ fun Route.configureServerSubscriptionRoutes() {
 				.setSaveDefaultPaymentMethod(SubscriptionCreateParams.PaymentSettings.SaveDefaultPaymentMethod.ON_SUBSCRIPTION)
 				.build()
 
-			// TODO: User should provide Product.id, search for priceId in database
-			val item = SubscriptionCreateParams.Item.builder()
-				.setPrice(ProductPrices.MINECRAFT_SERVER_BASIC.priceId)
-				.build()
+			val priceIds = transaction {
+				body.cart.mapNotNull {
+					SubscriptionCreateParams.Item.builder().setPrice(
+						Product.findById(UUID.fromString(it))?.stripeId
+					).build()
+				}
+			}
 
 			val subCreateParams = SubscriptionCreateParams.builder()
 				.setCustomer(customer.id)
-				.addItem(item)
+				.addAllItem(priceIds)
 				.setPaymentSettings(paymentSettings)
 				.setPaymentBehavior(SubscriptionCreateParams.PaymentBehavior.DEFAULT_INCOMPLETE)
 				.addAllExpand(listOf("latest_invoice.payment_intent"))
@@ -65,13 +69,15 @@ fun Route.configureServerSubscriptionRoutes() {
 
 			val subscription = try {
 				StripeSubscription.create(subCreateParams)
-			} catch (_: StripeException) {
+			} catch (e: StripeException) {
+				e.printStackTrace()
 				call.response.status(HttpStatusCode.InternalServerError)
 				call.respond(AuthenticationErrors.STRIPE_ERROR.toHashMap(true))
 				return@post
 			}
 
 			val response = SubscriptionCreateResponse(
+				subscription.latestInvoiceObject.total,
 				subscription.latestInvoiceObject.paymentIntentObject.clientSecret,
 			)
 

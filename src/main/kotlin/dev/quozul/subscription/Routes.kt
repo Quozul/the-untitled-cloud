@@ -267,7 +267,7 @@ fun Route.configureSubscriptionRoutes() {
 
 	post {
 		// TODO: Create a new subscription, return the clientSecret
-		call.response.status(HttpStatusCode.NotImplemented)
+		call.response.status(HttpStatusCode.SeeOther)
 	}
 
 	put("{subscriptionId}") {
