@@ -11,13 +11,14 @@
 	import type { ApiError } from "$shared/models";
 	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 	import Link from "$shared/Link.svelte";
+	import { formatPrice } from "$shared/helpers.js";
 
 	let stripe: Stripe | null = null;
 	let processing = false;
 	let error: ApiError = null;
 	let elements;
 	let cgv = false;
-	let eula = false;
+	let totalPrice: number = 0;
 
 	function alertUnload(e) {
 		e.preventDefault();
@@ -33,6 +34,7 @@
 			try {
 				const response = await getClientSecret();
 				$clientSecret = response.clientSecret;
+				totalPrice = response.totalPrice;
 			} catch (e: ApiError) {
 				error = e;
 			}
@@ -96,21 +98,11 @@
 			</label>
 		</small>
 
-		<!-- TODO: Move this somewhere else -->
-		<small class="form-check">
-			<input class="form-check-input" type="checkbox" value="" id="eula" bind:checked={eula}>
-			<label class="form-check-label" for="eula">
-				J'ai pris connaissance et j'accepte le
-				<Link href="https://www.minecraft.net/fr-fr/eula">contrat de licence utilisateur final</Link>
-				de Minecraft.
-			</label>
-		</small>
-
-		<button class="w-100 btn btn-primary btn-lg my-3" type="submit" disabled="{processing || !cgv || !eula}">
+		<button class="w-100 btn btn-primary btn-lg my-3" type="submit" disabled="{processing || !cgv}">
 			{#if processing}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 			{/if}
-			{$t("checkout.proceed")}
+			{$t("checkout.proceed")} ({formatPrice(totalPrice)})
 		</button>
 	</form>
 {:else}

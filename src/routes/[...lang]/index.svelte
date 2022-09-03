@@ -12,11 +12,5 @@
         <div class="col-lg-6">
             <Hero/>
         </div>
-
-        <div class="col-md-10 mx-auto col-lg-5">
-            <div class="p-4 p-md-5">
-                <Product/>
-            </div>
-        </div>
     </div>
 </div>

@@ -35,4 +35,11 @@
 			<strong>{formatPrice(total)}</strong>
 		</li>
 	</ul>
+
+	<form class="card p-2">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder={$t("promo_code")}>
+			<button type="submit" class="btn btn-secondary">{$t("use")}</button>
+		</div>
+	</form>
 </div>

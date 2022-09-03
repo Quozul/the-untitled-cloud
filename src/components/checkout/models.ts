@@ -1,5 +1,6 @@
 export type ClientSecretResponse = {
 	clientSecret: string,
+	totalPrice: number,
 }
 
 export type SubscriptionCreated = {
