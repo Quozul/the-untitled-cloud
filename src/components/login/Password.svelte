@@ -67,17 +67,17 @@
     </button>
 
     <div class="mb-3">
-        <label for="email" class="form-label">{$t("email")}</label>
-        <input id="email" type="email" name="email" class="form-control" placeholder={$t("email")} bind:value={email}>
+        <label for="email" class="form-label">{$t("email_address")}</label>
+        <input id="email" type="email" name="email" class="form-control" placeholder={$t("email_address")} bind:value={email}>
     </div>
 
     <div class="mb-3">
-        <label for="password" class="form-label">{$t("password")}</label>
+        <label for="password" class="form-label">{$t("new_password")}</label>
         <input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
     </div>
 
     <div class="mb-3">
-        <label for="confirm" class="form-label">{$t("confirm_password")}</label>
+        <label for="confirm" class="form-label">{$t("new_confirm_password")}</label>
         <input id="confirm" type="password" name="password" class="form-control" placeholder={$t("confirm")} bind:value={confirmPassword}>
     </div>
 
