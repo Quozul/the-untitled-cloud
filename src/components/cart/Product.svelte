@@ -11,7 +11,7 @@
 
 	let isInCart: boolean;
 
-	$: isInCart = !!$cart.find(p => p.id === product.id);
+	$: isInCart = !!$cart?.find(p => p.id === product.id);
 
 	function handleOnClick() {
 		toggleInCart(product);
@@ -24,7 +24,6 @@
 	</div>
 
 	<div class="card-body">
-		<p class="mb-0 text-muted fw-light">{$t("starting_from")}</p>
 		<h1 class="card-title pricing-card-title">
 			{formatPrice(product.price)}<small class="text-muted fw-light">/{$t("month")}</small>
 		</h1>

@@ -27,8 +27,10 @@
 		}
 
 		$user = await getUser();
-		const extension = $user.discord.avatar.startsWith("a_") ? ".gif" : ".png";
-		avatarUrl = `https://cdn.discordapp.com/avatars/${$user.discord.id}/${$user.discord.avatar}${extension}`;
+		if ($user.discord) {
+			const extension = $user.discord.avatar.startsWith("a_") ? ".gif" : ".png";
+			avatarUrl = `https://cdn.discordapp.com/avatars/${$user.discord.id}/${$user.discord.avatar}${extension}`;
+		}
 	});
 </script>
 
@@ -75,7 +77,9 @@
 	<div>
 		{#if $user?.discord}
 			<button class="btn btn-light py-0 discord">
-				<img src={avatarUrl} alt="Avatar" class="avatar"/>
+				{#if avatarUrl}
+					<img src={avatarUrl} alt="Avatar" class="avatar"/>
+				{/if}
 				<div class="name">
 					<span class="username">{$user.discord.username}</span>
 					<span class="discriminator">#{$user.discord.discriminator}</span>
