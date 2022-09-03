@@ -1,18 +1,19 @@
 import type { Writable } from "svelte/store";
-import type { Cart } from "$components/cart/models";
 import type { CheckoutSteps } from "$components/checkout/constants";
 import type { Credentials } from "$components/login/models/Credentials";
+import type { ApiError } from "$components/shared/models";
+import type { ApiPaginate } from "$models/ApiPaginate";
+import type { ApiService } from "$models/ApiService";
+import type { ApiServer } from "$models/ApiServer";
+import type { ApiUser } from "$models/ApiUser";
+import type { ApiProduct } from "$models/ApiProduct";
+
 import { createStoreEntry } from "./helpers";
 import { browser } from "$app/env";
 import { LoginMode } from "$components/login/models/LoginMode";
 import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";
 import { writable } from "svelte/store";
-import type { ApiError } from "$components/shared/models";
-import type { ApiPaginate } from "$models/ApiPaginate";
-import type { ApiService } from "$models/ApiService";
-import type { ApiServer } from "$models/ApiServer";
-import type { ApiUser } from "$models/ApiUser";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
@@ -22,7 +23,7 @@ export const token: Writable<string> = createStoreEntry("token", null, browser &
  * @deprecated Use $server instead
  */
 export const selectedServer: Writable<ApiService | null> = createStoreEntry("selectedServer", null, browser && sessionStorage);
-export const cart: Writable<Cart> = createStoreEntry("cart", null, browser && sessionStorage);
+export const cart: Writable<ApiProduct[]> = createStoreEntry("cart", [], browser && sessionStorage);
 export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarCollapsed", false, browser && sessionStorage);
 
 // App active servers stores

@@ -1,35 +1,52 @@
 <script lang="ts">
-    import { t } from "svelte-intl-precompile";
+	import { t } from "svelte-intl-precompile";
+	import nf from "@tuplo/numberfmt";
 	import { cart, token } from "$store/store";
-    import Link from "../shared/Link.svelte";
+	import type { ApiProduct } from "$models/ApiProduct";
+	import { formatPrice } from "$shared/helpers.js";
+	import { toggleInCart } from "./helpers";
+	import Button from "$shared/Button.svelte";
 
-	function addToCart() {
-		$cart = {
-			id: "",
-			price: 200,
-			name: $t("product.starter.name"),
-			description: $t("product.starter.description"),
-		}
+	export let product: ApiProduct;
+
+	let isInCart: boolean;
+
+	$: isInCart = !!$cart.find(p => p.id === product.id);
+
+	function handleOnClick() {
+		toggleInCart(product);
 	}
 </script>
 
 <div class="card">
-    <div class="card-header py-4">
-        <h4 class="my-0 fw-normal">{$t("product.starter.name")}</h4>
-    </div>
+	<div class="card-header py-4">
+		<h4 class="my-0 fw-normal">{product.name}</h4>
+	</div>
 
-    <div class="card-body">
-        <p class="mb-0 text-muted fw-light">{$t("starting_from")}</p>
-        <h1 class="card-title pricing-card-title">2€<small class="text-muted fw-light">/{$t("month")}</small>
-        </h1>
+	<div class="card-body">
+		<p class="mb-0 text-muted fw-light">{$t("starting_from")}</p>
+		<h1 class="card-title pricing-card-title">
+			{formatPrice(product.price)}<small class="text-muted fw-light">/{$t("month")}</small>
+		</h1>
 
-        <ul class="list-unstyled mt-3">
-            <li>2 {$t("unit.gigabyte")} {$t("of")} {$t("memory")}</li>
-            <li>1 {$t("cpu_core")}</li>
-        </ul>
+		<ul class="list-unstyled mt-3">
+			<li>{product.cpu} {$t("cpu_core")}</li>
+			<li>{nf(product.memory * 1048576, "0 B")} {$t("of")} {$t("memory")}</li>
+		</ul>
 
-        <Link onClick={addToCart} href={$token ? "/rent/profile/" : "/rent/login/"} className="w-100 btn btn-lg btn-outline-primary">
-            {$t("choose")}
-        </Link>
-    </div>
+		<Button
+			onClick={handleOnClick}
+			className="w-100 btn-lg text-center"
+			outline={!isInCart}
+			disabled={!product.inStocks}
+		>
+			{#if isInCart}
+				{$t("remove_from_cart")}
+			{:else if !product.inStocks}
+				{$t("out_of_stock")}
+			{:else}
+				{$t("choose")}
+			{/if}
+		</Button>
+	</div>
 </div>
