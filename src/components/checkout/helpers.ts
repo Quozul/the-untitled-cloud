@@ -1,11 +1,15 @@
 import type { ClientSecretResponse } from "./models";
-import { getOptions, handleRequest } from "$shared/helpers";
+import { api, getOptions, handleRequest } from "$shared/helpers";
 import type { ApiService } from "$models/ApiService";
 import { get } from "svelte/store";
-import { cart } from "$store/store";
+import { cart, promoCode } from "$store/store";
 
 export async function getClientSecret(): Promise<ClientSecretResponse> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`, getOptions("POST", {cart: get(cart).map(p => p.id)}));
+	const options = getOptions("POST", {
+		cart: get(cart).map(p => p.id),
+		promo: get(promoCode)?.code ?? null,
+	});
+	const request = api("payment/stripe/subscription", options);
 	return await handleRequest(request) as ClientSecretResponse;
 }
 

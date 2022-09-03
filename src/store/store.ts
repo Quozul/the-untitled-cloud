@@ -14,6 +14,8 @@ import { LoginMode } from "$components/login/models/LoginMode";
 import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";
 import { writable } from "svelte/store";
+import type { PromoCode } from "$components/cart/models";
+import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
 export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
@@ -24,6 +26,7 @@ export const token: Writable<string> = createStoreEntry("token", null, browser &
  */
 export const selectedServer: Writable<ApiService | null> = createStoreEntry("selectedServer", null, browser && sessionStorage);
 export const cart: Writable<ApiProduct[]> = createStoreEntry("cart", [], browser && sessionStorage);
+export const promoCode: Writable<PromoCode | null> = createStoreEntry("promoCode", EmptyPromoCode, browser && sessionStorage);
 export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarCollapsed", false, browser && sessionStorage);
 
 // App active servers stores
@@ -46,6 +49,9 @@ export const user: Writable<ApiUser> = createStoreEntry("user", null, browser &&
 export const credentials: Writable<Credentials | null> = writable(null);
 export const loginMode: Writable<LoginMode> = writable(LoginMode.LOGIN);
 export const checkoutStep: Writable<CheckoutSteps | null> = writable(null);
+/**
+ * @deprecated Client secret should not be app wide
+ */
 export const clientSecret: Writable<string | null> = writable(null);
 export const selectedTab: Writable<ServerTab> = writable(ServerTab.INFO);
 export const onProfilePage: Writable<boolean> = writable(false);

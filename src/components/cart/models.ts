@@ -1,7 +1,5 @@
-import type { Id } from "$shared/models";
-
-export type Cart = Id & {
-	price: number,
-	name: string,
-	description: string,
+export type PromoCode = {
+	code: string | null,
+	amountOff: number | null,
+	percentOff: number | null,
 }

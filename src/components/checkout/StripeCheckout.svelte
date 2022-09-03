@@ -4,7 +4,7 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, clientSecret, selectedServer } from "$store/store";
+	import { cart, checkoutStep, promoCode, selectedServer } from "$store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
@@ -12,6 +12,8 @@
 	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 	import Link from "$shared/Link.svelte";
 	import { formatPrice } from "$shared/helpers.js";
+	import Alert from "$shared/Alert.svelte";
+	import { Variant } from "$shared/constants.js";
 
 	let stripe: Stripe | null = null;
 	let processing = false;
@@ -19,6 +21,7 @@
 	let elements;
 	let cgv = false;
 	let totalPrice: number = 0;
+	let clientSecret: string | null = null;
 
 	function alertUnload(e) {
 		e.preventDefault();
@@ -30,14 +33,12 @@
 		window.addEventListener("beforeunload", alertUnload);
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		if (!$clientSecret) {
-			try {
-				const response = await getClientSecret();
-				$clientSecret = response.clientSecret;
-				totalPrice = response.totalPrice;
-			} catch (e: ApiError) {
-				error = e;
-			}
+		try {
+			const response = await getClientSecret();
+			clientSecret = response.clientSecret;
+			totalPrice = response.totalPrice;
+		} catch (e: ApiError) {
+			error = e;
 		}
 	});
 
@@ -78,15 +79,16 @@
 			window.removeEventListener("beforeunload", alertUnload);
 			await goto("/app");
 			$checkoutStep = CheckoutSteps.PRODUCTS;
-			$clientSecret = null;
+			clientSecret = null;
 			$cart = null;
+			$promoCode = null;
 		}
 	}
 </script>
 
-{#if stripe && !!$clientSecret}
+{#if stripe && !!clientSecret}
 	<form on:submit|preventDefault={submit}>
-		<Elements {stripe} clientSecret={$clientSecret} bind:elements>
+		<Elements {stripe} clientSecret={clientSecret} bind:elements>
 			<PaymentElement />
 		</Elements>
 
@@ -105,13 +107,15 @@
 			{$t("checkout.proceed")} ({formatPrice(totalPrice)})
 		</button>
 	</form>
-{:else}
+{:else if !error}
 	<div class="d-flex align-items-center mb-3">
 		<div class="spinner-border me-3" role="status" aria-hidden="true"></div>
 		<strong>{$t("loading")}...</strong>
 	</div>
 {/if}
 
-<div class:visually-hidden={!error} class="text-danger mb-3">
-	Erreur : {error?.message}
-</div>
+{#if error}
+	<Alert variant={Variant.DANGER} icon="warning">
+		{error.translatedMessage || error.message}
+	</Alert>
+{/if}

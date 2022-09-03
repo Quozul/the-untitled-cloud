@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CheckoutSteps } from "$components/checkout/constants";
-	import Cart from "$components/Cart.svelte";
+	import Cart from "../../../components/cart/Cart.svelte";
 	import { cart, token, checkoutStep } from "$store/store";
 	import { t } from "svelte-intl-precompile";
 	import Link from "$components/shared/Link.svelte";
@@ -53,7 +53,7 @@
 </nav>
 
 <div class="row g-5">
-	<Cart/>
+	<Cart canEdit={$checkoutStep !== CheckoutSteps.CHECKOUT}/>
 
 	<div class="col-md-7 col-lg-8">
 		<slot/>

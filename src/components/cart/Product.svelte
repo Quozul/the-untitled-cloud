@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
 	import nf from "@tuplo/numberfmt";
-	import { cart, token } from "$store/store";
+	import { cart } from "$store/store";
 	import type { ApiProduct } from "$models/ApiProduct";
 	import { formatPrice } from "$shared/helpers.js";
 	import { toggleInCart } from "./helpers";

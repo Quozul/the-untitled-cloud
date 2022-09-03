@@ -5,9 +5,10 @@
 	export let variant: Variant = Variant.PRIMARY;
 	export let icon: string | null = null;
 	export let title: string = "";
+	export let className: string = "";
 </script>
 
-<div class="alert alert-{variant} d-flex align-items-center gap-2">
+<div class="alert alert-{variant} d-flex align-items-center gap-2 {className}">
 	{#if icon && title}
 		<h6 class="fw-bold d-flex align-items-center gap-2">
 			<Icon key={icon}/>
