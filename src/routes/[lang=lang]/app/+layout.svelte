@@ -32,10 +32,11 @@
 	import { refreshSelectedServer } from "$components/app/helpers";
 	import Icons from "$components/icons/Icons.svelte";
 	import "$root/app.scss";
+	import { locale } from "svelte-intl-precompile";
 
 	onMount(async () => {
 		if (!$token) {
-			await goto("/login?redirect=/app");
+			await goto(`/${$locale}/login?redirect=/${$locale}/app`);
 		}
 
 		await refreshSelectedServer();

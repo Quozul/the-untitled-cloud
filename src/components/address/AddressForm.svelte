@@ -9,7 +9,7 @@
 	import jwtDecode from "jwt-decode";
 	import { getAddress, setAddress, href } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
-    import Link from "../shared/Link.svelte";
+    import Link from "$shared/Link.svelte";
 
 	let address: Address = {
 		city: null,

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ApiError } from "../shared/models";
+	import type { ApiError } from "$shared/models";
 	import type { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { t } from "svelte-intl-precompile";
 	import { Variant } from "$shared/constants.js";

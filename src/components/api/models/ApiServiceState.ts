@@ -1,4 +1,4 @@
-import type { ApiServiceStatus } from "../enums/ApiServiceStatus";
+import type { ApiServiceStatus } from "$enums/ApiServiceStatus";
 
 export type ApiServiceState = {
 	status: ApiServiceStatus,

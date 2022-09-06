@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { locale } from "svelte-intl-precompile";
-	import { defaultLocale } from "./constants";
 
 	export let href: string = "/";
 	export let className: string = "";
@@ -11,7 +10,7 @@
 	let internalLink: string = null;
 
 	$: if (!isExternalLink) {
-		if ($locale === defaultLocale || !$locale) {
+		if (!$locale) {
 			internalLink = href;
 		} else {
 			internalLink = `/${$locale}${href}`;

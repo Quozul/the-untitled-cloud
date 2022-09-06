@@ -14,20 +14,20 @@
     <div class="col mb-3">
         <h5>Pages</h5>
         <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Accueil</a></li>
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Contact</a></li>
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">A propos</a></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">Accueil</Link></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">Contact</Link></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">A propos</Link></li>
         </ul>
     </div>
 
     <div class="col mb-3">
         <h5>Infos</h5>
         <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Politique de Confidentialité</a></li>
-            <li class="nav-item mb-2"><a href="/tos/" class="nav-link p-0 text-muted">CGU</a></li>
-            <li class="nav-item mb-2"><a href="/cgv/" class="nav-link p-0 text-muted">CGV</a></li>
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Mentions légales</a></li>
-            <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Gestion des cookies</a></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">Politique de Confidentialité</Link></li>
+            <li class="nav-item mb-2"><Link href="/terms-of-use/" className="nav-link p-0 text-muted">CGU</Link></li>
+            <li class="nav-item mb-2"><Link href="/terms-of-sale/" className="nav-link p-0 text-muted">CGV</Link></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">Mentions légales</Link></li>
+            <li class="nav-item mb-2"><Link href="/" className="nav-link p-0 text-muted">Gestion des cookies</Link></li>
         </ul>
     </div>
 </footer>

@@ -9,7 +9,7 @@ import type { ApiUser } from "$models/ApiUser";
 import type { ApiProduct } from "$models/ApiProduct";
 
 import { createStoreEntry } from "./helpers";
-import { browser } from "$app/env";
+import { browser } from "$app/environment";
 import { LoginMode } from "$components/login/models/LoginMode";
 import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";

@@ -1,5 +1,5 @@
 <script>
-	import { t } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import { token } from "$store/store";
 	import Link from "$shared/Link.svelte";
 </script>
@@ -15,11 +15,11 @@
 	<Link href="/rent/products/" className="btn btn-primary btn-lg px-4 me-md-2">{$t("rent_a_server")}</Link>
 
 	{#if $token}
-		<a href="/app/" class="btn btn-outline-secondary btn-lg px-4">
+		<Link href="/app/" className="btn btn-outline-secondary btn-lg px-4">
 			{$t("my_servers")}
-		</a>
+		</Link>
 	{:else}
-		<Link href="/login/?redirect=/app" className="btn btn-outline-secondary btn-lg px-4">
+		<Link href="/login/?redirect=/{$locale}/app" className="btn btn-outline-secondary btn-lg px-4">
 			{$t("to_login")}
 		</Link>
 	{/if}

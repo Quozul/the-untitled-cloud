@@ -6,7 +6,7 @@
     import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
     import type { ApiService } from "$models/ApiService";
     import { ApiServiceStatus } from "$enums/ApiServiceStatus";
-    import { compareServices, deepEqual } from "$shared/helpers";
+    import { locale } from "svelte-intl-precompile";
 
 	export let service: ApiService;
 	let iconName: string = "box";
@@ -38,7 +38,7 @@
         $server = service;
         if ($onProfilePage) {
             $onProfilePage = false;
-            await goto("/app/");
+            await goto(`/${$locale}/app/`);
         }
         await refreshSelectedServer();
     }

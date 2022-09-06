@@ -14,7 +14,7 @@
 	import { formatter, shortDate } from "$shared/constants";
 	import Invoices from "./Invoices.svelte";
 	import Modal from "$components/modal/Modal.svelte";
-	import InternalError from "../info/errors/InternalError.svelte";
+	import InternalError from "$components/app/tabs/info/errors/InternalError.svelte";
 	import type { ApiService } from "$models/ApiService";
 	import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 	import type { ApiPaginate } from "$models/ApiPaginate";

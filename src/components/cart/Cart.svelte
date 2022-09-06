@@ -19,7 +19,7 @@
 	let promotionCodeError: ApiError | null = null;
 
 	$: {
-		if ($cart?.length > 0) {
+		if ($cart) {
 			total = $cart.reduce((a, b) => a + b.price, 0);
 
 			if ($promoCode?.percentOff) {

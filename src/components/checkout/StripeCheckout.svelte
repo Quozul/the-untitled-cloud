@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import type { PaymentIntentResult, Stripe } from "@stripe/stripe-js/types/stripe-js/stripe";
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
@@ -77,7 +77,7 @@
 
 			// Clear everything and redirect to app
 			window.removeEventListener("beforeunload", alertUnload);
-			await goto("/app");
+			await goto(`/${$locale}/app`);
 			$checkoutStep = CheckoutSteps.PRODUCTS;
 			clientSecret = null;
 			$cart = null;

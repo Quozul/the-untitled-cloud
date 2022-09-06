@@ -7,7 +7,7 @@
 	import Button from "$shared/Button.svelte";
     import { patchServer, refreshSelectedServer } from "$components/app/helpers";
     import { Variant } from "$shared/constants";
-    import Modal from "../../../modal/Modal.svelte";
+    import Modal from "$components/modal/Modal.svelte";
 
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;

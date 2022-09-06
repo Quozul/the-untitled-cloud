@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
 	import { Variant } from "$shared/constants";
-	import Button from "../shared/Button.svelte";
+	import Button from "$shared/Button.svelte";
 
 	export let visible: boolean = false;
 	export let icon: string = "";

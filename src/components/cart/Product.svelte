@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
-	import nf from "@tuplo/numberfmt";
 	import { cart } from "$store/store";
 	import type { ApiProduct } from "$models/ApiProduct";
 	import { formatPrice } from "$shared/helpers.js";
@@ -30,7 +29,7 @@
 
 		<ul class="list-unstyled mt-3">
 			<li>{product.cpu} {$t("cpu_core")}</li>
-			<li>{nf(product.memory * 1048576, "0 B")} {$t("of")} {$t("memory")}</li>
+<!--			<li>{nf(product.memory * 1048576, "0 B")} {$t("of")} {$t("memory")}</li>-->
 		</ul>
 
 		<Button

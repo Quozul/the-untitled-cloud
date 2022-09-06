@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CheckoutSteps } from "$components/checkout/constants";
-	import Cart from "../../../components/cart/Cart.svelte";
+	import Cart from "$components/cart/Cart.svelte";
 	import { cart, token, checkoutStep } from "$store/store";
 	import { t } from "svelte-intl-precompile";
 	import Link from "$components/shared/Link.svelte";
@@ -34,7 +34,7 @@
 		className={classNames({
             "nav-link": true,
             active: $checkoutStep === CheckoutSteps.PROFILE,
-            disabled: !$token
+            disabled: !$token,
         })}
 	>
 		3. {$t("complete_profile")}
@@ -45,7 +45,7 @@
 		className={classNames({
             "nav-link": true,
             active: $checkoutStep === CheckoutSteps.CHECKOUT,
-            disabled: !$token || !$cart
+            disabled: !$token || !$cart || $cart.length === 0,
         })}
 	>
 		4. {$t("checkout")}

@@ -18,6 +18,7 @@
 	import type { ApiService } from "$models/ApiService";
 	import type { ApiPaginate } from "$models/ApiPaginate";
 	import Modal from "$components/modal/Modal.svelte";
+	import { locale } from "svelte-intl-precompile";
 
 	// State
 	let endedServers: ApiPaginate<ApiService>;
@@ -42,12 +43,12 @@
 	async function logout() {
 		$token = null;
 		$user = null;
-		await goto("/");
+		await goto(`/${$locale}/`);
 	}
 
 	async function redirectToLogin() {
 		$token = null;
-		await goto("/login/?redirect=/app/");
+		await goto(`/${$locale}/login/?redirect=/${$locale}/app/`);
 	}
 
 	const toggleCollapsed = () => {

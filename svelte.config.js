@@ -26,9 +26,8 @@ const config = {
 			concurrency: 10,
 			enabled: true,
 			// This can be false if you're using a fallback (i.e. SPA mode)
-			default: true,
 			crawl: true,
-			entries: ["/"],
+			entries: ["/fr/"],
 		},
 
 		alias: {

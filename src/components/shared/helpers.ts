@@ -5,7 +5,7 @@ import { token } from "$store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";
 import { defaultLocale } from "./constants";
-import { AuthenticationErrors } from "../login/models/AuthenticationErrors";
+import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 import { t } from "svelte-intl-precompile";
 import type { ClassNames } from "./models";
 import type { ApiPaginate } from "$models/ApiPaginate";

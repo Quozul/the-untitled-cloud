@@ -1,8 +1,8 @@
 import type { Id } from "$shared/models";
 import type { DockerStatus } from "./constants";
 import type { ServerParameters } from "$components/parameters/models";
-import type { ApiServiceStatus } from "../api/enums/ApiServiceStatus";
-import type { ApiSubscriptionStatus } from "../api/enums/ApiSubscriptionStatus";
+import type { ApiServiceStatus } from "$enums/ApiServiceStatus";
+import type { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 
 /**
  * @deprecated Use ApiPaginate instead

@@ -4,10 +4,10 @@
 	import { getParameters, putService } from "./helpers";
 	import Button from "$shared/Button.svelte";
 	import { putParameters } from "./helpers.js";
-	import { patchServer, refreshAllServers, refreshSelectedServer } from "../app/helpers";
+	import { patchServer, refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
 	import { Variant } from "$shared/constants";
 	import AdvancedParameters from "./AdvancedParameters.svelte";
-	import Icon from "../icons/Icon.svelte";
+	import Icon from "$components/icons/Icon.svelte";
 	import type { ApiService } from "$models/ApiService";
 
 	$: fetchParameters($server)

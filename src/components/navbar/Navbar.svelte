@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { locale, t } from "svelte-intl-precompile";
-	import Icon from "./icons/Icon.svelte";
+	import Icon from "$components/icons/Icon.svelte";
 	import { token } from "$store/store";
 	import { page } from "$app/stores";
-	import Link from "./shared/Link.svelte";
+	import Link from "$shared/Link.svelte";
 
 	let selectedPage: string;
 	$: selectedPage = $page.url.pathname.replace(`/${$locale}`, "");
@@ -29,11 +29,11 @@
 
 	<div class="text-end">
 		{#if $token}
-			<a href="/app/" class="btn btn-outline-primary me-2">
+			<Link href="/app/" className="btn btn-outline-primary me-2">
 				{$t("my_servers")}
-			</a>
+			</Link>
 		{:else}
-			<Link href="/login/?redirect=/app" className="btn btn-outline-primary">
+			<Link href="/login/?redirect=/{$locale}/app" className="btn btn-outline-primary">
 				{$t("to_login")}
 			</Link>
 		{/if}
