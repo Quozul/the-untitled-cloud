@@ -1,55 +1,45 @@
 <script lang="ts">
-	import { onDestroy, onMount, setContext } from "svelte";
-	import { type Unsubscriber, type Writable, writable } from "svelte/store";
-	import { searchKey, valueKey, focusKey } from "./constants";
 	import Icon from "$components/icons/Icon.svelte";
 	import {clickOutside} from "$shared/clickOutside";
 	import Option from "./Option.svelte";
+	import type { SelectItem } from "./SelectItem";
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	// Props
-	export let defaultText: string = "";
-	export let value: string = "";
-	export let placeholder: string = "";
+	export let placeholder: string = "Search..."
+	export let items: SelectItem[];
+	export let value: SelectItem;
+	export let allowCustom: boolean = false;
 
 	// State
-	let unsubscribeValue: Unsubscriber;
+	let search: string = value.label;
+	let focus: boolean = false;
 
-	// Contexts
-	let selectedStore: Writable<string> = writable(defaultText);
-	setContext(searchKey, selectedStore);
-
-	let valueStore: Writable<string> = writable(value);
-	setContext(valueKey, valueStore);
-
-	let focus: Writable<boolean> = writable(false);
-	setContext(focusKey, focus);
-
-	$: $selectedStore = defaultText;
-
-	onMount(() => {
-		unsubscribeValue = valueStore.subscribe(v => {
-			value = v;
-		});
-	});
-
-	onDestroy(() => {
-		unsubscribeValue?.();
-	});
-
-	let select: HTMLElement;
 	let input: HTMLElement;
 
+	$: if (!focus) {
+		search = value.label;
+	}
+
 	function show() {
-		$focus = true;
+		search = "";
+		focus = true;
 	}
 
 	function hide() {
-		$focus = false;
+		focus = false;
 	}
 
 	function clear() {
-		$selectedStore = "";
+		search = "";
 		input.focus();
+	}
+
+	function handleSelect(event) {
+		hide();
+		dispatch("select", event.detail);
 	}
 </script>
 
@@ -89,20 +79,24 @@
 	}
 </style>
 
-<div class="select" on:focusin={show}  use:clickOutside on:click_outside={hide}>
-	<input type="text" class="input form-control" bind:value={$selectedStore} bind:this={input} placeholder={placeholder}>
+<div class="select" on:focusin={show} use:clickOutside on:click_outside={hide}>
+	<input type="text" class="input form-control" bind:value={search} bind:this={input} placeholder={placeholder}>
 
-	{#if $selectedStore.length > 0}
+	{#if search.length > 0}
 		<Icon key="x-lg" className="select-icon cross" onClick={clear} />
 	{:else}
 		<Icon key="chevron-down" className="select-icon chevron" />
 	{/if}
 
-	<div class="options border bg-white w-100" class:d-none={!$focus} class:d-block={$focus}>
+	<div class="options border bg-white w-100" class:d-none={!focus} class:d-block={focus}>
 		<slot/>
 
-		{#if $selectedStore.length > 0}
-			<Option value={$selectedStore} text={$selectedStore} force={true}/>
+		{#each items as item}
+			<Option {item} {search} on:click={handleSelect} />
+		{/each}
+
+		{#if allowCustom && search.length > 0}
+			<Option item={{label: search, value: search}} {search} on:click={handleSelect}/>
 		{/if}
 	</div>
 </div>

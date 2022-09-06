@@ -1,36 +1,21 @@
 <script lang="ts">
-	import { onProfilePage, server, token, user } from "$store/store";
+	import { onProfilePage, server, user } from "$store/store";
 	import Icon from "$components/icons/Icon.svelte";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
 	import * as UAParser from "ua-parser-js";
 	import { onMount } from "svelte";
-	import { getUser, updateDiscordAccount } from "$components/app/helpers";
-	import { page } from "$app/stores";
-	import { goto } from "$app/navigation";
+	import { getUser } from "$components/app/helpers";
 	import DeleteAccount from "$components/profile/DeleteAccount.svelte";
 
 	$server = null;
 	$onProfilePage = true;
 
 	let ua: UAParser.UAParserInstance;
-	let avatarUrl: string = null;
 
 	onMount(async () => {
 		ua = new UAParser(navigator.userAgent);
-
-		const code = $page.url.searchParams.get("code");
-		if (code !== null) {
-			await updateDiscordAccount(code, window.location.origin + window.location.pathname);
-			$page.url.searchParams.delete("code");
-			await goto(`?${$page.url.searchParams.toString()}`);
-		}
-
 		$user = await getUser();
-		if ($user.discord) {
-			const extension = $user.discord.avatar.startsWith("a_") ? ".gif" : ".png";
-			avatarUrl = `https://cdn.discordapp.com/avatars/${$user.discord.id}/${$user.discord.avatar}${extension}`;
-		}
 	});
 </script>
 
@@ -75,26 +60,6 @@
 	</p>
 
 	<div>
-		{#if $user?.discord}
-			<button class="btn btn-light py-0 discord">
-				{#if avatarUrl}
-					<img src={avatarUrl} alt="Avatar" class="avatar"/>
-				{/if}
-				<div class="name">
-					<span class="username">{$user.discord.username}</span>
-					<span class="discriminator">#{$user.discord.discriminator}</span>
-				</div>
-			</button>
-		{:else}
-			<a
-				class="btn btn-primary"
-				rel="noreferrer noopener"
-				href="https://discord.com/api/oauth2/authorize?client_id=1013410460873281577&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fapp%2Fprofile%2F&response_type=code&scope=identify"
-			>
-				Lier mon compte Discord
-			</a>
-		{/if}
-
 		<Button disabled>Télécharger mes données</Button>
 		<DeleteAccount/>
 	</div>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { ServerType } from "$components/app/constants";
 	import { parameters } from "$store/store";
-	import Select from "$components/select/Select.svelte";
-	import Option from "$components/select/Option.svelte";
 	import { capitalize } from "$shared/helpers";
-	import { Versions } from "./constants/versions.js";
 	import { t } from "svelte-intl-precompile";
+	import Select from "$components/select/Select.svelte";
+	import ServerVersion from "$components/parameters/ServerVersion.svelte";
+	import type { SelectItem } from "$components/select/SelectItem";
 
 	let defaultVersionName: string;
 	$: if ($parameters.version === "latest" || $parameters.version === "snapshot") {
@@ -13,30 +13,33 @@
 	} else {
 		defaultVersionName = $parameters.version;
 	}
+
+	const items: SelectItem[] = [];
+	let value: SelectItem;
+
+	for (const type of Object.keys(ServerType)) {
+		const item = {value: type, label: capitalize(type)};
+		items.push(item);
+
+		if (type === $parameters.serverType) {
+			value = item;
+		}
+	}
+
+	function handleSelect(event) {
+		value = event.detail;
+		$parameters.serverType = value.value;
+	}
 </script>
 
 <div class="d-flex flex-column gap-3 justify-content-start">
 	<div class="d-flex gap-3 justify-content-start">
 		<div>
 			<label class="form-label">Type de serveur</label>
-			<Select bind:value={$parameters.serverType} defaultText={capitalize($parameters.serverType)} placeholder="Type de serveur">
-				{#each Object.keys(ServerType) as type}
-					<Option text={capitalize(type)} value={type}/>
-				{/each}
-			</Select>
+			<Select {items} {value} placeholder="Chercher un type..." on:select={handleSelect}/>
 		</div>
 
-		<div>
-			<label class="form-label">Version de Minecraft</label>
-			<Select bind:value={$parameters.version} defaultText={defaultVersionName} placeholder="Version de Minecraft">
-				<Option text="Dernière" value="latest"/>
-				<Option text="Snapshot" value="snapshot"/>
-
-				{#each Versions as version}
-					<Option text={version} value={version}/>
-				{/each}
-			</Select>
-		</div>
+		<ServerVersion/>
 	</div>
 
 	<div class="d-flex gap-3 justify-content-start">

@@ -1,23 +1,17 @@
 <script lang="ts">
-	import { getContext } from "svelte";
-	import { focusKey, searchKey, valueKey } from "./constants";
-	import type { Writable } from "svelte/store";
+	import type { SelectItem } from "./SelectItem";
+	import { createEventDispatcher } from "svelte";
 
-	export let value: string = "";
-	export let text: string = "";
-	export let force: boolean = false;
+	const dispatch = createEventDispatcher();
 
-	let search: Writable<string> = getContext(searchKey);
-	let selectValue: Writable<string> = getContext(valueKey);
-	let focus: Writable<boolean> = getContext(focusKey);
+	export let item: SelectItem;
+	export let search: string;
 
 	let hide: boolean;
-	$: hide = !force && text.toLowerCase() === $search.toLowerCase() || !text.toLowerCase().includes($search.toLowerCase())
+	$: hide = !item.label.toLowerCase().includes(search.toLowerCase())
 
 	function select() {
-		$selectValue = value;
-		$search = text;
-		$focus = false;
+		dispatch("click", item);
 	}
 </script>
 
@@ -34,5 +28,5 @@
 </style>
 
 <div class="option px-2 py-1" class:d-none={hide} on:click={select}>
-	{text}
+	{item.label}
 </div>
