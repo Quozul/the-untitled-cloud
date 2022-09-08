@@ -78,6 +78,7 @@
 	"error.password_differ": "Les mots de passes doivent correspondrent.",
 	"error.already_exists": "Cette adresse email est déjà associée à un compte.",
 	"error.invalid_promo_code": "Code promotionnel invalide.",
+	"error.have_active_subscription": "Il vous reste des abonnements actifs, veuillez les annuler avant de supprimer votre compte.",
 	"error.empty": "Vide",
 	"error.already_owns": "Vous possédez déjà un produit de votre panier.",
 	"server_status.restarting": "Redémarre",

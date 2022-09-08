@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fetchingServer, selectedTab, server } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
-	import { goto } from "$app/navigation";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { locale } from "svelte-intl-precompile";
 	import { Products } from "$components/cart/constants.js";

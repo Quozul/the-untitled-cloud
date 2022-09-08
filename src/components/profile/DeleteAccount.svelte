@@ -3,11 +3,12 @@
 	import Button from "$shared/Button.svelte";
 	import Modal from "$components/modal/Modal.svelte";
 	import Code from "$components/login/Code.svelte";
-	import { user } from "$store/store.js";
+	import { token, user } from "$store/store.js";
 	import { deleteAccount } from "./helpers";
-	import { t } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import type { ApiError } from "shared/models";
 	import Alert from "$shared/Alert.svelte";
+	import { goto } from "$app/navigation";
 
 	let modalVisible: boolean = false;
 	let code: string | null = null;
@@ -21,6 +22,8 @@
 	async function handleSubmit() {
 		try {
 			await deleteAccount(password, code);
+			$token = null;
+			await goto(`/${$locale}`);
 		} catch (e: ApiError) {
 			error = e;
 		}
