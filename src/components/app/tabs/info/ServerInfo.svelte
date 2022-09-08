@@ -19,7 +19,7 @@
 		.withLocale(Locale.FRANCE);
 
 	onMount(() => {
-        if ($server?.state) {
+        if ($server?.state && $server?.state?.created) {
             // Parse dates
             started = ZonedDateTime.parse($server.state.startedAt);
             stopped = ZonedDateTime.parse($server.state.finishedAt);

@@ -19,13 +19,6 @@
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
 		isEnded = $server?.subscription.status === ApiSubscriptionStatus.CANCELLED;
 		isSuspended = $server?.subscription.status === ApiSubscriptionStatus.SUSPENDED;
-
-		// Set default tabs
-		if (isEnded && $selectedTab !== ServerTab.SUBSCRIPTION) {
-			goto(`/${$locale}/app/subscription/`);
-		} else if (isPending && $selectedTab === ServerTab.CONSOLE) {
-			goto(`/${$locale}/app/`);
-		}
 	}
 
 	function showModal() {
