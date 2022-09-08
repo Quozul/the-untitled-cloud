@@ -1,6 +1,7 @@
 package dev.quozul.database.models
 
 import com.github.dockerjava.api.exception.NotFoundException
+import com.github.dockerjava.api.exception.NotModifiedException
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.helpers.GameServer
@@ -80,9 +81,18 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 	}
 
 	fun remove() {
-		dockerContainer?.stop()
-		dockerContainer?.removeVolumes()
-		dockerContainer?.remove()
+		try {
+			dockerContainer?.stop()
+		} catch (_: Exception) {
+		}
+		try {
+			dockerContainer?.removeVolumes()
+		} catch (_: Exception) {
+		}
+		try {
+			dockerContainer?.remove()
+		} catch (_: Exception) {
+		}
 	}
 
 	var dockerContainer: DockerContainer?

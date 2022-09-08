@@ -14,6 +14,7 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.LocalDateTime
 
 fun Route.configureStripeWebhook() {
 	val endpointSecret = environment!!.config.property("payments.stripe.endpointSecret").getString()
@@ -92,11 +93,12 @@ fun Route.configureStripeWebhook() {
 					// Create containers for all products
 					runBlocking {
 						newSuspendedTransaction {
-							subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
-
 							subscription.items.forEach { item ->
 								item.remove()
 							}
+
+							subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
+							subscription.deletionDate = LocalDateTime.now()
 						}
 					}
 				}

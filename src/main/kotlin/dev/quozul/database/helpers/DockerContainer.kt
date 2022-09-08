@@ -78,7 +78,8 @@ open class DockerContainer(var containerId: String) {
 	fun remove() = dockerClient.removeContainerCmd(containerId).exec()
 
 	fun removeVolumes() {
-		inspect().volumes.forEach {
+		inspect().volumes?.forEach {
+			println("${it.hostPath}, ${it.containerPath}")
 			try {
 				val folder = File(it.hostPath)
 				folder.deleteRecursively()
