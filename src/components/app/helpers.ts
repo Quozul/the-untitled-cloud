@@ -5,7 +5,7 @@ import {
 	server,
 	servers,
 } from "$store/store";
-import { containId, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
+import { api, containId, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
 import type { ApiService } from "$models/ApiService";
@@ -13,6 +13,7 @@ import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiUser } from "$models/ApiUser";
+import type { ApiBillingPortal } from "$models/ApiBillingPortal";
 
 export async function getAllServers(page: number = 0, ended: boolean = false): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
@@ -116,4 +117,9 @@ export async function updateDiscordAccount(code: string, redirectUri: string) {
 export async function getUser(): Promise<ApiUser> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user`, getOptions("GET"));
 	return await handleRequest(request) as ApiUser;
+}
+
+export async function getStripePortal(redirect: string | null = null): Promise<ApiBillingPortal> {
+	const request = api(`user/portal?redirect=${redirect}`, getOptions("GET"));
+	return await handleRequest(request) as ApiBillingPortal;
 }

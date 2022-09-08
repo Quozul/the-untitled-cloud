@@ -5,10 +5,15 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { locale } from "svelte-intl-precompile";
 	import { Products } from "$components/cart/constants.js";
+	import Button from "$shared/Button.svelte";
+	import Modal from "$components/modal/Modal.svelte";
+	import { getStripePortal } from "./helpers";
+	import { page } from "$app/stores";
 
 	let isPending: boolean;
 	let isEnded: boolean;
 	let isSuspended: boolean;
+	let modalVisible: boolean = false;
 
 	$: {
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
@@ -21,6 +26,17 @@
 		} else if (isPending && $selectedTab === ServerTab.CONSOLE) {
 			goto(`/${$locale}/app/`);
 		}
+	}
+
+	function showModal() {
+		modalVisible = true;
+	}
+
+	async function redirectToStripe() {
+		const redirect = $page.url.href;
+		const url = await getStripePortal(redirect);
+		window.open(url.url);
+		modalVisible = false;
 	}
 </script>
 
@@ -56,12 +72,16 @@
 		</a>
 	{/if}
 
-	<a
-		class="nav-link"
-		class:active={!$fetchingServer && $selectedTab === ServerTab.SUBSCRIPTION}
-		class:disabled={$fetchingServer}
-		href="/{$locale}/app/subscription/"
+	<Button
+		className="nav-link justify-content-center"
+		disabled={$fetchingServer}
+		icon="box-arrow-up-left"
+		onClick={showModal}
 	>
 		Abonnement
-	</a>
+	</Button>
 </nav>
+
+<Modal bind:visible={modalVisible} okText="Gérer mes abonnements" onClick={redirectToStripe}>
+	Vous allez être redirigé vers notre partenaire pour gérer vos abonnements.
+</Modal>
