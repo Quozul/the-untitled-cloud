@@ -5,23 +5,15 @@ import com.stripe.model.*
 import com.stripe.model.Subscription
 import com.stripe.net.Webhook
 import dev.quozul.database.enums.SubscriptionStatus
-import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.models.*
-import dev.quozul.database.models.SubscriptionItem
 import dev.quozul.payments.provider.stripe.getUserFromStripeId
-import dev.quozul.servers.helpers.NameGenerator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.sql.SizedCollection
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
-import dev.quozul.database.models.Subscription.Companion as ModelsSubscription
 
 fun Route.configureStripeWebhook() {
 	val endpointSecret = environment!!.config.property("payments.stripe.endpointSecret").getString()

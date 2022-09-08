@@ -11,9 +11,8 @@ import com.stripe.param.PromotionCodeListParams
 import com.stripe.param.PromotionCodeRetrieveParams
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.models.AuthenticationErrors
-import dev.quozul.database.models.Product
-import dev.quozul.database.models.User
-import dev.quozul.database.models.getOrCreateSubscriptionFromInvoice
+import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.models.*
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.ApiCart
@@ -27,6 +26,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -51,6 +54,30 @@ fun Route.configureServerSubscriptionRoutes() {
 
 		// Get the Stripe customer from the database
 		if (user != null) {
+			// Verify user doesn't already own a product
+			val alreadyOwns = transaction {
+				body.cart.forEach {
+					val query = SubscriptionItems.innerJoin(Subscriptions)
+						.slice(SubscriptionItems.product, Subscriptions.owner)
+						.select {
+							(SubscriptionItems.product eq UUID.fromString(it)) and (Subscriptions.owner eq user.id)
+						}
+						.withDistinct()
+
+					if (SubscriptionItem.wrapRows(query).count() > 0) {
+						return@transaction true
+					}
+				}
+
+				false
+			}
+
+			if (alreadyOwns) {
+				call.response.status(HttpStatusCode.BadRequest)
+				call.respond(AuthenticationErrors.ALREADY_OWNS.toHashMap(true))
+				return@post
+			}
+
 			val customer = getOrCreateStripeCustomer(user)
 
 			val paymentSettings = SubscriptionCreateParams.PaymentSettings.builder()

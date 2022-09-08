@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiContainer(
 	val id: String?,
-	val product: ApiProduct,
+	val product: ApiProductInfo,
 	val tag: String?,
 	val name: String?,
 

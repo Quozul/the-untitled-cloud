@@ -3,6 +3,7 @@ package dev.quozul.database.models
 import dev.quozul.database.enums.GameServerE
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiProduct
+import dev.quozul.database.helpers.ApiProductInfo
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -45,6 +46,12 @@ class Product(id: EntityID<UUID>) : UUIDEntity(id) {
 		price,
 		cpu,
 		memory,
+	)
+
+	fun toApiProductInfo() = ApiProductInfo(
+		id.toString(),
+		name,
+		description,
 	)
 
 	fun isInStocks() = usedStocks < stocks

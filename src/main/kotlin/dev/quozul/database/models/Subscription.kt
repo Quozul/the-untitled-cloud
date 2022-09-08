@@ -72,7 +72,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 		val lastPage = count <= (page + 1) * size
 
 		Paginate(
-			products.limit(size, offset).map { it.toApiProduct() },
+			products.limit(size, offset).map { it.toApiProductInfo() },
 			page == 0,
 			lastPage,
 			count / size,

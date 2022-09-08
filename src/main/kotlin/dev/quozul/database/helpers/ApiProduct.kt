@@ -12,3 +12,10 @@ data class ApiProduct(
 	val cpu: Int,
 	val memory: Int,
 )
+
+@Serializable
+data class ApiProductInfo(
+	val id: String,
+	val name: String,
+	val description: String,
+)

@@ -46,7 +46,7 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 
 		return ApiContainer(
 			id = id.toString(),
-			product = product.toApiProduct(),
+			product = product.toApiProductInfo(),
 			tag = container?.containerTag,
 			name = container?.name,
 			port = container?.port,

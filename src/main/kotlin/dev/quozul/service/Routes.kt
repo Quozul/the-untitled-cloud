@@ -90,7 +90,7 @@ fun Route.configureServiceRoutes() {
 
 				ApiContainer(
 					id = row[SubscriptionItems.id].toString(),
-					product = product.toApiProduct(),
+					product = product.toApiProductInfo(),
 					tag = row.getOrNull(Containers.containerTag),
 					name = row.getOrNull(Containers.name),
 					port = container?.port,
