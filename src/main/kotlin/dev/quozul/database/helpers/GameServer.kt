@@ -6,7 +6,6 @@ import dev.quozul.database.enums.GameServerE
 import dev.quozul.database.models.Container
 import dev.quozul.database.models.Server
 import dev.quozul.database.models.SubscriptionItem
-import dev.quozul.database.models.findServerFromContainer
 import dev.quozul.servers.helpers.NameGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

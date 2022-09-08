@@ -3,8 +3,6 @@ package dev.quozul.database.models
 import com.stripe.model.Invoice
 import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
-import dev.quozul.database.helpers.ApiContainer
-import dev.quozul.database.helpers.ApiProduct
 import dev.quozul.database.helpers.ApiSubscription
 import dev.quozul.servers.models.Paginate
 import kotlinx.datetime.LocalDateTime
@@ -12,7 +10,6 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
@@ -58,16 +55,8 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 		)
 	}
 
-	fun toApiProducts() = transaction {
-		products.map { it.toApiProduct() }
-	}
-
-	fun toApiContainers() = transaction {
-		items.map { it.toApiContainer() }
-	}
-
 	fun toPaginatedApiProducts(page: Int, size: Int) = transaction {
-		val offset = (page * size).toLong();
+		val offset = (page * size).toLong()
 		val count = products.count()
 		val lastPage = count <= (page + 1) * size
 
@@ -82,7 +71,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 	}
 
 	fun toPaginatedApiContainers(page: Int, size: Int) = transaction {
-		val offset = (page * size).toLong();
+		val offset = (page * size).toLong()
 		val count = containers.count()
 		val lastPage = count <= (page + 1) * size
 
@@ -148,11 +137,6 @@ fun getOrCreateSubscriptionFromInvoice(
 			this.products = SizedCollection(products)
 		}
 	}
-}
-
-@Deprecated("Unsafe, use findSubscriptionWithOwnership", replaceWith = ReplaceWith("findSubscriptionWithOwnership()"))
-fun getSubscriptionFromId(id: UUID) = transaction {
-	Subscription.findById(id)
 }
 
 fun findSubscriptionWithOwnership(id: UUID, owner: UUID) = transaction {

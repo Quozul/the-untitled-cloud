@@ -5,15 +5,12 @@ import com.stripe.model.Subscription as StripeSubscription
 import dev.quozul.database.enums.SubscriptionProvider
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.Subscription
-import dev.quozul.database.models.Subscriptions
-import dev.quozul.database.models.User
 import dev.quozul.servers.models.ApiInvoice
 import dev.quozul.servers.models.SubscriptionInfo
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class ApiSubscription(
@@ -24,15 +21,6 @@ data class ApiSubscription(
 	val deletionDate: LocalDateTime?,
 ) {
 	companion object {
-		fun fromOwner(owner: User): List<ApiSubscription> = transaction {
-			Subscription.find {
-				Subscriptions.owner eq owner.id
-			}
-				.map {
-					it.toApiSubscription()
-				}
-		}
-
 		fun getDetails(subscription: Subscription) = try {
 			val params = SubscriptionRetrieveParams.builder()
 				.addAllExpand(listOf("default_payment_method", "latest_invoice")).build()

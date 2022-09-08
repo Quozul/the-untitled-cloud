@@ -1,7 +1,6 @@
 package dev.quozul.database.models
 
 import com.github.dockerjava.api.exception.NotFoundException
-import com.github.dockerjava.api.exception.NotModifiedException
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.helpers.GameServer

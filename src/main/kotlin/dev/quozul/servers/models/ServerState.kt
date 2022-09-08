@@ -1,19 +1,12 @@
 package dev.quozul.servers.models
 
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import java.lang.Exception
 
 enum class ServerStatus {
 	// Docker statuses
-	CREATED,
 	RESTARTING,
 	RUNNING,
-	REMOVING,
-	PAUSED,
-	EXITED,
-	DEAD,
 
 	// Custom statuses
 	UNAVAILABLE,

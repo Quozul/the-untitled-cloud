@@ -31,7 +31,7 @@ fun Route.configureSubscriptionRoutes() {
 		val uuid = UUID.fromString(principal!!.payload.getClaim("id").asString())
 		val page = (call.request.queryParameters["page"] ?: "0").toInt()
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
-		val offset = (page * size).toLong();
+		val offset = (page * size).toLong()
 		val status = call.request.queryParameters["status"]
 
 		val (servers, count) = transaction {

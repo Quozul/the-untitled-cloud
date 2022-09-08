@@ -2,16 +2,13 @@ package dev.quozul.payments.provider.stripe.routes
 
 import com.stripe.exception.InvalidRequestException
 import com.stripe.exception.StripeException
-import com.stripe.model.Coupon
 import com.stripe.model.PaymentIntent
 import com.stripe.model.PromotionCode
 import com.stripe.model.Subscription as StripeSubscription
 import com.stripe.param.PaymentIntentRetrieveParams
 import com.stripe.param.PromotionCodeListParams
-import com.stripe.param.PromotionCodeRetrieveParams
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.models.AuthenticationErrors
-import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.*
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
@@ -26,8 +23,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.SerializationException
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction

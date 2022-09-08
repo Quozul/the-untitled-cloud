@@ -15,7 +15,7 @@ data class Paginate<T>(
 	companion object {
 		fun <T> fromSizedIterable(page: Int, size: Int, iterable: SizedIterable<T>): Paginate<T> {
 			val count = iterable.count()
-			val offset = (page * size).toLong();
+			val offset = (page * size).toLong()
 			val lastPage = count <= (page + 1) * size
 
 			return Paginate(

@@ -3,13 +3,11 @@ package dev.quozul.database.helpers
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
 import com.github.dockerjava.api.command.PullImageResultCallback
-import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.NetworkSettings
 import com.github.dockerjava.api.model.Volume
 import dev.quozul.dockerClient
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import java.io.File
 
 open class DockerContainer(var containerId: String) {
@@ -61,11 +59,6 @@ open class DockerContainer(var containerId: String) {
 
 	val networkSettings: NetworkSettings
 		get() = inspect().networkSettings
-
-	fun getPort(port: Int = 25565): String? {
-		val exposedPort = ExposedPort.tcp(port)
-		return networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
-	}
 
 	fun inspect() = dockerClient.inspectContainerCmd(containerId).exec()
 

@@ -1,6 +1,5 @@
 package dev.quozul.servers.models
 
-import dev.quozul.database.helpers.ApiProductInfo
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 

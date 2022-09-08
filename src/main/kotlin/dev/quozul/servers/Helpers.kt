@@ -19,7 +19,5 @@ fun getDockerClient(): DockerClient {
 		.responseTimeout(Duration.ofSeconds(45))
 		.build()
 
-	val client = DockerClientImpl.getInstance(config, httpClient)
-
-	return client
+	return DockerClientImpl.getInstance(config, httpClient)
 }

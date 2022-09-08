@@ -3,12 +3,10 @@ package dev.quozul.database.models
 import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.database.helpers.DockerContainer
-import dev.quozul.servers.models.ServerState
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 /**
@@ -51,33 +49,8 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 			}
 		}
 
-	val state: ServerState
-		get() = ServerState.fromContainerState(
-			try {
-				dockerContainer?.state
-			} catch (_: NotFoundException) {
-				null
-			}
-		)
-
 	val server: Server?
 		get() = Server.find {
 			Servers.container eq id
 		}.firstOrNull()
-}
-
-@Deprecated("Unsafe, use findContainerWithOwnership", replaceWith = ReplaceWith("findContainerWithOwnership()"))
-fun findContainerFromId(id: UUID) = transaction {
-	Container.findById(id)
-}
-
-@Deprecated("Can return null, use findItemWithOwnership", replaceWith = ReplaceWith("findItemWithOwnership()"))
-fun findContainerFromItemWithOwnership(id: UUID, owner: UUID) = transaction {
-	SubscriptionItem.findById(id)?.let {
-		if (it.subscription.owner.id.value != owner) {
-			null
-		} else {
-			it.container
-		}
-	}
 }

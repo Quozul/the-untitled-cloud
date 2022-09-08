@@ -12,7 +12,7 @@ fun Route.configureProductsRoutes() {
 	get("") {
 		val page = (call.request.queryParameters["page"] ?: "0").toInt()
 		val size = (call.request.queryParameters["size"] ?: "6").toInt()
-		val offset = (page * size).toLong();
+		val offset = (page * size).toLong()
 
 		val (products, count) = transaction {
 			val products = Product.all()
