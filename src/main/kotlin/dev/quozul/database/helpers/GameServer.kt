@@ -88,14 +88,13 @@ class GameServer {
 			}
 
 			val server = transaction {
-				findServerFromContainer(container) ?: Server.new {
+				container.server ?: Server.new {
 					this.container = container
 				}
 			}
 
 			val env = server.toEnvironmentVariables()
 
-			// TODO: Get exposed port from product configuration
 			// Create port bindings
 			val portBindings = Ports()
 			for (exposedPort in gameServer.ports) {

@@ -59,6 +59,11 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 				null
 			}
 		)
+
+	val server: Server?
+		get() = Server.find {
+			Servers.container eq id
+		}.firstOrNull()
 }
 
 @Deprecated("Unsafe, use findContainerWithOwnership", replaceWith = ReplaceWith("findContainerWithOwnership()"))
