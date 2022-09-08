@@ -3,10 +3,10 @@
 		patchServer,
 		refreshAllServers,
 		refreshSelectedServer,
-	} from "$components/app/helpers";
-	import { server } from "$store/store";
-	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants";
+	} from "../app/helpers";
+	import { server } from "../../store/store";
+	import Button from "../shared/Button.svelte";
+	import { Variant } from "../shared/constants";
 
 	async function recreate() {
 		await patchServer($server, "RECREATE");

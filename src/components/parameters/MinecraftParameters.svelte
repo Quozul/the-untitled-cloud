@@ -47,7 +47,7 @@
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column gap-3">
-	<h4 class="mb-0">Paramètres du service</h4>
+	<h4 class="mb-0">Paramètres du serveur Minecraft</h4>
 	{#if $parameters && $server}
 		<div>
 			<label for="serverName" class="form-label">Nom du serveur</label>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Link from "$shared/Link.svelte";
+    import Link from "../shared/Link.svelte";
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column align-items-start">

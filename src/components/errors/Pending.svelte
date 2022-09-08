@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
+	import { refreshAllServers, refreshSelectedServer } from "../app/helpers";
 
 	function refresh() {
 		refreshAllServers();

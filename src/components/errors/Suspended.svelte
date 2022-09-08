@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ServerTab } from "$components/app/constants";
-	import { selectedTab } from "$store/store";
+	import { ServerTab } from "../app/constants";
+	import { selectedTab } from "../../store/store";
 
 	function goToSubscriptionTab() {
 		$selectedTab = ServerTab.SUBSCRIPTION

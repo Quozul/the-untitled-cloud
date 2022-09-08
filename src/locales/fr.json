@@ -79,6 +79,7 @@
 	"error.already_exists": "Cette adresse email est déjà associée à un compte.",
 	"error.invalid_promo_code": "Code promotionnel invalide.",
 	"error.empty": "Vide",
+	"error.already_owns": "Vous possédez déjà un produit de votre panier.",
 	"server_status.restarting": "Redémarre",
 	"server_status.running": "En marche",
 	"server_status.unavailable": "Non disponible",

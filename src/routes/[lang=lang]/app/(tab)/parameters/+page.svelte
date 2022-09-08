@@ -1,9 +1,19 @@
 <script lang="ts">
-	import NewParameters from "$components/parameters/NewParameters.svelte";
-	import { selectedTab } from "$store/store";
+	import MinecraftParameters from "$components/parameters/MinecraftParameters.svelte";
+	import { selectedTab, server } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
+	import { Products } from "$components/cart/constants";
+	import NoParameters from "$components/errors/NoParameters.svelte";
+	import SteamParameters from "$components/parameters/SteamParameters.svelte";
 
 	$selectedTab = ServerTab.PARAMETERS;
 </script>
 
-<NewParameters/>
+
+{#if $server?.product.id === Products.MinecraftServer}
+	<MinecraftParameters/>
+{:else if $server?.product.id === Products.SteamServer}
+	<SteamParameters/>
+{:else}
+	<NoParameters/>
+{/if}

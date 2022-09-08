@@ -92,7 +92,7 @@
 		<slot/>
 
 		{#each items as item}
-			<Option {item} {search} on:click={handleSelect} />
+			<Option {item} {search} {value} on:click={handleSelect} />
 		{/each}
 
 		{#if allowCustom && search.length > 0}

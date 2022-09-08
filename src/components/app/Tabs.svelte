@@ -4,6 +4,7 @@
 	import { goto } from "$app/navigation";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { locale } from "svelte-intl-precompile";
+	import { Products } from "$components/cart/constants.js";
 
 	let isPending: boolean;
 	let isEnded: boolean;
@@ -25,37 +26,41 @@
 
 <nav class="nav nav-pills nav-fill flex-column flex-lg-row">
 	<a
-			class="nav-link"
-			class:active={!$fetchingServer && $selectedTab === ServerTab.INFO}
-			class:disabled={$fetchingServer || isEnded}
-			href="/{$locale}/app/"
+		class="nav-link"
+		class:active={!$fetchingServer && $selectedTab === ServerTab.INFO}
+		class:disabled={$fetchingServer || isEnded}
+		href="/{$locale}/app/"
 	>
 		Informations
 	</a>
 
-	<a
+	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.SteamServer}
+		<a
 			class="nav-link"
 			class:active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
 			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
 			href="/{$locale}/app/parameters/"
-	>
-		Paramètres
-	</a>
+		>
+			Paramètres
+		</a>
+	{/if}
 
-	<a
+	{#if $server?.product.id === Products.MinecraftServer}
+		<a
 			class="nav-link"
 			class:active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
 			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
 			href="/{$locale}/app/console/"
-	>
-		Console
-	</a>
+		>
+			Console
+		</a>
+	{/if}
 
 	<a
-			class="nav-link"
-			class:active={!$fetchingServer && $selectedTab === ServerTab.SUBSCRIPTION}
-			class:disabled={$fetchingServer}
-			href="/{$locale}/app/subscription/"
+		class="nav-link"
+		class:active={!$fetchingServer && $selectedTab === ServerTab.SUBSCRIPTION}
+		class:disabled={$fetchingServer}
+		href="/{$locale}/app/subscription/"
 	>
 		Abonnement
 	</a>
