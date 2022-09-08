@@ -23,6 +23,7 @@ enum class AuthenticationErrors(private val message: String) {
 	ALREADY_EXISTS("An account already exists"),
 	INVALID_PROMO_CODE("Invalid promotion code"),
 	ALREADY_OWNS("Already owns a product"),
+	HAVE_ACTIVE_SUBSCRIPTION("User have active subscriptions"),
 	INVALID_CODE("Invalid code");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {

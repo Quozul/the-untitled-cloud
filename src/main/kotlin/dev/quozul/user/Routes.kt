@@ -1,5 +1,6 @@
 package dev.quozul.user
 
+import com.stripe.model.Customer
 import com.stripe.model.billingportal.Session
 import dev.quozul.payments.provider.stripe.models.Address
 import com.stripe.param.CustomerUpdateParams
@@ -7,6 +8,9 @@ import com.stripe.param.billingportal.SessionCreateParams
 import dev.quozul.authentication.hashString
 import dev.quozul.authentication.models.*
 import dev.quozul.client
+import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.models.Subscription
+import dev.quozul.database.models.Subscriptions
 import dev.quozul.database.models.User
 import dev.quozul.database.models.Users
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
@@ -126,6 +130,27 @@ fun Route.configureUserRoutes() {
 				(Users.id eq UUID.fromString(id)) and (Users.verificationCode eq credentials.code) and (Users.password eq hash)
 			}.firstOrNull()
 		}?.let { user ->
+			// Error if the user has running subscriptions
+			val subscriptions = transaction {
+				Subscription.find {
+					(Subscriptions.owner eq user.id) and (Subscriptions.subscriptionStatus neq SubscriptionStatus.CANCELLED)
+				}.count()
+			}
+
+			if (subscriptions > 0) {
+				call.response.status(HttpStatusCode.BadRequest)
+				call.respond(AuthenticationErrors.HAVE_ACTIVE_SUBSCRIPTION.toHashMap(true))
+				return@delete
+			}
+
+			// Remove Stripe user
+			Customer.retrieve(user.stripeId).delete()
+
+			// Remove user from database
+			transaction {
+				user.delete()
+			}
+
 			call.response.status(HttpStatusCode.NoContent)
 		} ?: run {
 			call.response.status(HttpStatusCode.Unauthorized)
