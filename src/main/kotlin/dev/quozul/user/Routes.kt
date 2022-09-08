@@ -1,13 +1,16 @@
 package dev.quozul.user
 
+import com.stripe.model.billingportal.Session
 import dev.quozul.payments.provider.stripe.models.Address
 import com.stripe.param.CustomerUpdateParams
+import com.stripe.param.billingportal.SessionCreateParams
 import dev.quozul.authentication.hashString
 import dev.quozul.authentication.models.*
 import dev.quozul.client
 import dev.quozul.database.models.User
 import dev.quozul.database.models.Users
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
+import dev.quozul.user.models.ApiBillingPortal
 import dev.quozul.user.models.ApiUser
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -182,5 +185,24 @@ fun Route.configureUserRoutes() {
 		}
 
 		call.response.status(HttpStatusCode.InternalServerError)
+	}
+
+	get("portal") {
+		val principal = call.principal<JWTPrincipal>()
+		val id = UUID.fromString(principal!!.payload.getClaim("id").asString())
+		val redirect = (call.request.queryParameters["redirect"] ?: "https://theuntitledcloud.com/")
+
+		transaction {
+			User.findById(id)
+		}?.let {
+			val params = SessionCreateParams.builder()
+				.setCustomer(it.stripeId)
+				.setReturnUrl(redirect)
+				.build()
+
+			val session: Session = Session.create(params)
+
+			call.respond(ApiBillingPortal(session.url))
+		} ?: call.response.status(HttpStatusCode.BadRequest)
 	}
 }

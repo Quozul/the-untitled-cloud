@@ -10,6 +10,7 @@ import com.github.dockerjava.api.model.Volume
 import dev.quozul.dockerClient
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 open class DockerContainer(var containerId: String) {
 	companion object {
@@ -75,6 +76,16 @@ open class DockerContainer(var containerId: String) {
 	fun restart() = dockerClient.restartContainerCmd(containerId).exec()
 
 	fun remove() = dockerClient.removeContainerCmd(containerId).exec()
+
+	fun removeVolumes() {
+		inspect().volumes.forEach {
+			try {
+				val folder = File(it.hostPath)
+				folder.deleteRecursively()
+			} catch (_: Exception) {
+			}
+		}
+	}
 
 	// TODO: Remove all volumes and recreate
 	fun reset() {

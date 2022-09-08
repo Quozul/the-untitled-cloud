@@ -79,6 +79,12 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 		createContainer(wasRunning)
 	}
 
+	fun remove() {
+		dockerContainer?.stop()
+		dockerContainer?.removeVolumes()
+		dockerContainer?.remove()
+	}
+
 	var dockerContainer: DockerContainer?
 		get() = transaction { container?.dockerContainer }
 		set(value) = transaction {

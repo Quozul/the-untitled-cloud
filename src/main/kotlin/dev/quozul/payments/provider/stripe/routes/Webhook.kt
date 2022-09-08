@@ -89,13 +89,15 @@ fun Route.configureStripeWebhook() {
 				stripeObject as Subscription
 
 				getSubscriptionFromStripeId(stripeObject.id)?.let { subscription ->
-					transaction {
-						subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
-					}
+					// Create containers for all products
+					runBlocking {
+						newSuspendedTransaction {
+							subscription.subscriptionStatus = SubscriptionStatus.CANCELLED
 
-					// Remove all containers
-					subscription.containers.forEach { container ->
-						container.dockerContainer?.remove()
+							subscription.items.forEach { item ->
+								item.remove()
+							}
+						}
 					}
 				}
 
