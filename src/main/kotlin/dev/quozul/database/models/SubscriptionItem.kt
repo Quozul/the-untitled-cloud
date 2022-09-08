@@ -1,20 +1,15 @@
 package dev.quozul.database.models
 
 import com.github.dockerjava.api.exception.NotFoundException
-import com.github.dockerjava.api.model.*
-import dev.quozul.containerDirectory
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.DockerContainer
-import dev.quozul.servers.helpers.NameGenerator
+import dev.quozul.database.helpers.GameServer
 import dev.quozul.servers.models.ServerState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -61,46 +56,11 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 	}
 
 	suspend fun createContainer(start: Boolean = false) {
-		runBlocking {
-			newSuspendedTransaction(Dispatchers.Default) {
-				val container = this@SubscriptionItem.container ?: Container.new {
-					this.name = NameGenerator.getRandomName()
-				}
+		GameServer.new(this@SubscriptionItem)
 
-				val server = findServerFromContainer(container) ?: Server.new {
-					this.container = container
-				}
-
-				val env = server.toEnvironmentVariables()
-
-				// TODO: Get exposed port from product configuration
-				val exposedPort = ExposedPort.tcp(25565)
-				val portBindings = Ports()
-				portBindings.bind(exposedPort, Ports.Binding.empty())
-
-				val volume = Volume("/data")
-				val bind = transaction {
-					Bind("${containerDirectory}${this@SubscriptionItem.subscription.owner.id.value}/${this@SubscriptionItem.id}", volume)
-				}
-
-				container.dockerContainer = DockerContainer.new(
-					image = product.dockerImage,
-					tag = container.containerTag,
-					env = env,
-					hostConfig = HostConfig
-						.newHostConfig()
-						.withPortBindings(portBindings)
-						.withBinds(bind)
-						.withMemory(2147483648) // TODO: Get resources from product configuration
-						.withCpuCount(1),
-					volumes = volume,
-				)
-
-				this@SubscriptionItem.container = container
-
-				if (start) {
-					container.dockerContainer?.start()
-				}
+		if (start) {
+			transaction {
+				container?.dockerContainer?.start()
 			}
 		}
 	}

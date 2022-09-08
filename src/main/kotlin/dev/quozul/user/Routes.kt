@@ -24,75 +24,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 
-fun Route.configureUserRoutes() {
-	val token = this@configureUserRoutes.environment!!.config.property("discord.token").getString()
-	val clientSecret = this@configureUserRoutes.environment!!.config.property("discord.client_secret").getString()
-	val clientId = this@configureUserRoutes.environment!!.config.property("discord.client_id").getString()
-	val salt = environment!!.config.property("passwords.salt").getString()
-	val pepper = environment!!.config.property("passwords.pepper").getString()
-
-	// Authenticated requests
-	// TODO: Add renew token
-	// TODO: Add password change
-
-	get {
-		val principal = call.principal<JWTPrincipal>()
-		val id = principal!!.payload.getClaim("id").asString()
-
-		val user = transaction {
-			User.findById(UUID.fromString(id))!!
-		}
-
-		val discordUser = if (user.discordId != null) {
-			client.get("https://discord.com/api/users/${user.discordId}") {
-				contentType(ContentType.Application.Json)
-				headers {
-					append("authorization", "Bot $token")
-				}
-			}.body<ApiDiscordUser>()
-		} else {
-			null
-		}
-
-		call.respond(ApiUser(user.email, user.communicationLanguage, discordUser))
-	}
-
-	post {
-		val principal = call.principal<JWTPrincipal>()
-		val id = principal!!.payload.getClaim("id").asString()
-
-		val email = transaction {
-			User.findById(UUID.fromString(id))!!.email
-		}
-
-		sendEmail(email, "subject", "content")
-		call.response.status(HttpStatusCode.NoContent)
-	}
-
-	delete {
-		val principal = call.principal<JWTPrincipal>()
-		val id = principal!!.payload.getClaim("id").asString()
-
-		val credentials = try {
-			call.receive<VerificationCredentials>()
-		} catch (e: SerializationException) {
-			call.response.status(HttpStatusCode.BadRequest)
-			return@delete
-		}
-
-		val hash = hashString("SHA-256", salt + credentials.password + pepper)
-
-		transaction {
-			User.find {
-				(Users.id eq UUID.fromString(id)) and (Users.verificationCode eq credentials.code) and (Users.password eq hash)
-			}.firstOrNull()
-		}?.let { user ->
-			call.response.status(HttpStatusCode.NoContent)
-		} ?: run {
-			call.response.status(HttpStatusCode.Unauthorized)
-			call.respond(AuthenticationErrors.INVALID_CREDENTIALS.toHashMap(true))
-		}
-	}
+fun Route.configureDiscordRoute() {
+	val clientSecret = this@configureDiscordRoute.environment!!.config.property("discord.client_secret").getString()
+	val clientId = this@configureDiscordRoute.environment!!.config.property("discord.client_id").getString()
 
 	post("/discord") {
 		val discordCode = try {
@@ -137,6 +71,63 @@ fun Route.configureUserRoutes() {
 		}
 
 		call.respond(userResponse)
+	}
+}
+
+fun Route.configureUserRoutes() {
+	val salt = environment!!.config.property("passwords.salt").getString()
+	val pepper = environment!!.config.property("passwords.pepper").getString()
+
+	// Authenticated requests
+	// TODO: Add renew token
+	// TODO: Add password change
+
+	get {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val user = transaction {
+			User.findById(UUID.fromString(id))!!
+		}
+
+		call.respond(ApiUser(user.email, user.communicationLanguage, null))
+	}
+
+	post {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val email = transaction {
+			User.findById(UUID.fromString(id))!!.email
+		}
+
+		sendEmail(email, "subject", "content")
+		call.response.status(HttpStatusCode.NoContent)
+	}
+
+	delete {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val credentials = try {
+			call.receive<VerificationCredentials>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@delete
+		}
+
+		val hash = hashString("SHA-256", salt + credentials.password + pepper)
+
+		transaction {
+			User.find {
+				(Users.id eq UUID.fromString(id)) and (Users.verificationCode eq credentials.code) and (Users.password eq hash)
+			}.firstOrNull()
+		}?.let { user ->
+			call.response.status(HttpStatusCode.NoContent)
+		} ?: run {
+			call.response.status(HttpStatusCode.Unauthorized)
+			call.respond(AuthenticationErrors.INVALID_CREDENTIALS.toHashMap(true))
+		}
 	}
 
 	// Get user billing address

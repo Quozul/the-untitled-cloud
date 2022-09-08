@@ -1,12 +1,12 @@
 package dev.quozul.database.models
 
+import dev.quozul.database.enums.GameServerE
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiProduct
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,7 +21,7 @@ object Products : UUIDTable("product") {
 	val cpu = integer("cpu").default(1)
 	val memory = integer("memory").default(512)
 	val stocks = integer("stocks").default(1)
-	// TODO: Add default containers' limits?
+	val gameServer = enumeration<GameServerE>("game_server").nullable()
 }
 
 class Product(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -35,6 +35,7 @@ class Product(id: EntityID<UUID>) : UUIDEntity(id) {
 	var cpu by Products.cpu
 	var memory by Products.memory
 	var stocks by Products.stocks
+	var gameServer by Products.gameServer
 
 	fun toApiProduct() = ApiProduct(
 		id.toString(),

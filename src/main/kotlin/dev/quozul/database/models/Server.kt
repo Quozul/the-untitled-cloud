@@ -55,10 +55,12 @@ class Server(id: EntityID<UUID>) : UUIDEntity(id) {
 	var ftbModpackVersionId by Servers.ftbModpackVersionId
 
 	fun toEnvironmentVariables(): List<String> {
+		// TODO: Use env from GameServer enum
 		val list = mutableListOf(
 			"VERSION=${version}",
 			"EULA=TRUE",
 			"TYPE=${serverType}",
+			"MOTD=Hosted by theuntitledcloud.com",
 		)
 
 		forgeVersion?.let { list.add("FORGEVERSION=$forgeVersion") }

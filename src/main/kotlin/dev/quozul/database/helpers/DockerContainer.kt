@@ -11,7 +11,7 @@ import dev.quozul.dockerClient
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-class DockerContainer(var containerId: String) {
+open class DockerContainer(var containerId: String) {
 	companion object {
 		suspend fun new(
 			image: String,
@@ -19,18 +19,18 @@ class DockerContainer(var containerId: String) {
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: Volume? = null
+			volumes: List<Volume>? = null
 		) = createContainer(image, name, tag, env, hostConfig, volumes)?.let {
 			DockerContainer(it.id)
 		}
 
-		suspend fun createContainer(
+		private suspend fun createContainer(
 			image: String,
 			name: String? = null,
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: Volume? = null
+			volumes: List<Volume>? = null
 		): CreateContainerResponse? = coroutineScope {
 			dockerClient.pullImageCmd(image)
 				.withTag(tag)
