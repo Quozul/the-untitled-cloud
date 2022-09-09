@@ -9,7 +9,6 @@ import { defaultLocale } from "$shared/constants";
 
 /** @type {import("./$types").LayoutLoad} */
 export async function load({params}: any) {
-
 	addMessages("en", en);
 	addMessages("fr", fr);
 
@@ -20,5 +19,3 @@ export async function load({params}: any) {
 
 	await waitLocale(params.lang);
 }
-
-export const prerender = true;

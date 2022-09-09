@@ -18,7 +18,7 @@ const config = {
 			// these options are set automatically — see below
 			pages: "build",
 			assets: "build",
-			fallback: null,
+			fallback: "fallback.html",
 			precompress: true,
 		}),
 		trailingSlash: "always",
