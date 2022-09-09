@@ -35,20 +35,6 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 			containerId = value?.containerId
 		}
 
-	val port: String?
-		get() {
-			// TODO: Get exposed port from product configuration
-			val exposedPort = ExposedPort.tcp(25565)
-
-			return try {
-				dockerContainer?.let { dc ->
-					dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
-				}
-			} catch (_: NotFoundException) {
-				null
-			}
-		}
-
 	val server: Server?
 		get() = Server.find {
 			Servers.container eq id

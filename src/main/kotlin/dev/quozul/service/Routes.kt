@@ -73,6 +73,7 @@ fun Route.configureServiceRoutes() {
 
 			val response = query.limit(size, offset).map { row ->
 				// This should never be null, but if it happens, I'm screwed
+				val item: SubscriptionItem = SubscriptionItem.findById(row[SubscriptionItems.id])!!
 				val product: Product = Product.findById(row[Products.id])!!
 				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
@@ -93,7 +94,7 @@ fun Route.configureServiceRoutes() {
 					product = product.toApiProductInfo(),
 					tag = row.getOrNull(Containers.containerTag),
 					name = row.getOrNull(Containers.name),
-					port = container?.port,
+					port = item.port,
 					state = state,
 					subscription = subscription.toApiSubscription(),
 				)

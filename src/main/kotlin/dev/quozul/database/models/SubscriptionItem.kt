@@ -95,7 +95,7 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 		}
 	}
 
-	private val port: String?
+	val port: String?
 		get() =
 			product.gameServer.ports.firstOrNull()?.let { exposedPort ->
 				try {
