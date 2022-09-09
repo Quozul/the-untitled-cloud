@@ -19,7 +19,9 @@ fun Application.configureDatabase() {
 
 	transaction {
 		SchemaUtils.create(Containers, Options, Products, Servers, Subscriptions, SubscriptionItems, Users)
+	}
 
+	transaction {
 		SchemaUtils.statementsRequiredToActualizeScheme(
 			Containers,
 			Options,
@@ -28,17 +30,7 @@ fun Application.configureDatabase() {
 			Subscriptions,
 			SubscriptionItems,
 			Users
-		)
-			.forEach {
-				println(it)
-				try {
-					TransactionManager.current().exec(it)
-				} catch (e: Exception) {
-					e.printStackTrace()
-				}
-			}
-
-		SchemaUtils.addMissingColumnsStatements(
+		) + SchemaUtils.addMissingColumnsStatements(
 			Containers,
 			Options,
 			Products,
@@ -47,13 +39,13 @@ fun Application.configureDatabase() {
 			SubscriptionItems,
 			Users
 		)
-			.forEach {
-				println(it)
-				try {
-					TransactionManager.current().exec(it)
-				} catch (e: Exception) {
-					e.printStackTrace()
-				}
+	}.forEach {
+		transaction {
+			try {
+				TransactionManager.current().exec(it)
+			} catch (e: Exception) {
+				e.printStackTrace()
 			}
+		}
 	}
 }
