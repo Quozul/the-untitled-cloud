@@ -71,6 +71,8 @@ fun Route.configureServiceRoutes() {
 				}
 				.withDistinct()
 
+			val count = query.count()
+
 			val response = query.limit(size, offset).map { row ->
 				// This should never be null, but if it happens, I'm screwed
 				val item: SubscriptionItem = SubscriptionItem.findById(row[SubscriptionItems.id])!!
@@ -100,7 +102,7 @@ fun Route.configureServiceRoutes() {
 				)
 			}
 
-			Pair(response, query.count())
+			Pair(response, count)
 		}
 
 		val lastPage = count <= (page + 1) * size
