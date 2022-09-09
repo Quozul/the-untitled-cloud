@@ -8,6 +8,16 @@
 	export let className: string = "";
 </script>
 
+<style lang="scss" global>
+	.alert {
+		.icon {
+			width: 16px;
+			height: 16px;
+			flex: none;
+		}
+	}
+</style>
+
 <div class="alert alert-{variant} d-flex align-items-center gap-2 {className}">
 	{#if icon && title}
 		<h6 class="fw-bold d-flex align-items-center gap-2">
@@ -16,11 +26,11 @@
 		</h6>
 	{:else if icon}
 		<Icon key={icon}/>
+
 		<div>
 			<slot/>
 		</div>
 	{:else}
 		<slot/>
 	{/if}
-
 </div>
