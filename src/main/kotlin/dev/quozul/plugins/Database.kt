@@ -18,28 +18,42 @@ fun Application.configureDatabase() {
 	)
 
 	transaction {
-		SchemaUtils.create(Containers)
-		SchemaUtils.create(Options)
-		SchemaUtils.create(Products)
-		SchemaUtils.create(Servers)
-		SchemaUtils.create(Subscriptions)
-		SchemaUtils.create(SubscriptionItems)
-		SchemaUtils.create(Users)
+		SchemaUtils.create(Containers, Options, Products, Servers, Subscriptions, SubscriptionItems, Users)
 
+		SchemaUtils.statementsRequiredToActualizeScheme(
+			Containers,
+			Options,
+			Products,
+			Servers,
+			Subscriptions,
+			SubscriptionItems,
+			Users
+		)
+			.forEach {
+				println(it)
+				try {
+					TransactionManager.current().exec(it)
+				} catch (e: Exception) {
+					e.printStackTrace()
+				}
+			}
 
-		SchemaUtils.statementsRequiredToActualizeScheme(Containers) +
-				SchemaUtils.statementsRequiredToActualizeScheme(Options) +
-				SchemaUtils.statementsRequiredToActualizeScheme(Products) +
-				SchemaUtils.statementsRequiredToActualizeScheme(Servers) +
-				SchemaUtils.statementsRequiredToActualizeScheme(Subscriptions) +
-				SchemaUtils.statementsRequiredToActualizeScheme(SubscriptionItems) +
-				SchemaUtils.statementsRequiredToActualizeScheme(Users)
-					.forEach {
-						try {
-							TransactionManager.current().exec(it)
-						} catch (e: Exception) {
-							e.printStackTrace()
-						}
-					}
+		SchemaUtils.addMissingColumnsStatements(
+			Containers,
+			Options,
+			Products,
+			Servers,
+			Subscriptions,
+			SubscriptionItems,
+			Users
+		)
+			.forEach {
+				println(it)
+				try {
+					TransactionManager.current().exec(it)
+				} catch (e: Exception) {
+					e.printStackTrace()
+				}
+			}
 	}
 }
