@@ -4,16 +4,19 @@ import dev.quozul.database.enums.GameServerE
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.helpers.ApiProduct
 import dev.quozul.database.helpers.ApiProductInfo
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
+import org.jetbrains.exposed.dao.Entity
+import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
 
-object Products : UUIDTable("product") {
+object Products : IdTable<GameServerE>("product") {
+	override val id: Column<EntityID<GameServerE>> = enumeration<GameServerE>("id").entityId()
+	override val primaryKey by lazy { super.primaryKey ?: PrimaryKey(id) }
+
 	val name = varchar("name", 32)
 	val description = varchar("description", 1024)
 	val stripeId = varchar("stripe_id", 32).uniqueIndex()
@@ -22,11 +25,10 @@ object Products : UUIDTable("product") {
 	val cpu = integer("cpu").default(1)
 	val memory = integer("memory").default(512)
 	val stocks = integer("stocks").default(1)
-	val gameServer = enumeration<GameServerE>("game_server").nullable()
 }
 
-class Product(id: EntityID<UUID>) : UUIDEntity(id) {
-	companion object : UUIDEntityClass<Product>(Products)
+class Product(id: EntityID<GameServerE>) : Entity<GameServerE>(id) {
+	companion object : EntityClass<GameServerE, Product>(Products)
 
 	var name by Products.name
 	var description by Products.description
@@ -36,13 +38,12 @@ class Product(id: EntityID<UUID>) : UUIDEntity(id) {
 	var cpu by Products.cpu
 	var memory by Products.memory
 	var stocks by Products.stocks
-	var gameServer by Products.gameServer
 
 	fun toApiProduct() = ApiProduct(
 		id.toString(),
 		name,
 		description,
-		isInStocks(),
+		inStock,
 		price,
 		cpu,
 		memory,
@@ -54,7 +55,11 @@ class Product(id: EntityID<UUID>) : UUIDEntity(id) {
 		description,
 	)
 
-	fun isInStocks() = usedStocks < stocks
+	val gameServer: GameServerE
+		get() = id.value
+
+	private val inStock: Boolean
+		get() = usedStocks < stocks
 
 	private val usedStocks: Long
 		get() = transaction {

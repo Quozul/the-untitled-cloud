@@ -146,6 +146,8 @@ fun Route.configureUserRoutes() {
 			// Remove Stripe user
 			Customer.retrieve(user.stripeId).delete()
 
+			// TODO: Delete user's folder
+
 			// Remove user from database
 			transaction {
 				user.delete()

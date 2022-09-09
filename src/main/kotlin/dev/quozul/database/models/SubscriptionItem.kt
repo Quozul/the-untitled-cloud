@@ -1,6 +1,7 @@
 package dev.quozul.database.models
 
 import com.github.dockerjava.api.exception.NotFoundException
+import com.github.dockerjava.api.model.ExposedPort
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.DockerContainer
 import dev.quozul.database.helpers.GameServer
@@ -49,7 +50,7 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 			product = product.toApiProductInfo(),
 			tag = container?.containerTag,
 			name = container?.name,
-			port = container?.port,
+			port = port,
 			state = state,
 			subscription = subscription.toApiSubscription(),
 		)
@@ -93,6 +94,18 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 		} catch (_: Exception) {
 		}
 	}
+
+	private val port: String?
+		get() =
+			product.gameServer.ports.firstOrNull()?.let { exposedPort ->
+				try {
+					dockerContainer?.let { dc ->
+						dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
+					}
+				} catch (_: NotFoundException) {
+					null
+				}
+			}
 
 	var dockerContainer: DockerContainer?
 		get() = transaction { container?.dockerContainer }

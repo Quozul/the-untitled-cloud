@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class GameServer {
 	companion object {
 		suspend fun new(subscriptionItem: SubscriptionItem) {
-			transaction { subscriptionItem.product.gameServer }?.let {
+			transaction { subscriptionItem.product.gameServer }.let {
 				when (it) {
 					GameServerE.MINECRAFT -> newMinecraftContainer(subscriptionItem, it)
 					GameServerE.ARK -> newLinuxGSM(subscriptionItem, it)

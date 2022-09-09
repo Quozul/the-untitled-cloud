@@ -117,7 +117,8 @@ fun getOrCreateSubscriptionFromInvoice(
 			subscription.products = SizedCollection(products)
 		}
 
-		if (status !== null) {
+		// Prevent status update if current one is cancelled
+		if (status !== null && subscription.subscriptionStatus != SubscriptionStatus.CANCELLED) {
 			subscription.subscriptionStatus = status
 		}
 

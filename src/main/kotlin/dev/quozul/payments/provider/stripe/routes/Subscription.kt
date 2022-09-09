@@ -55,7 +55,7 @@ fun Route.configureServerSubscriptionRoutes() {
 					val query = SubscriptionItems.innerJoin(Subscriptions)
 						.slice(SubscriptionItems.product, Subscriptions.owner)
 						.select {
-							(SubscriptionItems.product eq UUID.fromString(it)) and (Subscriptions.owner eq user.id)
+							(SubscriptionItems.product eq it) and (Subscriptions.owner eq user.id)
 						}
 						.withDistinct()
 
@@ -82,7 +82,7 @@ fun Route.configureServerSubscriptionRoutes() {
 			val priceIds = transaction {
 				body.cart.mapNotNull {
 					SubscriptionCreateParams.Item.builder().setPrice(
-						Product.findById(UUID.fromString(it))?.stripeId
+						Product.findById(it)?.stripeId
 					).build()
 				}
 			}
