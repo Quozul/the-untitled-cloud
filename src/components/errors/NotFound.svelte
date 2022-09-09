@@ -3,15 +3,23 @@
 		patchServer,
 		refreshAllServers,
 		refreshSelectedServer,
-	} from "../app/helpers";
-	import { server } from "../../store/store";
-	import Button from "../shared/Button.svelte";
-	import { Variant } from "../shared/constants";
+	} from "$components/app/helpers";
+	import { server } from "$store/store";
+	import Button from "$shared/Button.svelte";
+	import { Variant } from "$shared/constants";
+	import type { ApiError } from "$shared/models";
+	import Alert from "$shared/Alert.svelte";
+
+	let error: ApiError
 
 	async function recreate() {
-		await patchServer($server, "RECREATE");
-		refreshAllServers();
-		refreshSelectedServer();
+		try {
+			await patchServer($server, "RECREATE");
+			refreshAllServers();
+			refreshSelectedServer();
+		} catch (e: ApiError) {
+			error = e;
+		}
 	}
 </script>
 
@@ -25,4 +33,10 @@
 	<Button variant={Variant.DANGER} onClick={recreate}>
 		Recréer
 	</Button>
+
+	{#if error}
+		<Alert variant={Variant.DANGER} icon="warning" className="mt-3">
+			{error.translatedMessage}
+		</Alert>
+	{/if}
 </div>

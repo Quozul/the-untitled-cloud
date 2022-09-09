@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { t } from "svelte-intl-precompile";
+    import { locale, t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
 	import type { ApiError } from "$shared/models";
 	import { onMount } from "svelte";
 	import { token, cart } from "$store/store";
-	import { CheckoutSteps } from "$components/checkout/constants";
 	import Icon from "$components/icons/Icon.svelte";
 	import jwtDecode from "jwt-decode";
-	import { getAddress, setAddress, href } from "$shared/helpers";
+	import { getAddress, setAddress } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
     import Link from "$shared/Link.svelte";
+    import { goto } from "$app/navigation";
 
 	let address: Address = {
 		city: null,
@@ -42,7 +42,7 @@
 	async function submit() {
 		try {
             await setAddress(address);
-			await setStep(CheckoutSteps.CHECKOUT);
+            await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
 		} catch (e: ApiError) {
 			// TODO: Handle error
 			console.log(e);

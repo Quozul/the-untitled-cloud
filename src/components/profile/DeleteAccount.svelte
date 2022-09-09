@@ -44,7 +44,7 @@
 		Cette action est réalisée dès l'envoi de ce formulaire et est irréversible.
 	</p>
 	<p>
-		Tous vos abonnements seront annulés et non remboursés.
+		Tous vos abonnements doivent annulés pour procéder.
 	</p>
 
 	<hr/>

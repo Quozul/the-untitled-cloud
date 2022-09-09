@@ -52,6 +52,7 @@ export async function handleRequest(response: Promise<Response>): Promise<Object
 							code: response.status,
 							isError: true,
 							message: response.statusText,
+							translatedMessage: get(t)(`error.${response.status}`),
 						};
 						reject(error);
 					});

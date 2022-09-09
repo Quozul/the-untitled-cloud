@@ -1,5 +1,7 @@
+import type { Products } from "$components/cart/constants";
+
 export type ApiProduct = {
-	id: string,
+	id: Products,
 	name: string,
 	description: string,
 	inStocks: boolean,

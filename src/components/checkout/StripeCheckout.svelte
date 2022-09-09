@@ -96,7 +96,7 @@
 			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv}>
 			<label class="form-check-label" for="cgv">
 				{$t("i_acknowledge_and_accept")}
-				<Link href="/cgv/">{$t("terms_of_sale")}</Link>.
+				<Link href="/terms-of-sale/">{$t("terms_of_sale")}</Link>.
 			</label>
 		</small>
 

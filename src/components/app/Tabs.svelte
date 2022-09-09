@@ -42,7 +42,7 @@
 		Informations
 	</a>
 
-	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.SteamServer}
+	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
 		<a
 			class="nav-link"
 			class:active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}

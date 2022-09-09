@@ -80,6 +80,7 @@
 	"error.invalid_promo_code": "Code promotionnel invalide.",
 	"error.have_active_subscription": "Il vous reste des abonnements actifs, veuillez les annuler avant de supprimer votre compte.",
 	"error.empty": "Vide",
+	"error.500": "Une erreur interne est survenue.",
 	"error.already_owns": "Vous possédez déjà un produit de votre panier.",
 	"server_status.restarting": "Redémarre",
 	"server_status.running": "En marche",

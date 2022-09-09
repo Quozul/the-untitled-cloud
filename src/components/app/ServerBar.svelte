@@ -9,6 +9,7 @@
 	import { Variant } from "$shared/constants";
 	import { t } from "svelte-intl-precompile";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
+	import { Products } from "$components/cart/constants.js";
 
 	// State
 	let started: ZonedDateTime = null;
@@ -143,7 +144,13 @@
 					{#if !$server.port}
 						Démarrez le serveur pour avoir une adresse de connexion.
 					{:else}
-						quozul.com:{$server.port}
+						{#if $server.product.id === Products.MinecraftServer}
+							quozul.com:{$server.port}
+						{:else if $server.product.id === Products.ArkServer}
+							<a href="steam://connect/theuntitledcloud.com:{$server.port}/">Lien de connexion Steam</a>
+						{:else}
+							Impossible de déterminer l'adresse de connexion.
+						{/if}
 					{/if}
 				</dd>
 			</div>

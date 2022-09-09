@@ -12,7 +12,7 @@
 
 {#if $server?.product.id === Products.MinecraftServer}
 	<MinecraftParameters/>
-{:else if $server?.product.id === Products.SteamServer}
+{:else if $server?.product.id === Products.ArkServer}
 	<SteamParameters/>
 {:else}
 	<NoParameters/>

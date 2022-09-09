@@ -2,6 +2,7 @@
 	import LoginForm from "$components/login/LoginForm.svelte";
 	import { checkoutStep, cart } from "$store/store";
 	import { CheckoutSteps } from "$components/checkout/constants";
+    import { locale } from "svelte-intl-precompile";
 
 	$checkoutStep = CheckoutSteps.LOGIN;
 </script>
@@ -10,4 +11,4 @@
     <title>Connexion</title>
 </svelte:head>
 
-<LoginForm redirectTo={$cart ? "/rent/profile/" : "/rent/products/"}/>
+<LoginForm redirectTo={$cart ? `/${$locale}/rent/profile/` : `/${$locale}/rent/products/`}/>
