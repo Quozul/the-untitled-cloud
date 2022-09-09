@@ -9,16 +9,37 @@
 	import AdvancedParameters from "./AdvancedParameters.svelte";
 	import Icon from "$components/icons/Icon.svelte";
 	import type { ApiService } from "$models/ApiService";
+	import { onDestroy, onMount } from "svelte";
+	import type { Unsubscriber } from "svelte/store";
+	import { subscribe } from "svelte/internal";
 
-	$: fetchParameters($server)
+	let edited: boolean = false;
+	let unsubscribe: Unsubscriber | null = null;
+
+	onMount(async () => {
+		await fetchParameters();
+
+		unsubscribe = subscribe(parameters, setEdited);
+		edited = false;
+	});
+
+	onDestroy(() => {
+		unsubscribe?.();
+	});
+
+	function setEdited() {
+		edited = true;
+	}
 
 	async function fetchParameters(s: ApiService = $server) {
 		$parameters = await getParameters(s.id);
+		edited = false;
 	}
 
 	async function saveParameters() {
 		await putParameters($server.id, $parameters);
 		await putService($server, $server.name, $server.tag);
+		edited = false;
 	}
 
 	async function fullRefresh() {
@@ -52,7 +73,7 @@
 		<div>
 			<label for="serverName" class="form-label">Nom du serveur</label>
 			<div class="input-group">
-				<input id="serverName" maxlength="32" class="form-control" placeholder={$server?.name} bind:value={$server.name}>
+				<input id="serverName" maxlength="32" class="form-control" placeholder={$server?.name} bind:value={$server.name} on:change={setEdited}>
 				<button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" on:click={handleRandomName}>
 					<Icon key="shuffle"/>
 					Nom aléatoire
@@ -63,7 +84,7 @@
 
 	<div>
 		<label for="tag" class="form-label">Environnement</label>
-		<select class="form-select" id="tag" bind:value={$server.tag}>
+		<select class="form-select" id="tag" bind:value={$server.tag} on:change={setEdited}>
 			<option value="latest">Dernière</option>
 			<option value="java17">Java 17</option>
 			<option value="java17-graalvm-ce">GraalVM 17</option>
@@ -81,16 +102,12 @@
 	</div>
 
 	<div class="d-flex gap-3 mt-3">
-		<Button onClick={handleSave}>
+		<Button onClick={handleSave} disabled={!edited}>
 			Sauvegarder
 		</Button>
 
-		<Button onClick={handleApply}>
+		<Button onClick={handleApply} disabled={!edited}>
 			Sauvegarder et appliquer les changements
-		</Button>
-
-		<Button variant={Variant.SECONDARY} onClick={fetchParameters}>
-			Annuler les changements
 		</Button>
 	</div>
 </div>

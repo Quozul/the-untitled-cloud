@@ -88,5 +88,6 @@
 	"server_status.starting": "Démarre",
 	"server_status.stopped": "Éteint",
 	"latest_version": "Dernière",
-	"snapshot_version": "Snapshot"
+	"snapshot_version": "Snapshot",
+	"search_country": "Chercher un pays..."
 }

@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { ServerTab } from "../app/constants";
-	import { selectedTab } from "../../store/store";
+	import { page } from "$app/stores";
+	import { getStripePortal } from "../app/helpers";
+	import Button from "$shared/Button.svelte";
+	import { Variant } from "$shared/constants.js";
 
-	function goToSubscriptionTab() {
-		$selectedTab = ServerTab.SUBSCRIPTION
+	async function redirectToStripe() {
+		const redirect = $page.url.href;
+		const url = await getStripePortal(redirect);
+		window.open(url.url);
 	}
 </script>
 
@@ -16,5 +20,11 @@
 		Consultez l'onglet Abonnement pour plus d'informations.
 	</p>
 
-	<button class="btn btn-secondary" on:click={goToSubscriptionTab}>Voir mon abonnement</button>
+	<Button
+		icon="box-arrow-up-right"
+		onClick={redirectToStripe}
+		variant={Variant.SECONDARY}
+	>
+		Voir mon abonnement
+	</Button>
 </div>

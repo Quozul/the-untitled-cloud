@@ -67,7 +67,7 @@
 	<Button
 		className="nav-link justify-content-center"
 		disabled={$fetchingServer}
-		icon="box-arrow-up-left"
+		icon="box-arrow-up-right"
 		onClick={showModal}
 	>
 		Abonnement

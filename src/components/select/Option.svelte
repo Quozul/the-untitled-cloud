@@ -9,7 +9,7 @@
 	export let value: SelectItem | null = null;
 
 	let hide: boolean, selected: boolean;
-	$: hide = !item.label.toLowerCase().includes(search.toLowerCase());
+	$: hide = !item.label.toLowerCase().startsWith(search.toLowerCase());
 	$: selected = item.value === value?.value;
 
 	function select() {

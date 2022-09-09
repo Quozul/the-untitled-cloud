@@ -18,6 +18,7 @@
 	let formattedStartDate: string = "Jamais";
 	let name: string = "Chargement";
 	let menu: boolean = false;
+	let icon: string = "warning";
 
 	// Constants
 	const formatter = DateTimeFormatter
@@ -34,6 +35,16 @@
 			}
 			duration = Duration.between(started, stopped);
 			formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
+
+			if ($server.subscription.status === ApiSubscriptionStatus.PENDING) {
+				icon = "hourglass";
+			} else if ($server.subscription.status === ApiSubscriptionStatus.SUSPENDED) {
+				icon = "pause";
+			} else if ($server.subscription.status === ApiSubscriptionStatus.CANCELLED) {
+				icon = "archive";
+			} else if ($server.state.created) {
+				icon = $server.state.running ? "play-fill" : "stop-fill";
+			}
 		}
 	}
 
@@ -67,34 +78,22 @@
 <div class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
 	<div class="d-flex justify-content-between server-bar">
 		<Button
-				onClick={toggleServerState}
-				className="d-flex align-items-center"
-				disabled="{!$server.state.created || $server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}"
-				variant={Variant.LIGHT}
+			onClick={toggleServerState}
+			className="d-flex align-items-center"
+			disabled="{!$server.state.created || $server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}"
+			variant={Variant.LIGHT}
+			{icon}
+			iconSize="28"
 		>
 			{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
-				<Icon key="hourglass" width="28" height="28"/>
-
 				<h3 class="m-0">En attente</h3>
 			{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-				<Icon key="pause" width="28" height="28"/>
-
 				<h3 class="m-0">Suspendu</h3>
 			{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-				<Icon key="archive" width="28" height="28"/>
-
 				<h3 class="m-0">Terminé</h3>
 			{:else if $server.state.created}
-				{#if $server.state.running}
-					<Icon key="play-fill" width="28" height="28"/>
-				{:else}
-					<Icon key="stop-fill" width="28" height="28"/>
-				{/if}
-
 				<h3 class="m-0">{$server.name ?? $server.product.name}</h3>
 			{:else}
-				<Icon key="warning" width="28" height="28"/>
-
 				<h3 class="m-0">Introuvable</h3>
 			{/if}
 		</Button>

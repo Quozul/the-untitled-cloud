@@ -11,6 +11,7 @@
 	export let onClick: VoidFunction = null;
     export let loading: boolean = false;
     export let icon: string = null;
+    export let iconSize: string = "16";
 
 	let processing = false;
 
@@ -45,9 +46,9 @@
     on:click|preventDefault={handleClick}
 >
     {#if processing}
-        <span class="spinner-border spinner-border-sm"></span>
+        <span class="icon spinner-border spinner-border-sm"></span>
     {:else if icon}
-        <Icon key={icon}/>
+        <Icon key={icon} width={iconSize} height={iconSize}/>
     {/if}
 
     <slot/>

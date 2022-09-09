@@ -6,13 +6,6 @@
 	import Tabs from "$components/app/Tabs.svelte";
 	import InternalError from "$components/errors/InternalError.svelte";
 	import { fetchingServer } from "$store/store";
-
-	// State
-	let showDebug: boolean = false;
-
-	const toggleDebug = () => {
-		showDebug = !showDebug;
-	};
 </script>
 
 {#if $server}
@@ -27,7 +20,3 @@
 {:else}
 	<NoServer/>
 {/if}
-
-<hr>
-<button type="button" class="btn btn-sm btn-light" on:click|preventDefault={toggleDebug}>Debug</button>
-<pre class="collapse" class:show={showDebug}>{JSON.stringify($server, " ", 4)}</pre>

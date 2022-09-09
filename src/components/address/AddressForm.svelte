@@ -2,6 +2,7 @@
     import { locale, t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
 	import type { ApiError } from "$shared/models";
+    import type { SelectItem } from "../select/SelectItem";
 	import { onMount } from "svelte";
 	import { token, cart } from "$store/store";
 	import Icon from "$components/icons/Icon.svelte";
@@ -10,17 +11,14 @@
 	import Button from "$shared/Button.svelte";
     import Link from "$shared/Link.svelte";
     import { goto } from "$app/navigation";
+    import Select from "$components/select/Select.svelte";
+    import { EmptyAddress, IsoCountries } from "./constants";
 
-	let address: Address = {
-		city: null,
-		country: null,
-		fullname: null,
-		line1: null,
-		line2: null,
-		postal_code: null,
-		state: null,
-	};
+	let address: Address = EmptyAddress;
 	let email = "";
+    let value: SelectItem;
+
+    $: value = {value: address.country, label: $t(`country.${address.country}`)};
 
 	onMount(async () => {
         const jwt = jwtDecode($token);
@@ -48,6 +46,10 @@
 			console.log(e);
 		}
 	}
+
+    function selectCountry(event) {
+        address.country = event.detail.value;
+    }
 </script>
 
 <h4 class="mb-1">{$t("billing_address")}</h4>
@@ -80,10 +82,8 @@
         </div>
 
         <div class="col-md-5">
-            <label for="country" class="form-label">{$t("address.country")}</label>
-            <select class="form-select" id="country" required="" bind:value={address.country}>
-                <option value="FR" selected>France</option>
-            </select>
+            <label class="form-label">{$t("address.country")}</label>
+            <Select items={IsoCountries} {value} on:select={selectCountry} placeholder={$t("search_country")}/>
         </div>
 
         <div class="col-md-4">

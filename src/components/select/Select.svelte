@@ -41,6 +41,15 @@
 		hide();
 		dispatch("select", event.detail);
 	}
+
+	function handleChange() {
+		const searchValue = items.find(v => v.label === search);
+
+		if (searchValue) {
+			hide();
+			dispatch("select", searchValue);
+		}
+	}
 </script>
 
 <style lang="scss">
@@ -80,7 +89,7 @@
 </style>
 
 <div class="select" on:focusin={show} use:clickOutside on:click_outside={hide}>
-	<input type="text" class="input form-control" bind:value={search} bind:this={input} placeholder={placeholder}>
+	<input type="text" class="input form-control" bind:value={search} bind:this={input} placeholder={placeholder} autocomplete="off" on:change={handleChange}>
 
 	{#if search.length > 0}
 		<Icon key="x-lg" className="select-icon cross" onClick={clear} />
