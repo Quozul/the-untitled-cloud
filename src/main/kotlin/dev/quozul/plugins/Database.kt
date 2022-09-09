@@ -4,6 +4,8 @@ import dev.quozul.database.models.*
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -24,12 +26,20 @@ fun Application.configureDatabase() {
 		SchemaUtils.create(SubscriptionItems)
 		SchemaUtils.create(Users)
 
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Containers))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Options))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Products))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Servers))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Subscriptions))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(SubscriptionItems))
-		println(SchemaUtils.statementsRequiredToActualizeScheme(Users))
+
+		SchemaUtils.statementsRequiredToActualizeScheme(Containers) +
+				SchemaUtils.statementsRequiredToActualizeScheme(Options) +
+				SchemaUtils.statementsRequiredToActualizeScheme(Products) +
+				SchemaUtils.statementsRequiredToActualizeScheme(Servers) +
+				SchemaUtils.statementsRequiredToActualizeScheme(Subscriptions) +
+				SchemaUtils.statementsRequiredToActualizeScheme(SubscriptionItems) +
+				SchemaUtils.statementsRequiredToActualizeScheme(Users)
+					.forEach {
+						try {
+							TransactionManager.current().exec(it)
+						} catch (e: Exception) {
+							e.printStackTrace()
+						}
+					}
 	}
 }
