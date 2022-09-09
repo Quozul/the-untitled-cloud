@@ -50,6 +50,8 @@
     function selectCountry(event) {
         address.country = event.detail.value;
     }
+
+    const items = IsoCountries.map(i => ({label: $t(`country.${i}`), value: i}))
 </script>
 
 <h4 class="mb-1">{$t("billing_address")}</h4>
@@ -83,7 +85,7 @@
 
         <div class="col-md-5">
             <label class="form-label">{$t("address.country")}</label>
-            <Select items={IsoCountries} {value} on:select={selectCountry} placeholder={$t("search_country")}/>
+            <Select {items} {value} on:select={selectCountry} placeholder={$t("search_country")}/>
         </div>
 
         <div class="col-md-4">
