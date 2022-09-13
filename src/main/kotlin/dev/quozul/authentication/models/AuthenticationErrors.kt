@@ -24,7 +24,8 @@ enum class AuthenticationErrors(private val message: String) {
 	INVALID_PROMO_CODE("Invalid promotion code"),
 	ALREADY_OWNS("Already owns a product"),
 	HAVE_ACTIVE_SUBSCRIPTION("User have active subscriptions"),
-	INVALID_CODE("Invalid code");
+	INVALID_CODE("Invalid code"),
+	WAIT("Previous code is still valid");
 
 	fun toHashMap(isError: Boolean = false): AuthenticationError {
 		return AuthenticationError(isError, this.message, this.name)

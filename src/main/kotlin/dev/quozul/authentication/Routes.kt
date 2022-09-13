@@ -113,16 +113,24 @@ fun Route.configureAuthenticationRoutes() {
 			return@post
 		}
 
-		// "By signing you acknowledge to have read and accepted the TOS" -> set tosAcceptDate to now
 		val user = try {
-			transaction {
-				val user = User.find { Users.email eq email }.first()
+			val user = transaction {
+				User.find { Users.email eq email }.first()
+			}
 
+			// Previous code is still valid
+			if (user.verificationCodeValidDate > LocalDateTime.now()) {
+				call.response.status(HttpStatusCode.BadRequest)
+				call.respond(AuthenticationErrors.WAIT.toHashMap(true))
+				return@post
+			}
+
+			transaction {
 				user.verificationCode = generateValidationCode()
 				user.verificationCodeValidDate = LocalDateTime.now().plusHours(1)
-
-				user
 			}
+
+			user
 		} catch (e: NoSuchElementException) {
 			call.response.status(HttpStatusCode.NoContent)
 			return@post

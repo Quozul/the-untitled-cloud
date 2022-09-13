@@ -9,6 +9,7 @@ import com.stripe.param.PaymentIntentRetrieveParams
 import com.stripe.param.PromotionCodeListParams
 import com.stripe.param.SubscriptionCreateParams
 import dev.quozul.authentication.models.AuthenticationErrors
+import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.*
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
 import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
@@ -53,9 +54,9 @@ fun Route.configureServerSubscriptionRoutes() {
 			val alreadyOwns = transaction {
 				body.cart.forEach {
 					val query = SubscriptionItems.innerJoin(Subscriptions)
-						.slice(SubscriptionItems.product, Subscriptions.owner)
+						.slice(SubscriptionItems.product, Subscriptions.owner, Subscriptions.subscriptionStatus)
 						.select {
-							(SubscriptionItems.product eq it) and (Subscriptions.owner eq user.id)
+							(SubscriptionItems.product eq it) and (Subscriptions.owner eq user.id) and (Subscriptions.subscriptionStatus neq SubscriptionStatus.CANCELLED)
 						}
 						.withDistinct()
 
@@ -174,6 +175,35 @@ fun Route.configureServerSubscriptionRoutes() {
 		val subscription = getOrCreateSubscriptionFromInvoice(paymentIntent.invoiceObject, user)
 
 		call.respond(subscription.toApiSubscription())
+	}
+
+	delete("") {
+		val principal = call.principal<JWTPrincipal>()
+		val id = principal!!.payload.getClaim("id").asString()
+
+		val user = transaction {
+			User.findById(UUID.fromString(id))
+		}
+
+		if (user == null) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@delete
+		}
+
+		val body = try {
+			call.receive<ApiPaymentIntentUpdate>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@delete
+		}
+
+		try {
+			val paymentIntent = PaymentIntent.retrieve(body.paymentIntentId)
+			paymentIntent.cancel()
+			call.response.status(HttpStatusCode.NoContent)
+		} catch (e: StripeException) {
+			call.response.status(HttpStatusCode.InternalServerError)
+		}
 	}
 
 	get("promoCode/{promoCode}") {
