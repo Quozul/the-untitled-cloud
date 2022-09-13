@@ -5,6 +5,7 @@
 	import AddressForm from "$components/address/AddressForm.svelte";
 	import { checkoutStep, token } from "$store/store";
 	import StripeCheckout from "$components/checkout/StripeCheckout.svelte";
+	import { t } from "svelte-intl-precompile";
 
 	$checkoutStep = $token ? CheckoutSteps.PROFILE : CheckoutSteps.LOGIN;
 
@@ -21,10 +22,14 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{$t("checkout")}</title>
+</svelte:head>
+
 <div class="row">
 	<div class="col">
 		<ul class="list-group list-group-flush">
-			<li class="list-group-item py-3">
+			<li class="list-group-item py-3 border-top">
 				{#if $checkoutStep === CheckoutSteps.LOGIN}
 					<LoginForm redirectTo={null} defaultStyle={false} on:submit={setProfileTab} />
 				{:else}
@@ -44,7 +49,7 @@
 				{/if}
 			</li>
 
-			<li class="list-group-item py-3">
+			<li class="list-group-item py-3 border-bottom">
 				{#if $checkoutStep === CheckoutSteps.CHECKOUT}
 					<StripeCheckout />
 				{:else}

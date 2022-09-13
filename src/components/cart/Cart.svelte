@@ -11,35 +11,37 @@
 	import { onMount } from "svelte";
 	import { EmptyPromoCode } from "./constants";
 	import Alert from "$shared/Alert.svelte";
+	import Link from "$shared/Link.svelte";
 
 	export let canEdit = true;
 
 	let codeInput: string = null;
+	let subtotal = 0;
 	let total = 0;
 	let promotionCodeError: ApiError | null = null;
 
 	$: {
 		if ($cart) {
-			total = $cart.reduce((a, b) => a + b.price, 0);
+			subtotal = $cart.reduce((a, b) => a + b.price, 0);
 
 			if ($promoCode?.percentOff) {
-				total -= (total * $promoCode.percentOff) / 100;
+				total = subtotal - (subtotal * $promoCode.percentOff) / 100;
 			} else if ($promoCode?.amountOff) {
-				total -= $promoCode.amountOff;
+				total = subtotal - $promoCode.amountOff;
 			}
 		}
 	}
 
 	onMount(async () => {
 		if ($promoCode?.code) {
-			await fetchCode();
+			await fetchCode($promoCode.code);
 		}
 	});
 
-	async function fetchCode() {
+	async function fetchCode(code: string) {
 		promotionCodeError = null;
 
-		const {error, response} = await getPromoCode(codeInput.toUpperCase());
+		const { error, response } = await getPromoCode(code.toUpperCase());
 
 		if (response) {
 			$promoCode = response;
@@ -51,11 +53,7 @@
 	}
 
 	async function setPromoCode() {
-		if (!$promoCode) {
-			$promoCode = EmptyPromoCode;
-		}
-
-		await fetchCode();
+		await fetchCode(codeInput);
 	}
 
 	function removePromoCode() {
@@ -64,12 +62,8 @@
 	}
 </script>
 
-<div>
-	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		{$t("cart")}
-	</h4>
-
-	<ul class="list-group list-group-flush mb-3">
+<div class="d-flex gap-4 flex-column bg-light py-3">
+	<ul class="list-group list-group-flush px-4">
 		{#if $cart?.length > 0}
 			{#each $cart as product}
 				<CartRow {product} {canEdit} />
@@ -81,78 +75,75 @@
 				</div>
 			</li>
 		{/if}
-
-		{#if $promoCode && $promoCode.code && ($promoCode.amountOff || $promoCode.percentOff)}
-			<li class="list-group-item d-flex justify-content-between lh-sm">
-				<div>
-					<div class="d-flex align-items-center gap-2">
-						{#if canEdit}
-							<Icon key="x-lg" onClick={removePromoCode} />
-						{/if}
-						<h6 class="my-0">{$promoCode.code}</h6>
-					</div>
-					<small class="text-muted">{$t("promo_code")}</small>
-				</div>
-				<span class="text-muted">
-					-{#if $promoCode.amountOff}
-						{formatPrice($promoCode.amountOff)}
-					{:else if $promoCode.percentOff}
-						{$promoCode.percentOff}%
-					{:else}
-						Erreur
-					{/if}
-				</span>
-			</li>
-		{/if}
-
-		<li class="list-group-item d-flex justify-content-between border-0">
-			<h6>{$t("sub_total")}</h6>
-			<span>{formatPrice(total)}</span>
-		</li>
-
-		{#if $promoCode && $promoCode.code && ($promoCode.amountOff || $promoCode.percentOff)}
-			<li class="list-group-item d-flex justify-content-between border-0">
-				<h6>{$t("promotion")}</h6>
-				<span>
-					-{#if $promoCode.amountOff}
-						{formatPrice($promoCode.amountOff)}
-					{:else if $promoCode.percentOff}
-						{$promoCode.percentOff}%
-					{/if}
-				</span>
-			</li>
-		{/if}
-
-		<li class="list-group-item d-flex justify-content-between">
-			<h6>{$t("taxes")}</h6>
-			<span>{formatPrice(0)}</span>
-		</li>
-
-		<li class="list-group-item d-flex justify-content-between">
-			<h5 class="fw-bold">{$t("total")}</h5>
-			<strong class="fs-5">{formatPrice(total)}</strong>
-		</li>
 	</ul>
 
-	{#if canEdit}
-		<form class="card p-2">
-			<div class="input-group">
-				<input
-					type="text"
-					class="form-control"
-					placeholder={$t("promo_code")}
-					bind:value={codeInput}
-				/>
-				<Button type="submit" onClick={setPromoCode} variant={Variant.SECONDARY}>
-					{$t("use")}
-				</Button>
-			</div>
+	<hr class="m-0" />
+
+	<div class="d-flex gap-4 flex-column px-4">
+		{#if canEdit}
+			<form autocomplete="off">
+				<label for="promoCode" class="form-label">{$t("promo_code")}</label>
+				<div class="input-group">
+					<input
+						type="text"
+						class="form-control"
+						id="promoCode"
+						placeholder={$t("promo_code")}
+						required=""
+						bind:value={codeInput}
+					/>
+
+					<Button type="submit" onClick={setPromoCode} variant={Variant.DARK} disabled={!codeInput?.length}>
+						{$t("use")}
+					</Button>
+				</div>
+			</form>
 
 			{#if promotionCodeError}
 				<Alert variant={Variant.DANGER} className="mt-2 mb-0">
 					{promotionCodeError.translatedMessage || promotionCodeError.message}
 				</Alert>
 			{/if}
-		</form>
-	{/if}
+		{/if}
+
+		<div class="d-flex justify-content-between border-0">
+			<h6 class="text-muted mb-0">{$t("sub_total")}</h6>
+			<span class="fw-bold">{formatPrice(subtotal)}</span>
+		</div>
+
+		{#if $promoCode && $promoCode.code && ($promoCode.amountOff || $promoCode.percentOff)}
+			<div class="d-flex justify-content-between border-0">
+				<div class="d-flex align-items-center gap-2">
+					<h6 class="mb-0 text-muted">{$t("promotion")}</h6>
+					<span class="badge text-bg-secondary rounded-pill d-flex align-items-center gap-1">
+						{$promoCode.code}
+						<Icon key="x-lg" className="cursor-pointer" onClick={removePromoCode} height="10" width="10" />
+					</span>
+				</div>
+
+				<span class="fw-bold">
+					-{#if $promoCode.amountOff}
+						{formatPrice($promoCode.amountOff)}
+					{:else if $promoCode.percentOff}
+						{$promoCode.percentOff}%
+					{/if}
+				</span>
+			</div>
+		{/if}
+
+		<div>
+			<div class="d-flex justify-content-between">
+			<h6 class="text-muted mb-0">{$t("taxes")}</h6>
+			<span class="fw-bold">{formatPrice(0)}</span>
+			</div>
+			<small class="text-muted">TVA non applicable, <Link href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/">art. 293 B du CGI</Link>.</small>
+		</div>
+
+		<hr class="m-0" />
+
+		<div class="d-flex justify-content-between">
+			<h5 class="fw-bold mb-0">{$t("total")}</h5>
+			<strong class="fs-5">{formatPrice(total)}</strong>
+		</div>
+	</div>
 </div>

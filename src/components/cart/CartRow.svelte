@@ -12,11 +12,11 @@
 	}
 </script>
 
-<li class="list-group-item d-flex justify-content-between lh-sm">
+<li class="list-group-item d-flex justify-content-between lh-sm bg-light px-0">
 	<div>
 		<div class="d-flex align-items-center gap-2">
 			{#if canEdit}
-				<Icon key="x-lg" onClick={handleClick} />
+				<Icon key="x-lg" onClick={handleClick} className="cursor-pointer" />
 			{/if}
 
 			<h6 class="my-0">{product.name}</h6>
@@ -24,5 +24,6 @@
 
 		<small class="text-muted">{product.description}</small>
 	</div>
-	<span class="text-muted">{formatPrice(product.price)}</span>
+
+	<span class="fw-bold">{formatPrice(product.price)}</span>
 </li>
