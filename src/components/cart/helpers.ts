@@ -5,7 +5,7 @@ import { get } from "svelte/store";
 import { cart } from "$store/store";
 import type { PromoCode } from "./models";
 
-export async function getProducts(page: number = 0): Promise<ApiPaginate<ApiProduct>> {
+export async function getProducts(page = 0): Promise<ApiPaginate<ApiProduct>> {
 	const options = getOptions("GET");
 
 	const params = new URLSearchParams();
@@ -40,5 +40,3 @@ export function removeFromCart(product: ApiProduct) {
 	}
 	cart.set(c);
 }
-
-export function getCartTotal() {}

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { locale } from "svelte-intl-precompile";
 
-	export let href: string = "/";
-	export let className: string = "";
+	export let href = "/";
+	export let className = "";
 	export let onClick: VoidFunction = null;
 
 	const isExternalLink = href.startsWith("http");

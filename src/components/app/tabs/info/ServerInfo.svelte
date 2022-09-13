@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { server, fetchingServer } from "$store/store";
 	import { onMount } from "svelte";
-	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
+	import { Duration, ZonedDateTime } from "@js-joda/core";
 	import "@js-joda/timezone";
-	import { Locale } from "@js-joda/locale_fr";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "$components/app/helpers";
 	import { Variant } from "$shared/constants";
@@ -12,9 +11,7 @@
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
-	let modalVisible: boolean = false;
-
-	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
+	let modalVisible = false;
 
 	onMount(() => {
 		if ($server?.state && $server?.state?.created) {

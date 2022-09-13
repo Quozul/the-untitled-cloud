@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let key: string = "void";
-	export let className: string = "";
-	export let width: string = "16";
-	export let height: string = "16";
+	export let key = "void";
+	export let className = "";
+	export let width = "16";
+	export let height = "16";
 	export let onClick: VoidFunction | null = null;
 </script>
 

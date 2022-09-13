@@ -18,8 +18,6 @@
 		currentPeriodEnd =
 			invoice?.periodEnd && ZonedDateTime.parse(invoice?.periodEnd).format(shortDate);
 	}
-
-	async function downloadInvoice() {}
 </script>
 
 <div class="border p-3 d-flex flex-column align-items-start gap-3">
@@ -69,7 +67,7 @@
 		</div>
 	</dl>
 
-	<Button onClick={downloadInvoice} disabled="true">Télécharger</Button>
+	<Button disabled="true">Télécharger</Button>
 	Le téléchargement des factures n'est pas encore disponible.
 </div>
 

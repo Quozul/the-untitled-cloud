@@ -29,7 +29,7 @@
 	<h4 class="mb-0">Paramètres du serveur Steam</h4>
 
 	<div>
-		<label class="form-label">Jeu</label>
-		<Select items={games} {value} placeholder="Chercher un jeu..." on:select={handleSelect} />
+		<label class="form-label" for="game-search">Jeu</label>
+		<Select items={games} {value} placeholder="Chercher un jeu..." on:select={handleSelect} id="game-search" />
 	</div>
 </div>

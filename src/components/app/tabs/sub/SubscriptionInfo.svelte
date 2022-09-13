@@ -23,7 +23,7 @@
 	// State
 	let subscription: ApiSubscriptionDetails | null = null;
 	let error: ApiError = null;
-	let modalVisible: boolean = false;
+	let modalVisible = false;
 	let cancelError: ApiError = null;
 	let products: ApiPaginate<ApiProduct> = null;
 

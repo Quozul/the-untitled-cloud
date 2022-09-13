@@ -5,10 +5,10 @@
 	import { parse } from "ansicolor";
 
 	let socket: WebSocket;
-	let logs: string = "";
+	let logs = "";
 	let input: HTMLElement;
 	let consoleElement: HTMLElement;
-	let submitting: boolean = false;
+	let submitting = false;
 
 	const encoder = new TextEncoder();
 

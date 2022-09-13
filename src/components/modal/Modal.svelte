@@ -3,10 +3,10 @@
 	import { Variant } from "$shared/constants";
 	import Button from "$shared/Button.svelte";
 
-	export let visible: boolean = false;
-	export let icon: string = "";
-	export let title: string = "Confirmation";
-	export let closeText: string = "Fermer";
+	export let visible = false;
+	export let icon = "";
+	export let title = "Confirmation";
+	export let closeText = "Fermer";
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
 	export let variant: Variant = Variant.PRIMARY;

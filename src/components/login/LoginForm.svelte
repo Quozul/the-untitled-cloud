@@ -8,7 +8,7 @@
 	import ForgotPassword from "./Password.svelte";
 	import { t } from "svelte-intl-precompile";
 
-	export let redirectTo: string = "/";
+	export let redirectTo = "/";
 
 	onMount(() => {
 		$loginMode = LoginMode.LOGIN;

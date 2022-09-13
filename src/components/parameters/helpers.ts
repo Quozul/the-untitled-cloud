@@ -21,7 +21,7 @@ export async function putParameters(selectedServer: string, parameters: ApiServe
 export async function putService(
 	selectedServer: ApiService,
 	name: string,
-	tag: string = "latest"
+	tag = "latest"
 ): Promise<void> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer.id}`,

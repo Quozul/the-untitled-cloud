@@ -35,8 +35,8 @@
 <div class="d-flex flex-column gap-3 justify-content-start">
 	<div class="d-flex gap-3 justify-content-start">
 		<div>
-			<label class="form-label">Type de serveur</label>
-			<Select {items} {value} placeholder="Chercher un type..." on:select={handleSelect} />
+			<label class="form-label" for="server-type">Type de serveur</label>
+			<Select {items} {value} placeholder="Chercher un type..." on:select={handleSelect} id="server-type" />
 		</div>
 
 		<ServerVersion />
@@ -55,8 +55,9 @@
 			</div>
 		{:else if $parameters.serverType === ServerType.FABRIC}
 			<div>
-				<label for="fabricLauncherVersion" class="form-label"
-					>Version du lanceur de Fabric</label
+				<label
+					for="fabricLauncherVersion" class="form-label"
+				>Version du lanceur de Fabric</label
 				>
 				<input
 					id="fabricLauncherVersion"
@@ -77,8 +78,9 @@
 			</div>
 		{:else if $parameters.serverType === ServerType.QUILT}
 			<div>
-				<label for="quiltLauncherVersion" class="form-label"
-					>Version du lanceur de Quilt</label
+				<label
+					for="quiltLauncherVersion" class="form-label"
+				>Version du lanceur de Quilt</label
 				>
 				<input
 					id="quiltLauncherVersion"

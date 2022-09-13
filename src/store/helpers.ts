@@ -1,11 +1,11 @@
 import type { Writable } from "svelte/store";
 import { writable } from "svelte/store";
 
-export function createStoreEntry(
+export function createStoreEntry<T>(
 	name: string,
-	defaultValue: any = null,
+	defaultValue: T | null = null,
 	storage: Storage | false = false
-): Writable<any> {
+): Writable<T> {
 	const storageValue = (storage && storage.getItem(name)) || null;
 	const value = storageValue ? JSON.parse(storageValue) : defaultValue;
 	const token = writable(value);

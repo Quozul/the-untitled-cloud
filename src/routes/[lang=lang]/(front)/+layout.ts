@@ -1,4 +1,4 @@
-import { addMessages, init, locale, waitLocale } from "svelte-intl-precompile";
+import { addMessages, init, waitLocale } from "svelte-intl-precompile";
 import en from "$locales/en.json";
 import fr from "$locales/fr.json";
 import { defaultLocale } from "$shared/constants";

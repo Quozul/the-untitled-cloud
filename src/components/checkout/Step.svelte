@@ -5,13 +5,13 @@
 	import { href } from "$shared/helpers";
 
 	export let step: CheckoutSteps;
-	export let disabled: boolean = false;
+	export let disabled = false;
 
 	let link: string;
 
 	function getStepLink(): string {
 		if (step === CheckoutSteps.LOGIN) {
-			if (!!$token) {
+			if ($token) {
 				return href(`/rent/${CheckoutSteps.PROFILE}/`, $locale as string);
 			}
 		}

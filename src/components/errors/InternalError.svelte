@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from "../shared/Button.svelte";
+	import Button from "$shared/Button.svelte";
 
 	export let refresh: VoidFunction;
 </script>

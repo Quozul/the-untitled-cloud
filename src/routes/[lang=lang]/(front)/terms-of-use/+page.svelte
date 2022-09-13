@@ -1,10 +1,10 @@
 <script lang="ts">
-	const companyName: string = "[Nom d'entreprise]";
-	const siteName: string = "theunitledcloud.com";
+	const companyName = "[Nom d'entreprise]";
+	const siteName = "theunitledcloud.com";
 
-	const ownerName: string = "[Nom du propriétaire du site]";
-	const address: string = "[Adresse non disponible]";
-	const phoneNumber: string = "[Numéro de téléphone]";
+	const ownerName = "[Nom du propriétaire du site]";
+	const address = "[Adresse non disponible]";
+	const phoneNumber = "[Numéro de téléphone]";
 </script>
 
 <svelte:head>

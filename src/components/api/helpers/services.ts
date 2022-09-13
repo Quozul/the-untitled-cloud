@@ -3,7 +3,7 @@ import type { ApiPaginate } from "$models/ApiPaginate";
 import { api, getOptions, handleRequest } from "$shared/helpers";
 
 // TODO: Add filters
-export async function getServices(page: number = 0): Promise<ApiPaginate<ApiService>> {
+export async function getServices(page = 0): Promise<ApiPaginate<ApiService>> {
 	const options = getOptions("GET");
 
 	const params = new URLSearchParams();

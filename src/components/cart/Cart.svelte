@@ -12,10 +12,10 @@
 	import { EmptyPromoCode } from "./constants";
 	import Alert from "$shared/Alert.svelte";
 
-	export let canEdit: boolean = true;
+	export let canEdit = true;
 
 	let codeInput: string = null;
-	let total: number = 0;
+	let total = 0;
 	let promotionCodeError: ApiError | null = null;
 
 	$: {

@@ -20,7 +20,7 @@
 	let error: ApiError = null;
 	let elements;
 	let cgv = false;
-	let totalPrice: number = 0;
+	let totalPrice = 0;
 	let clientSecret: string | null = null;
 
 	function alertUnload(e) {

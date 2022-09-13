@@ -15,10 +15,9 @@
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
-	let formattedStartDate: string = "Jamais";
-	let name: string = "Chargement";
-	let menu: boolean = false;
-	let icon: string = "warning";
+	let formattedStartDate = "Jamais";
+	let menu = false;
+	let icon = "warning";
 
 	// Constants
 	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
@@ -154,7 +153,7 @@
 	<div
 		class="placeholder-glow bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5"
 	>
-		<h3 class="placeholder btn btn-secondary disabled h-100 w-100" />
+		<h3 class="placeholder btn btn-secondary disabled h-100 w-100">Introuvable</h3>
 	</div>
 {/if}
 

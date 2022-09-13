@@ -7,7 +7,7 @@
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;
-	export let className: string = "btn-outline-primary";
+	export let className = "btn-outline-primary";
 	export let iconName: string = null;
 </script>
 

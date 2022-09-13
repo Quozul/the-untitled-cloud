@@ -3,7 +3,7 @@ import en from "$locales/en.json";
 import fr from "$locales/fr.json";
 import { defaultLocale } from "$shared/constants";
 
-/** @type {import("./$types").LayoutLoad} */
+/** @type {import("./$types").PageLoad} */
 export async function load({ params }: any) {
 	addMessages("en", en);
 	addMessages("fr", fr);

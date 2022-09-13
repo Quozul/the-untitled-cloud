@@ -4,14 +4,14 @@
 	import { classNames } from "./helpers";
 
 	export let variant: Variant = Variant.PRIMARY;
-	export let outline: boolean = false;
-	export let className: string = "";
-	export let disabled: boolean = false;
-	export let type: string = "button";
+	export let outline = false;
+	export let className = "";
+	export let disabled = false;
+	export let type = "button";
 	export let onClick: VoidFunction = null;
-	export let loading: boolean = false;
+	export let loading = false;
 	export let icon: string = null;
-	export let iconSize: string = "16";
+	export let iconSize = "16";
 
 	let processing = false;
 

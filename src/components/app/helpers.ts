@@ -7,7 +7,7 @@ import {
 	server,
 	servers,
 } from "$store/store";
-import { api, containId, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
+import { api, containsService, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { EmptyPaginate } from "./models";
 import type { ApiService } from "$models/ApiService";
@@ -16,10 +16,11 @@ import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiUser } from "$models/ApiUser";
 import type { ApiBillingPortal } from "$models/ApiBillingPortal";
+import type { ApiError } from "$shared/models";
 
 export async function getAllServers(
-	page: number = 0,
-	ended: boolean = false
+	page = 0,
+	ended = false
 ): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
@@ -34,7 +35,7 @@ export async function getAllServers(
 	return (await handleRequest(request)) as ApiPaginate<ApiService>;
 }
 
-export async function refreshAllServers(page: number = 0): Promise<void> {
+export async function refreshAllServers(page = 0): Promise<void> {
 	if (page === 0) servers.set(EmptyPaginate);
 	fetchServersError.set(null);
 	fetchingServers.set(true);
@@ -47,7 +48,7 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 		if (!get(onProfilePage)) {
 			await setDefaultSelectedServer();
 		}
-	} catch (error: any) {
+	} catch (error: ApiError) {
 		fetchServersError.set(error);
 	} finally {
 		fetchingServers.set(false);
@@ -60,7 +61,7 @@ export async function refreshAllServers(page: number = 0): Promise<void> {
 export async function setDefaultSelectedServer(): Promise<void> {
 	const s = get(servers);
 
-	const contains = containId(s, get(server)?.id);
+	const contains = containsService(s, get(server)?.id);
 
 	if (!contains) {
 		server.set(s.data[0]);
@@ -93,7 +94,7 @@ export async function refreshSelectedServer(): Promise<void> {
 	try {
 		const response = await getServerInfo(ss);
 		server.set(response);
-	} catch (error: any) {
+	} catch (error: ApiError) {
 		fetchServerError.set(error);
 	} finally {
 		fetchingServer.set(false);
@@ -128,7 +129,7 @@ export async function getSubscriptionDetails(service: ApiService): Promise<ApiSu
 
 export async function cancelSubscription(
 	service: ApiService,
-	now: boolean = true
+	now = true
 ): Promise<ApiSubscriptionDetails> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`,

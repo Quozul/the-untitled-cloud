@@ -8,14 +8,16 @@
 	const dispatch = createEventDispatcher();
 
 	// Props
-	export let placeholder: string = "Search...";
+	export let placeholder = "Search...";
 	export let items: SelectItem[];
 	export let value: SelectItem;
-	export let allowCustom: boolean = false;
+	export let allowCustom = false;
+	export let className = "";
+	export let id: string | null = null;
 
 	// State
 	let search: string = value.label;
-	let focus: boolean = false;
+	let focus = false;
 
 	let input: HTMLElement;
 
@@ -52,7 +54,7 @@
 	}
 </script>
 
-<div class="select" on:focusin={show} use:clickOutside on:click_outside={hide}>
+<div class="select {className}" on:focusin={show} use:clickOutside on:click_outside={hide}>
 	<input
 		type="text"
 		class="input form-control"
@@ -61,6 +63,7 @@
 		{placeholder}
 		autocomplete="off"
 		on:change={handleChange}
+		{id}
 	/>
 
 	{#if search.length > 0}

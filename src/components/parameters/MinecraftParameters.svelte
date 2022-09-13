@@ -5,7 +5,6 @@
 	import Button from "$shared/Button.svelte";
 	import { putParameters } from "./helpers.js";
 	import { patchServer, refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
-	import { Variant } from "$shared/constants";
 	import AdvancedParameters from "./AdvancedParameters.svelte";
 	import Icon from "$components/icons/Icon.svelte";
 	import type { ApiService } from "$models/ApiService";
@@ -13,7 +12,7 @@
 	import type { Unsubscriber } from "svelte/store";
 	import { subscribe } from "svelte/internal";
 
-	let edited: boolean = false;
+	let edited = false;
 	let unsubscribe: Unsubscriber | null = null;
 
 	onMount(async () => {

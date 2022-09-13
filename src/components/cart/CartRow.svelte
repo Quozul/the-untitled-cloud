@@ -5,7 +5,7 @@
 	import Icon from "$components/icons/Icon.svelte";
 
 	export let product: ApiProduct;
-	export let canEdit: boolean = true;
+	export let canEdit = true;
 
 	function handleClick() {
 		removeFromCart(product);

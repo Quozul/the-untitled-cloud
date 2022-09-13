@@ -11,7 +11,7 @@
 
 	let error: AuthenticationErrors | null = null;
 	let errorMessage: string | null = null;
-	let codeSend: boolean = false;
+	let codeSend = false;
 
 	async function getCode() {
 		try {

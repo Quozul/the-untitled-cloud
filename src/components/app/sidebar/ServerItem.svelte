@@ -9,10 +9,10 @@
 	import { locale } from "svelte-intl-precompile";
 
 	export let service: ApiService;
-	let iconName: string = "box";
+	let iconName = "box";
 	let text: string = service.name ?? service.product.name;
-	let className: string = "btn-outline-primary";
-	let classes: string = "";
+	let className = "btn-outline-primary";
+	let classes = "";
 
 	if (service.subscription.status === ApiSubscriptionStatus.PENDING) {
 		iconName = "hourglass";

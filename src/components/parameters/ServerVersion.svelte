@@ -25,10 +25,12 @@
 </script>
 
 <div>
-	<label class="form-label">Version de Minecraft</label>
+	<label class="form-label" for="minecraft-version">Version de Minecraft</label>
+
 	<Select
 		{items}
 		{value}
+		id="minecraft-version"
 		placeholder="Chercher une version..."
 		allowCustom={true}
 		on:select={handleSelect}

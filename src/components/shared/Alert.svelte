@@ -4,8 +4,8 @@
 
 	export let variant: Variant = Variant.PRIMARY;
 	export let icon: string | null = null;
-	export let title: string = "";
-	export let className: string = "";
+	export let title = "";
+	export let className = "";
 </script>
 
 <div class="alert alert-{variant} d-flex align-items-center gap-2 {className}">

@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let name: string;
 
-	let isOpened: boolean = false;
+	let isOpened = false;
 
 	function toggleOpen() {
 		isOpened = !isOpened;

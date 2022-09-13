@@ -12,7 +12,7 @@
 	let isPending: boolean;
 	let isEnded: boolean;
 	let isSuspended: boolean;
-	let modalVisible: boolean = false;
+	let modalVisible = false;
 
 	$: {
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;

@@ -10,7 +10,7 @@
 	import Alert from "$shared/Alert.svelte";
 	import { goto } from "$app/navigation";
 
-	let modalVisible: boolean = false;
+	let modalVisible = false;
 	let code: string | null = null;
 	let password: string | null = null;
 	let error: ApiError | null = null;

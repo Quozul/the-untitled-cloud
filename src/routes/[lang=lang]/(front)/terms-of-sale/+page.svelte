@@ -2,10 +2,10 @@
 	import Link from "$shared/Link.svelte";
 	import AccordionItem from "$components/accordion/AccordionItem.svelte";
 
-	const siteName: string = "theuntitledcloud.com";
-	const ownerName: string = "[Nom du propriétaire du site]";
-	const address: string = "[Adresse non disponible]";
-	const phoneNumber: string = "[Numéro de téléphone]";
+	const siteName = "theuntitledcloud.com";
+	const ownerName = "[Nom du propriétaire du site]";
+	const address = "[Adresse non disponible]";
+	const phoneNumber = "[Numéro de téléphone]";
 </script>
 
 <svelte:head>

@@ -12,7 +12,7 @@
 	export let redirectTo: string;
 
 	// Input fields
-	let code: string = "";
+	let code = "";
 
 	// States
 	let error: ApiError | null = null;
