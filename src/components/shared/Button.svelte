@@ -12,6 +12,7 @@
 	export let loading = false;
 	export let icon: string = null;
 	export let iconSize = "16";
+	export let pill = false;
 
 	let processing = false;
 
@@ -21,6 +22,7 @@
 		btn: true,
 		[`btn${outline ? "-outline" : ""}-${variant}`]: true,
 		placeholder: loading,
+		"rounded-pill": pill,
 		[`text-${variant}`]: loading,
 		disabled: loading || disabled || processing,
 		"d-inline-flex": !!icon,

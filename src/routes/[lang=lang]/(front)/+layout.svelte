@@ -9,7 +9,7 @@
 	<Icons />
 	<Navbar />
 
-	<main class="flex-grow-1">
+	<main class="flex-grow-1 d-flex flex-column align-items-center">
 		<slot />
 	</main>
 
