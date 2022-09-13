@@ -4,16 +4,17 @@
 	import { Variant } from "$shared/constants.js";
 	import { sendVerificationCode } from "./helpers";
 	import Button from "$shared/Button.svelte";
+	import Alert from "$shared/Alert.svelte";
 
 	export let code;
 	export let email;
 
 	let codeError: ApiError | null = null;
-	let codeSend = false;
+	let codeSent = false;
 
 	async function getCode() {
-		const { error, response } = await sendVerificationCode(email);
-		codeSend = !!response;
+		const { error } = await sendVerificationCode(email);
+		codeSent = true;
 		codeError = error;
 	}
 </script>
@@ -29,11 +30,19 @@
 			placeholder="123456"
 			bind:value={code}
 			maxlength="6"
+			disabled="{!email}"
 		/>
-		<Button variant={Variant.SECONDARY} onClick={getCode}>{$t("get_code")}</Button>
+
+		<Button variant={Variant.SECONDARY} onClick={getCode} disabled={!email}>{$t("get_code")}</Button>
 	</div>
 </div>
 
-<div class:visually-hidden={!codeSend} class="text-muted mb-3">
-	{$t("code_sent_check_mailbox")}
-</div>
+{#if codeError}
+	<Alert variant={Variant.DANGER}>
+		{codeError.translatedMessage}
+	</Alert>
+{:else if codeSent}
+	<Alert variant={Variant.INFO}>
+		{$t("code_sent_check_mailbox")}
+	</Alert>
+{/if}
