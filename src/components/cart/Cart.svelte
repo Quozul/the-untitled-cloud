@@ -38,11 +38,15 @@
 
 	async function fetchCode() {
 		promotionCodeError = null;
-		try {
-			$promoCode = await getPromoCode($promoCode.code);
-		} catch (e: ApiError) {
+
+		const {error, response} = await getPromoCode(codeInput.toUpperCase());
+
+		if (response) {
+			$promoCode = response;
+			codeInput = null;
+		} else if (error) {
 			$promoCode = EmptyPromoCode;
-			promotionCodeError = e;
+			promotionCodeError = error;
 		}
 	}
 
@@ -51,9 +55,7 @@
 			$promoCode = EmptyPromoCode;
 		}
 
-		$promoCode.code = codeInput.toUpperCase();
 		await fetchCode();
-		codeInput = null;
 	}
 
 	function removePromoCode() {

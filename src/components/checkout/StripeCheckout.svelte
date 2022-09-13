@@ -17,7 +17,7 @@
 
 	let stripe: Stripe | null = null;
 	let processing = false;
-	let error: ApiError = null;
+	let checkoutError: ApiError = null;
 	let elements;
 	let cgv = false;
 	let totalPrice = 0;
@@ -33,12 +33,12 @@
 		window.addEventListener("beforeunload", alertUnload);
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		try {
-			const response = await getClientSecret();
+		const { error, response } = await getClientSecret();
+		if (response) {
 			clientSecret = response.clientSecret;
 			totalPrice = response.totalPrice;
-		} catch (e: ApiError) {
-			error = e;
+		} else if (error) {
+			checkoutError = error;
 		}
 	});
 
@@ -60,7 +60,7 @@
 
 		if (result.error) {
 			// payment failed, notify user
-			error = {
+			checkoutError = {
 				code: AuthenticationErrors.STRIPE_ERROR,
 				isError: true,
 				message: result.error.message,
@@ -68,10 +68,9 @@
 			processing = false;
 		} else {
 			// Tell the API the payment has been made
-			try {
-				$selectedServer = await updatePaymentIntent(result.paymentIntent.id);
-			} catch (e: ApiError) {
-				error = e;
+			const { error } = await updatePaymentIntent(result.paymentIntent.id);
+			if (error) {
+				checkoutError = error;
 			}
 
 			// Clear everything and redirect to app
@@ -111,15 +110,15 @@
 			{$t("checkout.proceed")} ({formatPrice(totalPrice)})
 		</button>
 	</form>
-{:else if !error}
+{:else if !checkoutError}
 	<div class="d-flex align-items-center mb-3">
 		<div class="spinner-border me-3" role="status" aria-hidden="true" />
 		<strong>{$t("loading")}...</strong>
 	</div>
 {/if}
 
-{#if error}
+{#if checkoutError}
 	<Alert variant={Variant.DANGER} icon="warning">
-		{error.translatedMessage || error.message}
+		{checkoutError.translatedMessage || checkoutError.message}
 	</Alert>
 {/if}

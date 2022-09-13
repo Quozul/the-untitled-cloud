@@ -19,30 +19,31 @@
 	let tos = false;
 
 	// States
-	let error: ApiError | null = null;
+	let signupError: ApiError | null = null;
 
 	async function submit() {
 		if (password !== confirmPassword) {
-			error = {
+			signupError = {
 				code: AuthenticationErrors.PASSWORDS_DIFFER,
 				translatedMessage: $t("error.password_differ"),
 			};
 			return;
 		}
 
-		try {
-			error = null;
-			const res = await signUp(email, password, "fr", tos);
-			if (res.code === AuthenticationErrors.VERIFY_ACCOUNT) {
+		signupError = null;
+		const { error, response } = await signUp(email, password, "fr", tos);
+
+		if (response) {
+			if (response.code === AuthenticationErrors.VERIFY_ACCOUNT) {
 				$credentials = { email, password };
 				$loginMode = LoginMode.VERIFICATION;
 			} else {
 				// This should never happen, but just in case...
 				await redirect(redirectTo);
 			}
-		} catch (e: ApiError) {
-			error = e;
 		}
+
+		signupError = error;
 	}
 </script>
 
@@ -88,12 +89,13 @@
 		<input id="tos" class="form-check-input" type="checkbox" value="" bind:checked={tos} />
 		<label for="tos" class="form-check-label">
 			{$t("i_acknowledge_and_accept")}
-			<Link href="/tos">{$t("terms_of_service")}</Link>.
+			<Link href="/tos">{$t("terms_of_service")}</Link>
+			.
 		</label>
 	</small>
 
-	<div class:visually-hidden={!error} class="text-danger mb-3">
-		{error?.translatedMessage}
+	<div class:visually-hidden={!signupError} class="text-danger mb-3">
+		{signupError?.translatedMessage}
 	</div>
 
 	<Button type="submit" className="btn btn-primary" onClick={submit}>

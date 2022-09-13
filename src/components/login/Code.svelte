@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { ApiError } from "$shared/models";
-	import type { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { t } from "svelte-intl-precompile";
 	import { Variant } from "$shared/constants.js";
 	import { sendVerificationCode } from "./helpers";
@@ -9,20 +8,13 @@
 	export let code;
 	export let email;
 
-	let error: AuthenticationErrors | null = null;
-	let errorMessage: string | null = null;
+	let codeError: ApiError | null = null;
 	let codeSend = false;
 
 	async function getCode() {
-		try {
-			codeSend = false;
-			error = null;
-			await sendVerificationCode(email);
-			codeSend = true;
-		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
-		}
+		const { error, response } = await sendVerificationCode(email);
+		codeSend = !!response;
+		codeError = error;
 	}
 </script>
 

@@ -21,7 +21,7 @@
 		const item = { value: type, label: capitalize(type) };
 		items.push(item);
 
-		if (type === $parameters.serverType) {
+		if (!value || type === $parameters.serverType) {
 			value = item;
 		}
 	}
@@ -57,8 +57,9 @@
 			<div>
 				<label
 					for="fabricLauncherVersion" class="form-label"
-				>Version du lanceur de Fabric</label
 				>
+					Version du lanceur de Fabric
+				</label>
 				<input
 					id="fabricLauncherVersion"
 					class="form-control"

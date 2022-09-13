@@ -11,18 +11,6 @@ export const EmptyPaginate: ApiPaginate<any> = {
 };
 
 /**
- * @deprecated Use ServiceState instead
- */
-export type ServerState = {
-	status: ApiServiceStatus;
-	created: boolean;
-	running: boolean;
-	starting: boolean;
-	startedAt: string | null;
-	finishedAt: string | null;
-};
-
-/**
  * @deprecated Use ApiSubscriptionDetails instead
  */
 export type SubscriptionInfo = {

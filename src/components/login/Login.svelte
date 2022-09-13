@@ -16,22 +16,24 @@
 	let password = null;
 
 	// States
-	let error: ApiError | null = null;
+	let loginError: ApiError | null = null;
 
 	async function submit() {
-		try {
-			error = null;
-			const res = await signIn(email, password);
-			$token = res.token;
+		loginError = null;
+
+		const { error, response } = await signIn(email, password);
+
+		if (response) {
+			$token = response.token;
 			await redirect(redirectTo);
-		} catch (e: ApiError) {
-			if (e.code === AuthenticationErrors.VERIFY_ACCOUNT) {
-				$credentials = { email, password };
-				$loginMode = LoginMode.VERIFICATION;
-			} else {
-				error = e;
-			}
 		}
+
+		if (error?.code === AuthenticationErrors.VERIFY_ACCOUNT) {
+			$credentials = { email, password };
+			$loginMode = LoginMode.VERIFICATION;
+		}
+
+		loginError = error;
 	}
 
 	async function forgotPassword() {
@@ -74,8 +76,8 @@
 		{$t("password_lost_question_mark")}
 	</button>
 
-	<div class:visually-hidden={!error} class="text-danger mb-3">
-		{error?.translatedMessage}
+	<div class:visually-hidden={!loginError} class="text-danger mb-3">
+		{loginError?.translatedMessage}
 	</div>
 
 	<Button type="submit" className="btn btn-primary" onClick={submit}>

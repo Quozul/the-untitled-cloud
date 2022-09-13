@@ -67,8 +67,10 @@
 			<Button
 				onClick={toggleServerState}
 				className="d-flex align-items-center"
-				disabled={!$server.state.created ||
-					$server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}
+				disabled={
+					!$server.state.created ||
+					$server.subscription.status !== ApiSubscriptionStatus.ACTIVE
+				}
 				variant={Variant.LIGHT}
 				{icon}
 				iconSize="28"

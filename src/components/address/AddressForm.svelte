@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { locale, t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
-	import type { ApiError } from "$shared/models";
 	import type { SelectItem } from "../select/SelectItem";
 	import { onMount } from "svelte";
 	import { token, cart } from "$store/store";

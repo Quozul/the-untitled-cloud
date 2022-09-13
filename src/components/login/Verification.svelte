@@ -15,7 +15,7 @@
 	let code = "";
 
 	// States
-	let error: ApiError | null = null;
+	let verificationError: ApiError | null = null;
 
 	$: if (code.length === 6) {
 		submit();
@@ -28,15 +28,16 @@
 			return;
 		}
 
-		try {
-			error = null;
-			const { email, password } = $credentials;
-			const res = await signIn(email, password, code);
-			$token = res.token;
+		verificationError = null;
+		const { email, password } = $credentials;
+		const { error, response } = await signIn(email, password, code);
+
+		if (response) {
+			$token = response.token;
 			await redirect(redirectTo);
-		} catch (e: ApiError) {
-			error = e;
 		}
+
+		verificationError = error;
 	}
 
 	async function resendCode() {
@@ -46,12 +47,14 @@
 			return;
 		}
 
-		try {
-			const { email } = $credentials;
-			error = await sendVerificationCode(email);
-		} catch (e: ApiError) {
-			error = e;
+		const { email } = $credentials;
+		const { error, response } = await sendVerificationCode(email);
+
+		if (response) {
+			verificationError = response;
 		}
+
+		verificationError = error;
 	}
 </script>
 
@@ -75,15 +78,15 @@
 		/>
 	</div>
 
-	<div class:visually-hidden={!error} class="text-danger mb-3">
-		{error?.translatedMessage}
+	<div class:visually-hidden={!verificationError} class="text-danger mb-3">
+		{verificationError?.translatedMessage}
 	</div>
 
 	<Button type="submit" onClick={submit}>
 		{$t("to_login")}
 	</Button>
 
-	{#if error && (error.code === AuthenticationErrors.EXPIRED_CODE || error.code === AuthenticationErrors.INVALID_CODE)}
+	{#if verificationError && (verificationError.code === AuthenticationErrors.EXPIRED_CODE || verificationError.code === AuthenticationErrors.INVALID_CODE)}
 		<Button className="btn btn-secondary" onClick={resendCode}>
 			{$t("resend_code")}
 		</Button>

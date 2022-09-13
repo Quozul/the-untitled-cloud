@@ -1,5 +1,4 @@
 import type { ApiError, ApiResponse, ClassNames } from "./models";
-import type { Address } from "$components/address/Address";
 import { token } from "$store/store";
 import { get } from "svelte/store";
 import { goto } from "$app/navigation";

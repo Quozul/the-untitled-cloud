@@ -11,6 +11,7 @@
 	import { onDestroy, onMount } from "svelte";
 	import type { Unsubscriber } from "svelte/store";
 	import { subscribe } from "svelte/internal";
+	import Product from "../cart/Product.svelte";
 
 	let edited = false;
 	let unsubscribe: Unsubscriber | null = null;
@@ -31,7 +32,8 @@
 	}
 
 	async function fetchParameters(s: ApiService = $server) {
-		$parameters = await getParameters(s.id);
+		const { response } = await getParameters(s.id);
+		$parameters = response;
 		edited = false;
 	}
 
@@ -42,9 +44,7 @@
 	}
 
 	async function fullRefresh() {
-		fetchParameters();
-		refreshAllServers();
-		refreshSelectedServer();
+		await Promise.all([fetchParameters(), refreshAllServers(), refreshSelectedServer()]);
 	}
 
 	async function handleSave() {

@@ -34,10 +34,11 @@
 
 	async function loadEndedServers() {
 		if (endedServers && !endedServers?.lastPage) {
-			const response = await getAllServers(endedServers.page + 1, true);
+			const { response } = await getAllServers(endedServers.page + 1, true);
 			endedServers = mergePaginate(endedServers, response);
 		} else {
-			endedServers = await getAllServers(0, true);
+			const { response } = await getAllServers(0, true);
+			endedServers = response;
 		}
 	}
 
@@ -108,7 +109,7 @@
 			<hr />
 		{/if}
 
-		{#if $servers.data.length > 0}
+		{#if $servers?.data?.length > 0}
 			<div class="d-flex flex-column gap-3">
 				<h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
 					<Icon />
