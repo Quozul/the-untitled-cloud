@@ -12,7 +12,7 @@
 					The Untitled Cloud
 				</h4>
 			</Link>
-			<p class="lead">Hébergement de serveur de jeux.</p>
+			<p class="lead">Hébergeur de serveur de jeux.</p>
 		</div>
 
 		<div class="col">
@@ -34,21 +34,10 @@
 			<h5>Infos</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">
-						Politique de Confidentialité
-					</Link>
-				</li>
-				<li class="nav-item mb-2">
-					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">CGU</Link>
-				</li>
-				<li class="nav-item mb-2">
-					<Link href="/terms-of-sale/" className="nav-link p-0 text-muted">CGV</Link>
-				</li>
-				<li class="nav-item mb-2">
 					<Link href="/" className="nav-link p-0 text-muted">Mentions légales</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">Gestion des cookies</Link>
+					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">Conditions générales</Link>
 				</li>
 			</ul>
 		</div>

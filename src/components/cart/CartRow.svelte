@@ -18,8 +18,10 @@
 			{#if canEdit}
 				<Icon key="x-lg" onClick={handleClick} />
 			{/if}
+
 			<h6 class="my-0">{product.name}</h6>
 		</div>
+
 		<small class="text-muted">{product.description}</small>
 	</div>
 	<span class="text-muted">{formatPrice(product.price)}</span>

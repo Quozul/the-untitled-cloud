@@ -2,14 +2,15 @@
 	import { t } from "svelte-intl-precompile";
 	import type { ApiError } from "$shared/models";
 	import { credentials, loginMode, token } from "$store/store";
-	import { redirect } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { LoginMode } from "./models/LoginMode";
 	import { signIn } from "./helpers";
+	import { createEventDispatcher } from "svelte";
+	import { Variant } from "$shared/constants.js";
 
-	// Props
-	export let redirectTo: string;
+	// Constants
+	const dispatch = createEventDispatcher();
 
 	// Input fields
 	let email = null;
@@ -25,7 +26,7 @@
 
 		if (response) {
 			$token = response.token;
-			await redirect(redirectTo);
+			dispatch("submit");
 		}
 
 		if (error?.code === AuthenticationErrors.VERIFY_ACCOUNT) {
@@ -80,7 +81,7 @@
 		{loginError?.translatedMessage}
 	</div>
 
-	<Button type="submit" className="btn btn-primary" onClick={submit}>
+	<Button type="submit" variant={Variant.DARK} onClick={submit} className="w-100">
 		{$t("to_login")}
 	</Button>
 </form>

@@ -84,6 +84,8 @@
 	}
 </script>
 
+<h4 class="mb-1">{$t("checkout")}</h4>
+
 {#if stripe && !!clientSecret}
 	<form on:submit|preventDefault={submit}>
 		<Elements {stripe} {clientSecret} bind:elements>
@@ -100,7 +102,7 @@
 		</small>
 
 		<button
-			class="w-100 btn btn-primary btn-lg my-3"
+			class="w-100 btn btn-dark my-3"
 			type="submit"
 			disabled={processing || !cgv}
 		>

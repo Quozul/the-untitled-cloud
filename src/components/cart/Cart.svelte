@@ -64,12 +64,12 @@
 	}
 </script>
 
-<div class="col-md-5 col-lg-4 order-md-last">
+<div>
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		<span class="text-primary">{$t("cart")}</span>
+		{$t("cart")}
 	</h4>
 
-	<ul class="list-group mb-3">
+	<ul class="list-group list-group-flush mb-3">
 		{#if $cart?.length > 0}
 			{#each $cart as product}
 				<CartRow {product} {canEdit} />
@@ -105,9 +105,32 @@
 			</li>
 		{/if}
 
+		<li class="list-group-item d-flex justify-content-between border-0">
+			<h6>{$t("sub_total")}</h6>
+			<span>{formatPrice(total)}</span>
+		</li>
+
+		{#if $promoCode && $promoCode.code && ($promoCode.amountOff || $promoCode.percentOff)}
+			<li class="list-group-item d-flex justify-content-between border-0">
+				<h6>{$t("promotion")}</h6>
+				<span>
+					-{#if $promoCode.amountOff}
+						{formatPrice($promoCode.amountOff)}
+					{:else if $promoCode.percentOff}
+						{$promoCode.percentOff}%
+					{/if}
+				</span>
+			</li>
+		{/if}
+
 		<li class="list-group-item d-flex justify-content-between">
-			<span>{$t("total")} (EUR)</span>
-			<strong>{formatPrice(total)}</strong>
+			<h6>{$t("taxes")}</h6>
+			<span>{formatPrice(0)}</span>
+		</li>
+
+		<li class="list-group-item d-flex justify-content-between">
+			<h5 class="fw-bold">{$t("total")}</h5>
+			<strong class="fs-5">{formatPrice(total)}</strong>
 		</li>
 	</ul>
 
@@ -120,9 +143,9 @@
 					placeholder={$t("promo_code")}
 					bind:value={codeInput}
 				/>
-				<Button type="submit" onClick={setPromoCode} variant={Variant.SECONDARY}
-					>{$t("use")}</Button
-				>
+				<Button type="submit" onClick={setPromoCode} variant={Variant.SECONDARY}>
+					{$t("use")}
+				</Button>
 			</div>
 
 			{#if promotionCodeError}

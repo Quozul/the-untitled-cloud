@@ -1,13 +1,19 @@
 <script>
 	import AddressForm from "$components/address/AddressForm.svelte";
-	import { checkoutStep } from "$store/store";
+	import { cart, checkoutStep } from "$store/store";
 	import { CheckoutSteps } from "$components/checkout/constants";
+	import { goto } from "$app/navigation";
+	import { locale } from "svelte-intl-precompile";
 
 	$checkoutStep = CheckoutSteps.PROFILE;
+
+	async function handleSubmit() {
+		await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
+	}
 </script>
 
 <svelte:head>
 	<title>Profil</title>
 </svelte:head>
 
-<AddressForm />
+<AddressForm on:submit={handleSubmit} />

@@ -4,11 +4,17 @@
 	import { credentials, loginMode } from "$store/store";
 	import { LoginMode } from "./models/LoginMode";
 	import Verification from "./Verification.svelte";
-	import { onDestroy, onMount } from "svelte";
+	import { createEventDispatcher, onDestroy, onMount } from "svelte";
 	import ForgotPassword from "./Password.svelte";
 	import { t } from "svelte-intl-precompile";
 
-	export let redirectTo = "/";
+	/**
+	 * Set to null to disable redirection
+	 */
+	export let redirectTo: string | null = "/";
+	export let defaultStyle: boolean = true;
+
+	const dispatch = createEventDispatcher();
 
 	onMount(() => {
 		$loginMode = LoginMode.LOGIN;
@@ -26,17 +32,25 @@
 			$loginMode = LoginMode.SIGNUP;
 		}
 	}
+
+	async function handleSubmit() {
+		if (redirectTo) {
+			await require(redirectTo);
+		}
+
+		dispatch("submit");
+	}
 </script>
 
-<div>
+<div class:fixed-width={defaultStyle}>
 	{#if $loginMode === LoginMode.VERIFICATION}
-		<Verification {redirectTo} />
+		<Verification on:submit={handleSubmit} />
 	{:else if $loginMode === LoginMode.SIGNUP}
-		<Signup {redirectTo} />
+		<Signup on:submit={handleSubmit} />
 	{:else if $loginMode === LoginMode.CHANGE_PASSWORD}
-		<ForgotPassword {redirectTo} />
+		<ForgotPassword on:submit={handleSubmit} />
 	{:else}
-		<Login {redirectTo} />
+		<Login on:submit={handleSubmit} />
 	{/if}
 
 	{#if $loginMode !== LoginMode.VERIFICATION && $loginMode !== LoginMode.CHANGE_PASSWORD}
@@ -51,7 +65,7 @@
 </div>
 
 <style lang="scss">
-	div {
+	.fixed-width {
 		max-width: 330px;
 		margin: auto;
 	}

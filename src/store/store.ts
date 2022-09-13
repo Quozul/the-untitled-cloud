@@ -18,7 +18,7 @@ import type { PromoCode } from "$components/cart/models";
 import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
-export const token: Writable<string | null> = createStoreEntry("token", null, browser && localStorage);
+export const token: Token = createStoreEntry("token", null, browser && localStorage);
 
 // Session store
 /**

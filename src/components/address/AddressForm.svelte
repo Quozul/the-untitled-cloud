@@ -1,18 +1,20 @@
 <script lang="ts">
-	import { locale, t } from "svelte-intl-precompile";
+	import { t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
 	import type { SelectItem } from "../select/SelectItem";
-	import { onMount } from "svelte";
-	import { token, cart } from "$store/store";
-	import Icon from "$components/icons/Icon.svelte";
+	import { createEventDispatcher, onMount } from "svelte";
+	import { token } from "$store/store";
 	import jwtDecode from "jwt-decode";
 	import { getAddress, setAddress } from "./helpers";
 	import Button from "$shared/Button.svelte";
-	import Link from "$shared/Link.svelte";
-	import { goto } from "$app/navigation";
 	import Select from "$components/select/Select.svelte";
 	import { EmptyAddress, IsoCountries } from "./constants";
+	import { Variant } from "$shared/constants.js";
 
+	// Constants
+	const dispatch = createEventDispatcher();
+
+	// State
 	let address: Address = EmptyAddress;
 	let email = "";
 	let value: SelectItem;
@@ -35,7 +37,7 @@
 	async function submit() {
 		// TODO: Handle error
 		await setAddress(address);
-		await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
+		dispatch("submit");
 	}
 
 	function selectCountry(event) {
@@ -126,15 +128,7 @@
 		</div>
 	</div>
 
-	<Button type="submit" className="btn btn-primary mt-3" onClick={submit}>
-		{$t("save")}
+	<Button type="submit" variant={Variant.DARK} className="w-100" onClick={submit}>
+		{$t("next")}
 	</Button>
-
-	<Link
-		href={$cart ? "/rent/checkout/" : "/rent/products/"}
-		className="btn btn-secondary mt-3 d-inline-flex align-items-center gap-2"
-	>
-		{$t("skip")}
-		<Icon key="chevron-double-right" />
-	</Link>
 </form>

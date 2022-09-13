@@ -8,9 +8,11 @@
 	import { LoginMode } from "./models/LoginMode";
 	import { signUp } from "./helpers";
 	import Link from "$shared/Link.svelte";
+	import { createEventDispatcher } from "svelte";
+	import { Variant } from "$shared/constants.js";
 
-	// Props
-	export let redirectTo: string;
+	// Constants
+	const dispatch = createEventDispatcher();
 
 	// Input fields
 	let email = "";
@@ -39,7 +41,7 @@
 				$loginMode = LoginMode.VERIFICATION;
 			} else {
 				// This should never happen, but just in case...
-				await redirect(redirectTo);
+				dispatch("submit");
 			}
 		}
 
@@ -98,7 +100,7 @@
 		{signupError?.translatedMessage}
 	</div>
 
-	<Button type="submit" className="btn btn-primary" onClick={submit}>
+	<Button type="submit" variant={Variant.DARK} onClick={submit} className="w-100">
 		{$t("to_signup")}
 	</Button>
 </form>

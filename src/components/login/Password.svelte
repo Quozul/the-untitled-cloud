@@ -9,9 +9,11 @@
 	import { changePassword } from "./helpers";
 	import Icon from "$components/icons/Icon.svelte";
 	import Code from "$components/login/Code.svelte";
+	import { createEventDispatcher } from "svelte";
+	import { Variant } from "$shared/constants.js";
 
-	// Props
-	export let redirectTo: string;
+	// Constants
+	const dispatch = createEventDispatcher();
 
 	// Input fields
 	let email: string | null = $credentials?.email ?? null;
@@ -20,24 +22,19 @@
 	let code: string | null = null;
 
 	// States
-	let error: AuthenticationErrors | null = null;
-	let errorMessage: string | null = null;
+	let passwordError: ApiError | null = null;
 
 	async function submit() {
 		if (password !== confirmPassword) {
-			error = AuthenticationErrors.PASSWORDS_DIFFER;
+			passwordError = { code: AuthenticationErrors.PASSWORDS_DIFFER };
 			return;
 		}
 
-		try {
-			error = null;
-			const res = await changePassword(email, password, code);
-			$token = res.token;
-			await redirect(redirectTo);
-		} catch (e: ApiError) {
-			error = e.code;
-			errorMessage = e.message;
-		}
+		const { error, response } = await changePassword(email, password, code);
+		$token = response;
+		dispatch("submit");
+
+		passwordError = error;
 	}
 
 	function back() {
@@ -91,11 +88,11 @@
 
 	<Code {email} bind:code />
 
-	<div class:visually-hidden={!error} class="text-danger mb-3">
-		Erreur : {errorMessage}
+	<div class:visually-hidden={!passwordError} class="text-danger mb-3">
+		Erreur : {passwordError?.translatedMessage}
 	</div>
 
-	<Button type="submit" className="btn btn-primary" onClick={submit}>
+	<Button type="submit" variant={Variant.DARK} onClick={submit} className="w-100">
 		{$t("update_password")}
 	</Button>
 </form>

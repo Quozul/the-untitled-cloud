@@ -7,9 +7,11 @@
 	import { LoginMode } from "./models/LoginMode";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { sendVerificationCode, signIn } from "./helpers";
+	import { createEventDispatcher } from "svelte";
+	import { Variant } from "$shared/constants.js";
 
-	// Props
-	export let redirectTo: string;
+	// Constants
+	const dispatch = createEventDispatcher();
 
 	// Input fields
 	let code = "";
@@ -34,7 +36,7 @@
 
 		if (response) {
 			$token = response.token;
-			await redirect(redirectTo);
+			dispatch("submit");
 		}
 
 		verificationError = error;
@@ -82,12 +84,12 @@
 		{verificationError?.translatedMessage}
 	</div>
 
-	<Button type="submit" onClick={submit}>
+	<Button variant={Variant.DARK} type="submit" onClick={submit} className="w-100">
 		{$t("to_login")}
 	</Button>
 
 	{#if verificationError && (verificationError.code === AuthenticationErrors.EXPIRED_CODE || verificationError.code === AuthenticationErrors.INVALID_CODE)}
-		<Button className="btn btn-secondary" onClick={resendCode}>
+		<Button variant={Variant.SECONDARY} onClick={resendCode}>
 			{$t("resend_code")}
 		</Button>
 	{/if}
