@@ -60,6 +60,6 @@
 	</div>
 
 	<div class="col">
-		<Cart canEdit={$checkoutStep !== CheckoutSteps.CHECKOUT} />
+		<Cart canEdit={$checkoutStep !== CheckoutSteps.CHECKOUT} background={true} />
 	</div>
 </div>

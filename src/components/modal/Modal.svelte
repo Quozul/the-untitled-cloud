@@ -2,6 +2,7 @@
 	import Icon from "$components/icons/Icon.svelte";
 	import { Variant } from "$shared/constants";
 	import Button from "$shared/Button.svelte";
+	import { clickOutside } from "$shared/clickOutside";
 
 	export let visible = false;
 	export let icon = "";
@@ -9,7 +10,7 @@
 	export let closeText = "Fermer";
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
-	export let variant: Variant = Variant.PRIMARY;
+	export let variant: Variant = Variant.DARK;
 
 	function hide() {
 		visible = false;
@@ -19,7 +20,7 @@
 <div class="modal" class:show={visible} class:d-block={visible} tabindex="-1">
 	<div class="backdrop bg-dark" class:d-none={!visible} class:d-block={visible} />
 
-	<div class="modal-dialog">
+	<div class="modal-dialog" use:clickOutside on:click_outside={hide}>
 		<div class="modal-content">
 			<div class="modal-header">
 				{#if icon}
@@ -34,13 +35,13 @@
 				<button type="button" class="btn-close" on:click|preventDefault={hide} />
 			</div>
 
-			<div class="modal-body">
+			<div class="modal-body p-0">
 				<slot />
 			</div>
 
 			<div class="modal-footer">
 				{#if closeText !== null}
-					<Button variant={Variant.SECONDARY} onClick={hide}>{closeText}</Button>
+					<Button variant={Variant.DARK} outline={true} onClick={hide}>{closeText}</Button>
 				{/if}
 
 				{#if okText !== null}

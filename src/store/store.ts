@@ -1,12 +1,14 @@
-import type { Writable } from "svelte/store";
-import type { CheckoutSteps } from "$components/checkout/constants";
-import type { Credentials } from "$components/login/models/Credentials";
 import type { ApiError } from "$components/shared/models";
 import type { ApiPaginate } from "$models/ApiPaginate";
-import type { ApiService } from "$models/ApiService";
-import type { ApiServer } from "$models/ApiServer";
-import type { ApiUser } from "$models/ApiUser";
 import type { ApiProduct } from "$models/ApiProduct";
+import type { ApiServer } from "$models/ApiServer";
+import type { ApiService } from "$models/ApiService";
+import type { ApiUser } from "$models/ApiUser";
+import type { CheckoutSteps } from "$components/checkout/constants";
+import type { Credentials } from "$components/login/models/Credentials";
+import type { PromoCode } from "$components/cart/models";
+import type { Token } from "$components/login/models/Token";
+import type { Writable } from "svelte/store";
 
 import { createStoreEntry } from "./helpers";
 import { browser } from "$app/environment";
@@ -14,11 +16,10 @@ import { LoginMode } from "$components/login/models/LoginMode";
 import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate } from "$components/app/models";
 import { writable } from "svelte/store";
-import type { PromoCode } from "$components/cart/models";
 import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
-export const token: Token = createStoreEntry("token", null, browser && localStorage);
+export const token: Writable<Token | null> = createStoreEntry("token", null, browser && localStorage);
 
 // Session store
 /**
@@ -73,9 +74,6 @@ export const user: Writable<ApiUser | null> = createStoreEntry("user", null, bro
 export const credentials: Writable<Credentials | null> = writable(null);
 export const loginMode: Writable<LoginMode> = writable(LoginMode.LOGIN);
 export const checkoutStep: Writable<CheckoutSteps | null> = writable(null);
-/**
- * @deprecated Client secret should not be app wide
- */
-export const clientSecret: Writable<string | null> = writable(null);
 export const selectedTab: Writable<ServerTab> = writable(ServerTab.INFO);
 export const onProfilePage: Writable<boolean> = writable(false);
+export const cartModalVisible: Writable<boolean> = writable(false);

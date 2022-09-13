@@ -1,12 +1,26 @@
 <script lang="ts">
 	import { locale, t } from "svelte-intl-precompile";
 	import Icon from "$components/icons/Icon.svelte";
-	import { token } from "$store/store";
+	import { token, cart } from "$store/store";
 	import { page } from "$app/stores";
 	import Link from "$shared/Link.svelte";
+	import Modal from "$components/modal/Modal.svelte";
+	import Cart from "$components/cart/Cart.svelte";
+	import { goto } from "$app/navigation";
+	import { cartModalVisible } from "$store/store.js";
 
 	let selectedPage: string;
+
 	$: selectedPage = $page.url.pathname.replace(`/${$locale}`, "");
+
+	function openCartModal() {
+		$cartModalVisible = true;
+	}
+
+	async function redirectToCheckout() {
+		await goto(`/${$locale}/checkout/`);
+		$cartModalVisible = false;
+	}
 </script>
 
 <header
@@ -30,7 +44,7 @@
 		</li>
 		<li>
 			<Link
-				href="/rent/products"
+				href="/products"
 				className="nav-link {selectedPage.startsWith('/rent/')
 					? 'link-secondary'
 					: 'link-dark'}"
@@ -50,5 +64,18 @@
 				{$t("to_login")}
 			</Link>
 		{/if}
+
+		<div on:click={openCartModal} class="d-inline cursor-pointer text-black p-3">
+			<Icon key={$cart.length > 0 ? "bag-check" : "bag"} />
+		</div>
 	</div>
 </header>
+
+<Modal
+	bind:visible={$cartModalVisible}
+	onClick={redirectToCheckout}
+	okText={$cart.length > 0 ? $t("checkout") : null}
+	title={$t("cart")}
+>
+	<Cart />
+</Modal>
