@@ -13,27 +13,21 @@
 	let currentPeriodEnd: string;
 
 	$: {
-		currentPeriodStart = invoice?.periodStart && ZonedDateTime.parse(invoice?.periodStart).format(shortDate);
-		currentPeriodEnd = invoice?.periodEnd && ZonedDateTime.parse(invoice?.periodEnd).format(shortDate);
+		currentPeriodStart =
+			invoice?.periodStart && ZonedDateTime.parse(invoice?.periodStart).format(shortDate);
+		currentPeriodEnd =
+			invoice?.periodEnd && ZonedDateTime.parse(invoice?.periodEnd).format(shortDate);
 	}
 
-	async function downloadInvoice() {
-
-	}
+	async function downloadInvoice() {}
 </script>
-
-<style>
-	div {
-		max-width: 330px;
-	}
-</style>
 
 <div class="border p-3 d-flex flex-column align-items-start gap-3">
 	<dl class="d-flex flex-column m-0 w-100">
 		<div class="separation">
 			{#if !invoice}
 				<p class="placeholder-glow w-100 m-0">
-					<span class="placeholder h-100 col-12"></span>
+					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
 				<dt>Pour la période</dt>
@@ -44,7 +38,7 @@
 		<div class="separation">
 			{#if !invoice}
 				<p class="placeholder-glow w-100 m-0">
-					<span class="placeholder h-100 col-12"></span>
+					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
 				<dt>Montant dû</dt>
@@ -55,7 +49,7 @@
 		<div class="separation">
 			{#if !invoice}
 				<p class="placeholder-glow w-100 m-0">
-					<span class="placeholder h-100 col-12"></span>
+					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
 				<dt>Montant payé</dt>
@@ -66,7 +60,7 @@
 		<div class="separation">
 			{#if !invoice}
 				<p class="placeholder-glow w-100 m-0">
-					<span class="placeholder h-100 col-12"></span>
+					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
 				<dt>Reste à payer</dt>
@@ -75,8 +69,12 @@
 		</div>
 	</dl>
 
-	<Button onClick={downloadInvoice} disabled="true">
-		Télécharger
-	</Button>
+	<Button onClick={downloadInvoice} disabled="true">Télécharger</Button>
 	Le téléchargement des factures n'est pas encore disponible.
 </div>
+
+<style>
+	div {
+		max-width: 330px;
+	}
+</style>

@@ -11,6 +11,24 @@
 	export let iconName: string = null;
 </script>
 
+{#if href}
+	<Link className="sidebar-item btn {className} d-flex align-items-center gap-2" {href}>
+		{#if iconName}
+			<Icon key={iconName} />
+		{/if}
+
+		{#if !$sidebarCollapsed}
+			<slot />
+		{/if}
+	</Link>
+{:else}
+	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={Variant.NONE}>
+		{#if !$sidebarCollapsed}
+			<slot />
+		{/if}
+	</Button>
+{/if}
+
 <style lang="scss" global>
 	.sidebar-item {
 		height: 38px;
@@ -24,21 +42,3 @@
 		}
 	}
 </style>
-
-{#if href}
-	<Link className="sidebar-item btn {className} d-flex align-items-center gap-2" {href}>
-		{#if iconName}
-			<Icon key={iconName}/>
-		{/if}
-
-		{#if !$sidebarCollapsed}
-			<slot/>
-		{/if}
-	</Link>
-{:else}
-	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={Variant.NONE}>
-		{#if !$sidebarCollapsed}
-			<slot/>
-		{/if}
-	</Button>
-{/if}

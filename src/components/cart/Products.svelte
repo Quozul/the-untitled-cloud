@@ -16,7 +16,7 @@
 	{#if products?.data}
 		{#each products.data as product}
 			<div class="col-6">
-			<Product {product}/>
+				<Product {product} />
 			</div>
 		{/each}
 	{/if}

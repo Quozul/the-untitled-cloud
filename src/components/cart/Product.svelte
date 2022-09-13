@@ -10,7 +10,7 @@
 
 	let isInCart: boolean;
 
-	$: isInCart = !!$cart?.find(p => p.id === product.id);
+	$: isInCart = !!$cart?.find((p) => p.id === product.id);
 
 	function handleOnClick() {
 		toggleInCart(product);
@@ -29,7 +29,7 @@
 
 		<ul class="list-unstyled mt-3">
 			<li>{product.cpu} {$t("cpu_core")}</li>
-<!--			<li>{nf(product.memory * 1048576, "0 B")} {$t("of")} {$t("memory")}</li>-->
+			<!--			<li>{nf(product.memory * 1048576, "0 B")} {$t("of")} {$t("memory")}</li>-->
 		</ul>
 
 		<Button

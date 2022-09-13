@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-    <title>Profil</title>
+	<title>Profil</title>
 </svelte:head>
 
-<AddressForm/>
+<AddressForm />

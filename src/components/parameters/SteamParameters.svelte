@@ -6,25 +6,24 @@
 	import { games } from "$components/parameters/constants/games";
 
 	const items: SelectItem[] = [
-		{label: "Dernière", value: "latest"},
-		{label: "Snapshot", value: "snapshot"},
+		{ label: "Dernière", value: "latest" },
+		{ label: "Snapshot", value: "snapshot" },
 	];
 
 	for (const version of Versions) {
-		items.push({label: version, value: version});
+		items.push({ label: version, value: version });
 	}
 
 	let value: SelectItem = {
 		value: $parameters.version,
 		label: $parameters.version,
-	}
+	};
 
 	function handleSelect(event) {
 		value = event.detail;
 		$parameters.version = value.value;
 	}
 </script>
-
 
 <div class="bg-light p-4 d-flex element flex-column gap-3">
 	<h4 class="mb-0">Paramètres du serveur Steam</h4>

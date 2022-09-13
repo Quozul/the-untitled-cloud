@@ -7,9 +7,9 @@
 </script>
 
 <svelte:head>
-    <title>Produits</title>
+	<title>Produits</title>
 </svelte:head>
 
 <div class="row justify-content-center g-3">
-    <Products/>
+	<Products />
 </div>

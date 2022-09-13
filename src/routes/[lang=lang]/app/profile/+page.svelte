@@ -14,6 +14,25 @@
 	});
 </script>
 
+<div class="bg-light p-4 d-flex element flex-column">
+	<h4>Profil</h4>
+	<p class="d-flex align-items-center gap-2 lead">
+		<Icon key="tools" />
+		Cette page est en cours de construction.
+	</p>
+	<p>
+		Pour toute demande en rapport avec la gestion de vos données (suppression, modification,
+		récupération, ...), veuillez entrer en contact par email à l'adresse <a
+			href="mailto:contact@theuntitledcloud.com">contact@theuntitledcloud.com</a
+		>.
+	</p>
+
+	<div>
+		<Button disabled>Télécharger mes données</Button>
+		<DeleteAccount />
+	</div>
+</div>
+
 <style lang="scss">
 	.discord {
 		display: inline-flex;
@@ -42,20 +61,3 @@
 		}
 	}
 </style>
-
-<div class="bg-light p-4 d-flex element flex-column">
-	<h4>Profil</h4>
-	<p class="d-flex align-items-center gap-2 lead">
-		<Icon key="tools"/>
-		Cette page est en cours de construction.
-	</p>
-	<p>
-		Pour toute demande en rapport avec la gestion de vos données (suppression, modification, récupération, ...),
-		veuillez entrer en contact par email à l'adresse <a href="mailto:contact@theuntitledcloud.com">contact@theuntitledcloud.com</a>.
-	</p>
-
-	<div>
-		<Button disabled>Télécharger mes données</Button>
-		<DeleteAccount/>
-	</div>
-</div>

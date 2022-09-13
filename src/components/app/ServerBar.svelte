@@ -21,9 +21,7 @@
 	let icon: string = "warning";
 
 	// Constants
-	const formatter = DateTimeFormatter
-		.ofPattern("eeee d MMMM yyyy")
-		.withLocale(Locale.FRANCE);
+	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
 
 	$: {
 		if ($server && $server.state.created) {
@@ -62,6 +60,104 @@
 	}
 </script>
 
+{#if $server}
+	<div
+		class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5"
+	>
+		<div class="d-flex justify-content-between server-bar">
+			<Button
+				onClick={toggleServerState}
+				className="d-flex align-items-center"
+				disabled={!$server.state.created ||
+					$server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}
+				variant={Variant.LIGHT}
+				{icon}
+				iconSize="28"
+			>
+				{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
+					<h3 class="m-0">En attente</h3>
+				{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
+					<h3 class="m-0">Suspendu</h3>
+				{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
+					<h3 class="m-0">Terminé</h3>
+				{:else if $server.state.created}
+					<h3 class="m-0">{$server.name ?? $server.product.name}</h3>
+				{:else}
+					<h3 class="m-0">Introuvable</h3>
+				{/if}
+			</Button>
+
+			<button
+				class="btn btn-light d-lg-none"
+				type="button"
+				on:click|preventDefault={toggleMenu}
+			>
+				<Icon key="list" width="28" height="28" />
+			</button>
+		</div>
+
+		<div class="collapse navbar-collapse d-lg-block" class:show={menu}>
+			<dl class="m-0 d-flex flex-column flex-xl-row gap-3 gap-lg-5">
+				<div>
+					<dt>État</dt>
+					<dd class="m-0">
+						{#if $server.state.created && $server.state.running}
+							{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()}
+							minutes)
+						{:else if $server.state.created}
+							{$t(`server_status.${$server.state.status.toLowerCase()}`)}
+						{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING}
+							En attente
+						{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
+							Suspendu
+						{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
+							Terminé
+						{:else}
+							Introuvable
+						{/if}
+					</dd>
+				</div>
+
+				{#if $server?.state}
+					<div>
+						<dt>Dernier démarrage</dt>
+						<dd class="m-0">
+							{#if $server.state?.status === DockerStatus.CREATED}
+								Jamais démarré
+							{:else}
+								{formattedStartDate}
+							{/if}
+						</dd>
+					</div>
+				{/if}
+
+				<div>
+					<dt>Adresse de connexion</dt>
+					<dd class="m-0">
+						{#if !$server.port}
+							Démarrez le serveur pour avoir une adresse de connexion.
+						{:else if $server.product.id === Products.MinecraftServer}
+							quozul.com:{$server.port}
+						{:else if $server.product.id === Products.ArkServer}
+							<a href="steam://connect/theuntitledcloud.com:{$server.port}/"
+								>Lien de connexion Steam</a
+							>
+						{:else}
+							Impossible de déterminer l'adresse de connexion.
+						{/if}
+					</dd>
+				</div>
+			</dl>
+		</div>
+	</div>
+{:else}
+	<div
+		class="placeholder-glow bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5"
+	>
+		<h3 class="placeholder btn btn-secondary disabled h-100 w-100" />
+	</div>
+{/if}
+
 <style lang="scss">
 	.server-bar {
 		white-space: nowrap;
@@ -73,91 +169,3 @@
 		}
 	}
 </style>
-
-{#if $server}
-<div class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
-	<div class="d-flex justify-content-between server-bar">
-		<Button
-			onClick={toggleServerState}
-			className="d-flex align-items-center"
-			disabled="{!$server.state.created || $server?.subscription.status !== ApiSubscriptionStatus.ACTIVE}"
-			variant={Variant.LIGHT}
-			{icon}
-			iconSize="28"
-		>
-			{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
-				<h3 class="m-0">En attente</h3>
-			{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-				<h3 class="m-0">Suspendu</h3>
-			{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-				<h3 class="m-0">Terminé</h3>
-			{:else if $server.state.created}
-				<h3 class="m-0">{$server.name ?? $server.product.name}</h3>
-			{:else}
-				<h3 class="m-0">Introuvable</h3>
-			{/if}
-		</Button>
-
-		<button class="btn btn-light d-lg-none" type="button" on:click|preventDefault={toggleMenu}>
-			<Icon key="list" width="28" height="28"/>
-		</button>
-	</div>
-
-	<div class="collapse navbar-collapse d-lg-block" class:show={menu}>
-		<dl class="m-0 d-flex flex-column flex-xl-row gap-3 gap-lg-5">
-			<div>
-				<dt>État</dt>
-				<dd class="m-0">
-					{#if $server.state.created && $server.state.running}
-						{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()} minutes)
-					{:else if $server.state.created}
-						{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-					{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING}
-						En attente
-					{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-						Suspendu
-					{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-						Terminé
-					{:else}
-						Introuvable
-					{/if}
-				</dd>
-			</div>
-
-			{#if $server?.state}
-				<div>
-					<dt>Dernier démarrage</dt>
-					<dd class="m-0">
-						{#if $server.state?.status === DockerStatus.CREATED}
-							Jamais démarré
-						{:else}
-							{formattedStartDate}
-						{/if}
-					</dd>
-				</div>
-			{/if}
-
-			<div>
-				<dt>Adresse de connexion</dt>
-				<dd class="m-0">
-					{#if !$server.port}
-						Démarrez le serveur pour avoir une adresse de connexion.
-					{:else}
-						{#if $server.product.id === Products.MinecraftServer}
-							quozul.com:{$server.port}
-						{:else if $server.product.id === Products.ArkServer}
-							<a href="steam://connect/theuntitledcloud.com:{$server.port}/">Lien de connexion Steam</a>
-						{:else}
-							Impossible de déterminer l'adresse de connexion.
-						{/if}
-					{/if}
-				</dd>
-			</div>
-		</dl>
-	</div>
-</div>
-{:else}
-	<div class="placeholder-glow bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5">
-		<h3 class="placeholder btn btn-secondary disabled h-100 w-100"></h3>
-	</div>
-{/if}

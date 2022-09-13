@@ -9,14 +9,14 @@
 </script>
 
 {#if $server}
-	<ServerBar/>
-	<Tabs/>
-	<slot/>
+	<ServerBar />
+	<Tabs />
+	<slot />
 {:else if $fetchServersError}
-	<InternalError refresh={refreshAllServers}/>
+	<InternalError refresh={refreshAllServers} />
 {:else if $fetchingServer}
-	<ServerBar/>
-	<Tabs/>
+	<ServerBar />
+	<Tabs />
 {:else}
-	<NoServer/>
+	<NoServer />
 {/if}

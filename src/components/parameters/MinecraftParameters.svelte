@@ -73,9 +73,20 @@
 		<div>
 			<label for="serverName" class="form-label">Nom du serveur</label>
 			<div class="input-group">
-				<input id="serverName" maxlength="32" class="form-control" placeholder={$server?.name} bind:value={$server.name} on:change={setEdited}>
-				<button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" on:click={handleRandomName}>
-					<Icon key="shuffle"/>
+				<input
+					id="serverName"
+					maxlength="32"
+					class="form-control"
+					placeholder={$server?.name}
+					bind:value={$server.name}
+					on:change={setEdited}
+				/>
+				<button
+					class="btn btn-outline-secondary d-flex align-items-center gap-2"
+					type="button"
+					on:click={handleRandomName}
+				>
+					<Icon key="shuffle" />
 					Nom aléatoire
 				</button>
 			</div>
@@ -96,15 +107,13 @@
 	<h4 class="mb-0">Paramètres du serveur</h4>
 	<div class="d-flex align-items-stretch gap-3">
 		{#if $parameters}
-			<ServerType/>
-			<AdvancedParameters/>
+			<ServerType />
+			<AdvancedParameters />
 		{/if}
 	</div>
 
 	<div class="d-flex gap-3 mt-3">
-		<Button onClick={handleSave} disabled={!edited}>
-			Sauvegarder
-		</Button>
+		<Button onClick={handleSave} disabled={!edited}>Sauvegarder</Button>
 
 		<Button onClick={handleApply} disabled={!edited}>
 			Sauvegarder et appliquer les changements

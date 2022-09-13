@@ -1,10 +1,10 @@
 export type ApiUser = {
-	email: string,
-	communicationLanguage: string,
+	email: string;
+	communicationLanguage: string;
 	discord: {
-		id: string,
-		username: string,
-		discriminator: string,
-		avatar: string | null,
-	},
-}
+		id: string;
+		username: string;
+		discriminator: string;
+		avatar: string | null;
+	};
+};

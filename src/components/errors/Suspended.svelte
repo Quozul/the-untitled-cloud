@@ -15,16 +15,13 @@
 	<h4>Suspendu</h4>
 
 	<p class="lead">
-		Votre serveur est suspendu.<br/>
-		Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement.<br/>
+		Votre serveur est suspendu.<br />
+		Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement.<br
+		/>
 		Consultez l'onglet Abonnement pour plus d'informations.
 	</p>
 
-	<Button
-		icon="box-arrow-up-right"
-		onClick={redirectToStripe}
-		variant={Variant.SECONDARY}
-	>
+	<Button icon="box-arrow-up-right" onClick={redirectToStripe} variant={Variant.SECONDARY}>
 		Voir mon abonnement
 	</Button>
 </div>

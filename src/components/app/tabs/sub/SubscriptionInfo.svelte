@@ -6,7 +6,7 @@
 		getSubscriptionDetails,
 		getSubscriptionProducts,
 		refreshAllServers,
-		refreshSelectedServer
+		refreshSelectedServer,
 	} from "$components/app/helpers";
 	import { server } from "$store/store";
 	import type { ApiError } from "$shared/models";
@@ -39,10 +39,18 @@
 			subscription = await getSubscriptionDetails(s);
 			products = await getSubscriptionProducts(s);
 
-			startDate = subscription?.startDate && ZonedDateTime.parse(subscription.startDate).format(formatter);
-			currentPeriodStart = subscription?.currentPeriodStart && ZonedDateTime.parse(subscription.currentPeriodStart).format(shortDate);
-			currentPeriodEnd = subscription?.currentPeriodEnd && ZonedDateTime.parse(subscription.currentPeriodEnd).format(shortDate);
-			canceledAt = subscription?.canceledAt && ZonedDateTime.parse(subscription.canceledAt).format(formatter);
+			startDate =
+				subscription?.startDate &&
+				ZonedDateTime.parse(subscription.startDate).format(formatter);
+			currentPeriodStart =
+				subscription?.currentPeriodStart &&
+				ZonedDateTime.parse(subscription.currentPeriodStart).format(shortDate);
+			currentPeriodEnd =
+				subscription?.currentPeriodEnd &&
+				ZonedDateTime.parse(subscription.currentPeriodEnd).format(shortDate);
+			canceledAt =
+				subscription?.canceledAt &&
+				ZonedDateTime.parse(subscription.canceledAt).format(formatter);
 		} catch (e: ApiError) {
 			error = e;
 		}
@@ -76,15 +84,13 @@
 		<div class="flex-grow-1 bg-light p-4 d-flex element flex-column align-items-stretch">
 			<h4>Votre abonnement</h4>
 
-			<p class="text-muted">
-				Informations concernant votre abonnement.
-			</p>
+			<p class="text-muted">Informations concernant votre abonnement.</p>
 
 			<dl class="d-flex flex-column m-0">
 				<div class="separation">
 					{#if !subscription}
 						<p class="placeholder-glow w-100 m-0">
-							<span class="placeholder h-100 col-12"></span>
+							<span class="placeholder h-100 col-12" />
 						</p>
 					{:else}
 						<dt>État</dt>
@@ -101,7 +107,7 @@
 				<div class="separation">
 					{#if !subscription}
 						<p class="placeholder-glow w-100 m-0">
-							<span class="placeholder h-100 col-12"></span>
+							<span class="placeholder h-100 col-12" />
 						</p>
 					{:else}
 						<dt>Commencé le</dt>
@@ -112,7 +118,7 @@
 				<div class="separation">
 					{#if !subscription}
 						<p class="placeholder-glow w-100 m-0">
-							<span class="placeholder h-100 col-12"></span>
+							<span class="placeholder h-100 col-12" />
 						</p>
 					{:else}
 						<dt>Période actuelle</dt>
@@ -123,7 +129,7 @@
 				<div class="separation">
 					{#if !subscription}
 						<p class="placeholder-glow w-100 m-0">
-							<span class="placeholder h-100 col-12"></span>
+							<span class="placeholder h-100 col-12" />
 						</p>
 					{:else}
 						<dt>Moyen de paiement</dt>
@@ -133,44 +139,40 @@
 			</dl>
 
 			{#if subscription && !subscription.canceledAt}
-				<hr/>
+				<hr />
 				<h5>Actions</h5>
 
 				<div class="d-flex flex-wrap gap-3">
 					<Button
-							loading={!subscription}
-							variant={Variant.DANGER}
-							onClick={openModal}
-							disabled="{!subscription.latestInvoice.paid}">
+						loading={!subscription}
+						variant={Variant.DANGER}
+						onClick={openModal}
+						disabled={!subscription.latestInvoice.paid}
+					>
 						Annuler mon abonnement
 					</Button>
 
 					{#if subscription.latestInvoice.paid}
 						<Modal
-								bind:visible={modalVisible}
-								onClick={cancel}
-								title="Annulation"
-								okText="Annuler mon abonnement"
-								closeText="Annuler"
-								variant={Variant.DANGER}
+							bind:visible={modalVisible}
+							onClick={cancel}
+							title="Annulation"
+							okText="Annuler mon abonnement"
+							closeText="Annuler"
+							variant={Variant.DANGER}
 						>
 							<p>
-								Vous êtes sur le point de d'annuler votre abonnement.
-								Dès que nous recevrons la confirmation de votre désabonnement, les fichiers de votre
-								serveur
-								seront
-								immédiatement supprimés et ne seront pas récupérables.
+								Vous êtes sur le point de d'annuler votre abonnement. Dès que nous
+								recevrons la confirmation de votre désabonnement, les fichiers de
+								votre serveur seront immédiatement supprimés et ne seront pas
+								récupérables.
 							</p>
-							<p>
-								Vous serez remboursé au prorata de votre consommation.
-							</p>
-							<p>
-								Êtes-vous sûr de vouloir continuer ?
-							</p>
+							<p>Vous serez remboursé au prorata de votre consommation.</p>
+							<p>Êtes-vous sûr de vouloir continuer ?</p>
 						</Modal>
 					{:else}
-						Vous ne pouvez pas annuler votre abonnement pour le moment.
-						La dernière facture a été émise mais n'a pas encore été payée.
+						Vous ne pouvez pas annuler votre abonnement pour le moment. La dernière
+						facture a été émise mais n'a pas encore été payée.
 					{/if}
 				</div>
 			{/if}
@@ -193,14 +195,14 @@
 					{/each}
 				{:else}
 					<p class="placeholder-glow w-100 m-0">
-						<span class="placeholder h-100 col-12"></span>
+						<span class="placeholder h-100 col-12" />
 					</p>
 				{/if}
 			</dl>
 		</div>
 	</div>
 
-	<Invoices {subscription}/>
+	<Invoices {subscription} />
 {:else}
-	<InternalError refresh={fetchSubscription}/>
+	<InternalError refresh={fetchSubscription} />
 {/if}

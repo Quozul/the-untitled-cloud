@@ -9,7 +9,7 @@
 <div class="px-4 py-5">
 	<div class="row flex-lg-row align-items-center g-5 py-5">
 		<div class="col-lg-6">
-			<Hero/>
+			<Hero />
 		</div>
 	</div>
 </div>

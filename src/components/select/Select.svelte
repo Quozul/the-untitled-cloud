@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
-	import {clickOutside} from "$shared/clickOutside";
+	import { clickOutside } from "$shared/clickOutside";
 	import Option from "./Option.svelte";
 	import type { SelectItem } from "./SelectItem";
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from "svelte";
 
 	const dispatch = createEventDispatcher();
 
 	// Props
-	export let placeholder: string = "Search..."
+	export let placeholder: string = "Search...";
 	export let items: SelectItem[];
 	export let value: SelectItem;
 	export let allowCustom: boolean = false;
@@ -43,7 +43,7 @@
 	}
 
 	function handleChange() {
-		const searchValue = items.find(v => v.label === search);
+		const searchValue = items.find((v) => v.label === search);
 
 		if (searchValue) {
 			hide();
@@ -51,6 +51,36 @@
 		}
 	}
 </script>
+
+<div class="select" on:focusin={show} use:clickOutside on:click_outside={hide}>
+	<input
+		type="text"
+		class="input form-control"
+		bind:value={search}
+		bind:this={input}
+		{placeholder}
+		autocomplete="off"
+		on:change={handleChange}
+	/>
+
+	{#if search.length > 0}
+		<Icon key="x-lg" className="select-icon cross" onClick={clear} />
+	{:else}
+		<Icon key="chevron-down" className="select-icon chevron" />
+	{/if}
+
+	<div class="options border bg-white w-100" class:d-none={!focus} class:d-block={focus}>
+		<slot />
+
+		{#each items as item}
+			<Option {item} {search} {value} on:click={handleSelect} />
+		{/each}
+
+		{#if allowCustom && search.length > 0}
+			<Option item={{ label: search, value: search }} {search} on:click={handleSelect} />
+		{/if}
+	</div>
+</div>
 
 <style lang="scss">
 	.select {
@@ -87,25 +117,3 @@
 		}
 	}
 </style>
-
-<div class="select" on:focusin={show} use:clickOutside on:click_outside={hide}>
-	<input type="text" class="input form-control" bind:value={search} bind:this={input} placeholder={placeholder} autocomplete="off" on:change={handleChange}>
-
-	{#if search.length > 0}
-		<Icon key="x-lg" className="select-icon cross" onClick={clear} />
-	{:else}
-		<Icon key="chevron-down" className="select-icon chevron" />
-	{/if}
-
-	<div class="options border bg-white w-100" class:d-none={!focus} class:d-block={focus}>
-		<slot/>
-
-		{#each items as item}
-			<Option {item} {search} {value} on:click={handleSelect} />
-		{/each}
-
-		{#if allowCustom && search.length > 0}
-			<Option item={{label: search, value: search}} {search} on:click={handleSelect}/>
-		{/if}
-	</div>
-</div>

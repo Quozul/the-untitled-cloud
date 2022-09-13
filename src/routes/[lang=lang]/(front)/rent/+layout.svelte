@@ -11,9 +11,9 @@
 	<Link
 		href="/rent/products/"
 		className={classNames({
-            "nav-link": true,
-            active: $checkoutStep === CheckoutSteps.PRODUCTS,
-        })}
+			"nav-link": true,
+			active: $checkoutStep === CheckoutSteps.PRODUCTS,
+		})}
 	>
 		1. {$t("choose_product")}
 	</Link>
@@ -21,10 +21,10 @@
 	<Link
 		href="/rent/login/"
 		className={classNames({
-            "nav-link": true,
-            active: $checkoutStep === CheckoutSteps.LOGIN,
-            disabled: !!$token,
-        })}
+			"nav-link": true,
+			active: $checkoutStep === CheckoutSteps.LOGIN,
+			disabled: !!$token,
+		})}
 	>
 		2. {$t("to_login")}
 	</Link>
@@ -32,10 +32,10 @@
 	<Link
 		href="/rent/profile/"
 		className={classNames({
-            "nav-link": true,
-            active: $checkoutStep === CheckoutSteps.PROFILE,
-            disabled: !$token,
-        })}
+			"nav-link": true,
+			active: $checkoutStep === CheckoutSteps.PROFILE,
+			disabled: !$token,
+		})}
 	>
 		3. {$t("complete_profile")}
 	</Link>
@@ -43,19 +43,19 @@
 	<Link
 		href="/rent/checkout/"
 		className={classNames({
-            "nav-link": true,
-            active: $checkoutStep === CheckoutSteps.CHECKOUT,
-            disabled: !$token || !$cart || $cart.length === 0,
-        })}
+			"nav-link": true,
+			active: $checkoutStep === CheckoutSteps.CHECKOUT,
+			disabled: !$token || !$cart || $cart.length === 0,
+		})}
 	>
 		4. {$t("checkout")}
 	</Link>
 </nav>
 
 <div class="row g-5">
-	<Cart canEdit={$checkoutStep !== CheckoutSteps.CHECKOUT}/>
+	<Cart canEdit={$checkoutStep !== CheckoutSteps.CHECKOUT} />
 
 	<div class="col-md-7 col-lg-8">
-		<slot/>
+		<slot />
 	</div>
 </div>

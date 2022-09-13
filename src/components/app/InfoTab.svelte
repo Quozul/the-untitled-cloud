@@ -9,28 +9,30 @@
 	import { refreshSelectedServer } from "./helpers";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 
-	let isPending: boolean
-	let isSuspended: boolean
-	let containerNotFound: boolean
+	let isPending: boolean;
+	let isSuspended: boolean;
+	let containerNotFound: boolean;
 
 	$: {
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
 		isSuspended = $server?.subscription.status === ApiSubscriptionStatus.SUSPENDED;
-		containerNotFound = $server?.subscription.status === ApiSubscriptionStatus.ACTIVE && !$server?.state.created;
+		containerNotFound =
+			$server?.subscription.status === ApiSubscriptionStatus.ACTIVE &&
+			!$server?.state.created;
 	}
 </script>
 
 {#if isPending}
-	<Pending/>
+	<Pending />
 {:else if containerNotFound}
-	<NotFound/>
+	<NotFound />
 {:else if isSuspended}
-	<Suspended/>
+	<Suspended />
 {:else if $fetchServerError}
-	<InternalError refresh={refreshSelectedServer}/>
+	<InternalError refresh={refreshSelectedServer} />
 {:else}
 	<div class="d-flex gap-3 flex-column flex-xl-row">
-		<ServerInfo/>
-		<ServerFtp/>
+		<ServerInfo />
+		<ServerFtp />
 	</div>
 {/if}

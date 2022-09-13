@@ -10,11 +10,16 @@
 
 <div class="accordion-item">
 	<h2 class="accordion-header">
-		<button class="accordion-button" class:collapsed={!isOpened} type="button" on:click|preventDefault={toggleOpen}>
+		<button
+			class="accordion-button"
+			class:collapsed={!isOpened}
+			type="button"
+			on:click|preventDefault={toggleOpen}
+		>
 			{name}
 		</button>
 	</h2>
 	<div class="accordion-collapse collapse p-3" class:show={isOpened}>
-		<slot/>
+		<slot />
 	</div>
 </div>

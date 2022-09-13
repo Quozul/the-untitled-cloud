@@ -12,13 +12,15 @@
 <div class="container min-vh-100 d-flex flex-column">
 	<Icons />
 	<header>
-		<Navbar/>
+		<Navbar />
 	</header>
 
-	<section class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center">
+	<section
+		class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center"
+	>
 		<div>
 			<div class="icon-container">
-				<Icon key="favicon" width="192" height="192"/>
+				<Icon key="favicon" width="192" height="192" />
 			</div>
 
 			<h1 class="display-1">{$page.status}</h1>
@@ -30,5 +32,5 @@
 		</div>
 	</section>
 
-	<Footer/>
+	<Footer />
 </div>

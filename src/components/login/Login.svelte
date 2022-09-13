@@ -26,7 +26,7 @@
 			await redirect(redirectTo);
 		} catch (e: ApiError) {
 			if (e.code === AuthenticationErrors.VERIFY_ACCOUNT) {
-				$credentials = {email, password};
+				$credentials = { email, password };
 				$loginMode = LoginMode.VERIFICATION;
 			} else {
 				error = e;
@@ -48,12 +48,26 @@
 	<h4>{$t("login")}</h4>
 	<div class="mb-3">
 		<label for="email" class="form-label">{$t("email_address")}</label>
-		<input id="email" type="email" name="email" class="form-control" placeholder={$t("email_address")} bind:value={email}>
+		<input
+			id="email"
+			type="email"
+			name="email"
+			class="form-control"
+			placeholder={$t("email_address")}
+			bind:value={email}
+		/>
 	</div>
 
 	<div>
 		<label for="password" class="form-label">{$t("password")}</label>
-		<input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
+		<input
+			id="password"
+			type="password"
+			name="password"
+			class="form-control"
+			placeholder={$t("password")}
+			bind:value={password}
+		/>
 	</div>
 
 	<button type="button" on:click={forgotPassword} class="d-block btn btn-sm btn-link p-0 mb-3">

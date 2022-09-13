@@ -24,23 +24,47 @@ export const token: Writable<string> = createStoreEntry("token", null, browser &
 /**
  * @deprecated Use $server instead
  */
-export const selectedServer: Writable<ApiService | null> = createStoreEntry("selectedServer", null, browser && sessionStorage);
+export const selectedServer: Writable<ApiService | null> = createStoreEntry(
+	"selectedServer",
+	null,
+	browser && sessionStorage
+);
 export const cart: Writable<ApiProduct[]> = createStoreEntry("cart", [], browser && sessionStorage);
-export const promoCode: Writable<PromoCode | null> = createStoreEntry("promoCode", EmptyPromoCode, browser && sessionStorage);
-export const sidebarCollapsed: Writable<boolean> = createStoreEntry("sidebarCollapsed", false, browser && sessionStorage);
+export const promoCode: Writable<PromoCode | null> = createStoreEntry(
+	"promoCode",
+	EmptyPromoCode,
+	browser && sessionStorage
+);
+export const sidebarCollapsed: Writable<boolean> = createStoreEntry(
+	"sidebarCollapsed",
+	false,
+	browser && sessionStorage
+);
 
 // App active servers stores
-export const servers: Writable<ApiPaginate<ApiService>> = createStoreEntry("servers", EmptyPaginate, browser && sessionStorage);
+export const servers: Writable<ApiPaginate<ApiService>> = createStoreEntry(
+	"servers",
+	EmptyPaginate,
+	browser && sessionStorage
+);
 export const fetchingServers: Writable<boolean> = writable(false);
 export const fetchServersError: Writable<ApiError | null> = writable(null);
 
 // App current selected server stores
-export const server: Writable<ApiService | null> = createStoreEntry("server", null, browser && sessionStorage);
+export const server: Writable<ApiService | null> = createStoreEntry(
+	"server",
+	null,
+	browser && sessionStorage
+);
 export const fetchingServer: Writable<boolean> = writable(false);
 export const fetchServerError: Writable<ApiError | null> = writable(null);
 
 // App server parameters store
-export const parameters: Writable<ApiServer> = createStoreEntry("parameters", null, browser && sessionStorage);
+export const parameters: Writable<ApiServer> = createStoreEntry(
+	"parameters",
+	null,
+	browser && sessionStorage
+);
 
 // App current user
 export const user: Writable<ApiUser> = createStoreEntry("user", null, browser && sessionStorage);

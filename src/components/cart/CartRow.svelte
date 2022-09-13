@@ -16,7 +16,7 @@
 	<div>
 		<div class="d-flex align-items-center gap-2">
 			{#if canEdit}
-				<Icon key="x-lg" onClick={handleClick}/>
+				<Icon key="x-lg" onClick={handleClick} />
 			{/if}
 			<h6 class="my-0">{product.name}</h6>
 		</div>

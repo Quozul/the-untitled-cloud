@@ -12,17 +12,17 @@ export async function getProducts(page: number = 0): Promise<ApiPaginate<ApiProd
 	params.set("page", page.toString());
 
 	const request = api(`product?${params.toString()}`, options);
-	return await handleRequest(request) as ApiPaginate<ApiProduct>;
+	return (await handleRequest(request)) as ApiPaginate<ApiProduct>;
 }
 
 export async function getPromoCode(promoCode: string): Promise<PromoCode> {
 	const request = api(`payment/stripe/subscription/promoCode/${promoCode}`, getOptions("GET"));
-	return await handleRequest(request) as PromoCode;
+	return (await handleRequest(request)) as PromoCode;
 }
 
 export function toggleInCart(product: ApiProduct) {
 	const c = get(cart) ?? [];
-	const isInCart = c.find(p => p.id === product.id);
+	const isInCart = c.find((p) => p.id === product.id);
 
 	if (!isInCart) {
 		c.push(product);
@@ -41,6 +41,4 @@ export function removeFromCart(product: ApiProduct) {
 	cart.set(c);
 }
 
-export function getCartTotal() {
-
-}
+export function getCartTotal() {}

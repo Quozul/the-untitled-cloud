@@ -23,7 +23,7 @@
 			total = $cart.reduce((a, b) => a + b.price, 0);
 
 			if ($promoCode?.percentOff) {
-				total -= total * $promoCode.percentOff / 100;
+				total -= (total * $promoCode.percentOff) / 100;
 			} else if ($promoCode?.amountOff) {
 				total -= $promoCode.amountOff;
 			}
@@ -70,7 +70,7 @@
 	<ul class="list-group mb-3">
 		{#if $cart?.length > 0}
 			{#each $cart as product}
-				<CartRow {product} {canEdit}/>
+				<CartRow {product} {canEdit} />
 			{/each}
 		{:else}
 			<li class="list-group-item d-flex justify-content-between lh-sm">
@@ -85,7 +85,7 @@
 				<div>
 					<div class="d-flex align-items-center gap-2">
 						{#if canEdit}
-							<Icon key="x-lg" onClick={removePromoCode}/>
+							<Icon key="x-lg" onClick={removePromoCode} />
 						{/if}
 						<h6 class="my-0">{$promoCode.code}</h6>
 					</div>
@@ -112,8 +112,15 @@
 	{#if canEdit}
 		<form class="card p-2">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder={$t("promo_code")} bind:value={codeInput}>
-				<Button type="submit" onClick={setPromoCode} variant={Variant.SECONDARY}>{$t("use")}</Button>
+				<input
+					type="text"
+					class="form-control"
+					placeholder={$t("promo_code")}
+					bind:value={codeInput}
+				/>
+				<Button type="submit" onClick={setPromoCode} variant={Variant.SECONDARY}
+					>{$t("use")}</Button
+				>
 			</div>
 
 			{#if promotionCodeError}

@@ -11,7 +11,7 @@
 	<h4>En attente</h4>
 
 	<p class="lead">
-		Votre serveur est en cours de préparation.<br/>
+		Votre serveur est en cours de préparation.<br />
 		Rafraichissez la liste pour voir son nouvel état.
 	</p>
 

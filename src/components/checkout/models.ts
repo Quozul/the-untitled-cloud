@@ -1,8 +1,8 @@
 export type ClientSecretResponse = {
-	clientSecret: string,
-	totalPrice: number,
-}
+	clientSecret: string;
+	totalPrice: number;
+};
 
 export type SubscriptionCreated = {
-	serverId: string,
-}
+	serverId: string;
+};

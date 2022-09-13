@@ -14,7 +14,10 @@ import type { ApiService } from "$models/ApiService";
 /**
  * Build request's options
  */
-export function getOptions(method: string = "POST", raw: { [key: string]: any } | null = null): RequestInit {
+export function getOptions(
+	method: string = "POST",
+	raw: { [key: string]: any } | null = null
+): RequestInit {
 	const jwt = get(token) || "";
 
 	const headers = new Headers();
@@ -27,7 +30,9 @@ export function getOptions(method: string = "POST", raw: { [key: string]: any } 
 	return {
 		redirect: "follow",
 		mode: "cors",
-		headers, body, method,
+		headers,
+		body,
+		method,
 	};
 }
 
@@ -36,34 +41,37 @@ export function getOptions(method: string = "POST", raw: { [key: string]: any } 
  */
 export async function handleRequest(response: Promise<Response>): Promise<Object | null> {
 	return new Promise((resolve, reject) => {
-		response.then((response) => {
-			if (!response.ok) {
-				response.json()
-					.then((err: ApiError) => {
-						reject({
-							...err,
-							translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
+		response
+			.then((response) => {
+				if (!response.ok) {
+					response
+						.json()
+						.then((err: ApiError) => {
+							reject({
+								...err,
+								translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
+							});
+						})
+						.catch(() => {
+							// The json does not exist, just return the HTTP error
+							const error: ApiError = {
+								// @ts-ignore
+								code: response.status,
+								isError: true,
+								message: response.statusText,
+								translatedMessage: get(t)(`error.${response.status}`),
+							};
+							reject(error);
 						});
-					})
-					.catch(() => {
-						// The json does not exist, just return the HTTP error
-						const error: ApiError = {
-							// @ts-ignore
-							code: response.status,
-							isError: true,
-							message: response.statusText,
-							translatedMessage: get(t)(`error.${response.status}`),
-						};
-						reject(error);
-					});
-			} else {
-				response.json()
-					.then(resolve)
-					.catch(() => {
-						resolve(null);
-					});
-			}
-		})
+				} else {
+					response
+						.json()
+						.then(resolve)
+						.catch(() => {
+							resolve(null);
+						});
+				}
+			})
 			.catch(() => {
 				const error: ApiError = {
 					code: AuthenticationErrors.FETCH_FAILED,
@@ -105,12 +113,14 @@ export const href = (link: string = "", locale: string = ""): string => {
 };
 
 export function classNames(classes: ClassNames): string {
-	return Object.entries(classes).filter(c => c[1]).map(c => c[0]).join(" ");
+	return Object.entries(classes)
+		.filter((c) => c[1])
+		.map((c) => c[0])
+		.join(" ");
 }
 
-
 export function formatPrice(amount: number, currency: string = "EUR"): string {
-	return new Intl.NumberFormat("fr-FR", {style: "currency", currency}).format(amount / 100);
+	return new Intl.NumberFormat("fr-FR", { style: "currency", currency }).format(amount / 100);
 }
 
 export async function redirect(fallback: string = "/") {
@@ -137,12 +147,15 @@ export function capitalize(str: string) {
 // TODO: Move this function
 export async function getAddress(): Promise<Address> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
-	return await handleRequest(request) as Address;
+	return (await handleRequest(request)) as Address;
 }
 
 // TODO: Move this function
 export async function setAddress(address: Address): Promise<void> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("POST", address));
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}user/address`,
+		getOptions("POST", address)
+	);
 	await handleRequest(request);
 }
 
@@ -155,11 +168,17 @@ export function compareServices(service1: ApiService, service2: ApiService): boo
 		return service1.id === service2.id;
 	}
 
-	return service1.subscription.id === service2.subscription.id && service1.product.id === service2.product.id;
+	return (
+		service1.subscription.id === service2.subscription.id &&
+		service1.product.id === service2.product.id
+	);
 }
 
 // This is expensive
-export function deepEqual(object1: { [key: string]: any }, object2: { [key: string]: any }): boolean {
+export function deepEqual(
+	object1: { [key: string]: any },
+	object2: { [key: string]: any }
+): boolean {
 	if (!object1 || !object2) {
 		return false;
 	}
@@ -172,10 +191,7 @@ export function deepEqual(object1: { [key: string]: any }, object2: { [key: stri
 		const val1 = object1[key];
 		const val2 = object2[key];
 		const areObjects = isObject(val1) && isObject(val2);
-		if (
-			areObjects && !deepEqual(val1, val2) ||
-			!areObjects && val1 !== val2
-		) {
+		if ((areObjects && !deepEqual(val1, val2)) || (!areObjects && val1 !== val2)) {
 			return false;
 		}
 	}

@@ -7,7 +7,7 @@ import { getOptions, handleRequest } from "$shared/helpers";
 export async function deleteAccount(password: string, code: string): Promise<void> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}user`,
-		getOptions("DELETE", { password, code }),
+		getOptions("DELETE", { password, code })
 	);
 	await handleRequest(request);
 }

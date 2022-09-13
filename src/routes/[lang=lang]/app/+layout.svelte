@@ -21,6 +21,16 @@
 	<title>Mes serveurs</title>
 </svelte:head>
 
+<Icons />
+
+<div class="d-flex vh-100">
+	<Sidebar />
+
+	<div class="content overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3">
+		<slot />
+	</div>
+</div>
+
 <style lang="scss">
 	@include media-breakpoint-down(sm) {
 		.content {
@@ -28,13 +38,3 @@
 		}
 	}
 </style>
-
-<Icons/>
-
-<div class="d-flex vh-100">
-	<Sidebar/>
-
-	<div class="content overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3">
-		<slot/>
-	</div>
-</div>

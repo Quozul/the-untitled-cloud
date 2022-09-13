@@ -9,12 +9,17 @@ import { getOptions, handleRequest } from "$shared/helpers";
  * @param language
  * @param acceptTos
  */
-export async function signUp(email: string, password: string, language: string, acceptTos: boolean): Promise<ApiError> {
+export async function signUp(
+	email: string,
+	password: string,
+	language: string,
+	acceptTos: boolean
+): Promise<ApiError> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
-		getOptions("POST", { email, password, language, acceptTos }),
-	)
-	return await handleRequest(request) as ApiError;
+		getOptions("POST", { email, password, language, acceptTos })
+	);
+	return (await handleRequest(request)) as ApiError;
 }
 
 /**
@@ -23,12 +28,16 @@ export async function signUp(email: string, password: string, language: string, 
  * @param password
  * @param code
  */
-export async function signIn(email: string, password: string, code: string | null = null): Promise<Token> {
+export async function signIn(
+	email: string,
+	password: string,
+	code: string | null = null
+): Promise<Token> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
-		getOptions("POST", { email, password, code }),
+		getOptions("POST", { email, password, code })
 	);
-	return await handleRequest(request) as Token;
+	return (await handleRequest(request)) as Token;
 }
 
 /**
@@ -38,9 +47,9 @@ export async function signIn(email: string, password: string, code: string | nul
 export async function sendVerificationCode(email: string): Promise<ApiError> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/code/${email}`,
-		getOptions("POST"),
+		getOptions("POST")
 	);
-	return await handleRequest(request) as ApiError;
+	return (await handleRequest(request)) as ApiError;
 }
 
 /**
@@ -49,10 +58,14 @@ export async function sendVerificationCode(email: string): Promise<ApiError> {
  * @param password
  * @param code
  */
-export async function changePassword(email: string, password: string, code: string): Promise<Token> {
+export async function changePassword(
+	email: string,
+	password: string,
+	code: string
+): Promise<Token> {
 	const request = fetch(
 		`${import.meta.env.VITE_API_BASE_URL}authentication/password`,
-		getOptions("POST", { email, password, code }),
+		getOptions("POST", { email, password, code })
 	);
-	return await handleRequest(request) as Token;
+	return (await handleRequest(request)) as Token;
 }

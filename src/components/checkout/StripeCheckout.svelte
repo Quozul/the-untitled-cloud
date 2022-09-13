@@ -53,11 +53,10 @@
 		processing = true;
 
 		// confirm payment with stripe
-		const result: PaymentIntentResult = await stripe
-			.confirmPayment({
-				elements,
-				redirect: "if_required",
-			});
+		const result: PaymentIntentResult = await stripe.confirmPayment({
+			elements,
+			redirect: "if_required",
+		});
 
 		if (result.error) {
 			// payment failed, notify user
@@ -70,7 +69,7 @@
 		} else {
 			// Tell the API the payment has been made
 			try {
-				$selectedServer = await updatePaymentIntent(result.paymentIntent.id)
+				$selectedServer = await updatePaymentIntent(result.paymentIntent.id);
 			} catch (e: ApiError) {
 				error = e;
 			}
@@ -88,28 +87,33 @@
 
 {#if stripe && !!clientSecret}
 	<form on:submit|preventDefault={submit}>
-		<Elements {stripe} clientSecret={clientSecret} bind:elements>
+		<Elements {stripe} {clientSecret} bind:elements>
 			<PaymentElement />
 		</Elements>
 
 		<small class="form-check mt-3">
-			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv}>
+			<input class="form-check-input" type="checkbox" value="" id="cgv" bind:checked={cgv} />
 			<label class="form-check-label" for="cgv">
 				{$t("i_acknowledge_and_accept")}
-				<Link href="/terms-of-sale/">{$t("terms_of_sale")}</Link>.
+				<Link href="/terms-of-sale/">{$t("terms_of_sale")}</Link>
+				.
 			</label>
 		</small>
 
-		<button class="w-100 btn btn-primary btn-lg my-3" type="submit" disabled="{processing || !cgv}">
+		<button
+			class="w-100 btn btn-primary btn-lg my-3"
+			type="submit"
+			disabled={processing || !cgv}
+		>
 			{#if processing}
-				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
 			{/if}
 			{$t("checkout.proceed")} ({formatPrice(totalPrice)})
 		</button>
 	</form>
 {:else if !error}
 	<div class="d-flex align-items-center mb-3">
-		<div class="spinner-border me-3" role="status" aria-hidden="true"></div>
+		<div class="spinner-border me-3" role="status" aria-hidden="true" />
 		<strong>{$t("loading")}...</strong>
 	</div>
 {/if}

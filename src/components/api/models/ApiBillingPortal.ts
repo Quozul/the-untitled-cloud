@@ -1,3 +1,3 @@
 export type ApiBillingPortal = {
-	url: string,
-}
+	url: string;
+};

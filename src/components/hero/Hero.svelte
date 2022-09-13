@@ -12,14 +12,19 @@
 </p>
 
 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-	<Link href="/rent/products/" className="btn btn-primary btn-lg px-4 me-md-2">{$t("rent_a_server")}</Link>
+	<Link href="/rent/products/" className="btn btn-primary btn-lg px-4 me-md-2"
+		>{$t("rent_a_server")}</Link
+	>
 
 	{#if $token}
 		<Link href="/app/" className="btn btn-outline-secondary btn-lg px-4">
 			{$t("my_servers")}
 		</Link>
 	{:else}
-		<Link href="/login/?redirect=/{$locale}/app" className="btn btn-outline-secondary btn-lg px-4">
+		<Link
+			href="/login/?redirect=/{$locale}/app"
+			className="btn btn-outline-secondary btn-lg px-4"
+		>
 			{$t("to_login")}
 		</Link>
 	{/if}

@@ -17,6 +17,10 @@
 	}
 </script>
 
+<div class="option px-2 py-1" class:active={selected} class:d-none={hide} on:click={select}>
+	{item.label}
+</div>
+
 <style lang="scss">
 	.option {
 		cursor: pointer;
@@ -33,7 +37,3 @@
 		}
 	}
 </style>
-
-<div class="option px-2 py-1" class:active={selected} class:d-none={hide} on:click={select}>
-	{item.label}
-</div>

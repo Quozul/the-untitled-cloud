@@ -40,21 +40,26 @@
 	variant={Variant.DANGER}
 >
 	<p>
-		Vous êtes sur le point de de supprimer votre compte.
-		Cette action est réalisée dès l'envoi de ce formulaire et est irréversible.
+		Vous êtes sur le point de de supprimer votre compte. Cette action est réalisée dès l'envoi
+		de ce formulaire et est irréversible.
 	</p>
-	<p>
-		Tous vos abonnements doivent annulés pour procéder.
-	</p>
+	<p>Tous vos abonnements doivent annulés pour procéder.</p>
 
-	<hr/>
+	<hr />
 
 	<div class="mb-3">
 		<label for="password" class="form-label">{$t("password")}</label>
-		<input id="password" type="password" name="password" class="form-control" placeholder={$t("password")} bind:value={password}>
+		<input
+			id="password"
+			type="password"
+			name="password"
+			class="form-control"
+			placeholder={$t("password")}
+			bind:value={password}
+		/>
 	</div>
 
-	<Code email={$user?.email} bind:code={code}/>
+	<Code email={$user?.email} bind:code />
 
 	{#if error}
 		<Alert variant={Variant.DANGER} icon="warning">

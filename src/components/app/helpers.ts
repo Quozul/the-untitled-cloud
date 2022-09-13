@@ -1,7 +1,9 @@
 import {
 	fetchingServer,
-	fetchingServers, fetchServerError,
-	fetchServersError, onProfilePage,
+	fetchingServers,
+	fetchServerError,
+	fetchServersError,
+	onProfilePage,
 	server,
 	servers,
 } from "$store/store";
@@ -15,15 +17,21 @@ import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiUser } from "$models/ApiUser";
 import type { ApiBillingPortal } from "$models/ApiBillingPortal";
 
-export async function getAllServers(page: number = 0, ended: boolean = false): Promise<ApiPaginate<ApiService>> {
+export async function getAllServers(
+	page: number = 0,
+	ended: boolean = false
+): Promise<ApiPaginate<ApiService>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
 	if (ended) {
 		params.set("status", "CANCELLED");
 	}
 
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service?${params.toString()}`, getOptions("GET"))
-	return await handleRequest(request) as ApiPaginate<ApiService>;
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}service?${params.toString()}`,
+		getOptions("GET")
+	);
+	return (await handleRequest(request)) as ApiPaginate<ApiService>;
 }
 
 export async function refreshAllServers(page: number = 0): Promise<void> {
@@ -67,8 +75,11 @@ export async function getServerInfo(service: ApiService): Promise<ApiService> {
 		return service;
 	}
 
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("GET"))
-	return await handleRequest(request) as ApiService;
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`,
+		getOptions("GET")
+	);
+	return (await handleRequest(request)) as ApiService;
 }
 
 export async function refreshSelectedServer(): Promise<void> {
@@ -90,36 +101,56 @@ export async function refreshSelectedServer(): Promise<void> {
 }
 
 export async function patchServer(service: ApiService, action: string): Promise<void> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`, getOptions("PATCH", {action}));
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`,
+		getOptions("PATCH", { action })
+	);
 	await handleRequest(request);
 }
 
-export async function getSubscriptionProducts(service: ApiService): Promise<ApiPaginate<ApiProduct>> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/products`, getOptions("GET"));
-	return await handleRequest(request) as ApiPaginate<ApiProduct>;
+export async function getSubscriptionProducts(
+	service: ApiService
+): Promise<ApiPaginate<ApiProduct>> {
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/products`,
+		getOptions("GET")
+	);
+	return (await handleRequest(request)) as ApiPaginate<ApiProduct>;
 }
 
 export async function getSubscriptionDetails(service: ApiService): Promise<ApiSubscriptionDetails> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/details`, getOptions("GET"));
-	return await handleRequest(request) as ApiSubscriptionDetails;
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/details`,
+		getOptions("GET")
+	);
+	return (await handleRequest(request)) as ApiSubscriptionDetails;
 }
 
-export async function cancelSubscription(service: ApiService, now: boolean = true): Promise<ApiSubscriptionDetails> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`, getOptions("DELETE", { now }));
-	return await handleRequest(request) as ApiSubscriptionDetails;
+export async function cancelSubscription(
+	service: ApiService,
+	now: boolean = true
+): Promise<ApiSubscriptionDetails> {
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`,
+		getOptions("DELETE", { now })
+	);
+	return (await handleRequest(request)) as ApiSubscriptionDetails;
 }
 
 export async function updateDiscordAccount(code: string, redirectUri: string) {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/discord`, getOptions("POST", { code, redirectUri }));
+	const request = fetch(
+		`${import.meta.env.VITE_API_BASE_URL}user/discord`,
+		getOptions("POST", { code, redirectUri })
+	);
 	await handleRequest(request);
 }
 
 export async function getUser(): Promise<ApiUser> {
 	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user`, getOptions("GET"));
-	return await handleRequest(request) as ApiUser;
+	return (await handleRequest(request)) as ApiUser;
 }
 
 export async function getStripePortal(redirect: string | null = null): Promise<ApiBillingPortal> {
 	const request = api(`user/portal?redirect=${redirect}`, getOptions("GET"));
-	return await handleRequest(request) as ApiBillingPortal;
+	return (await handleRequest(request)) as ApiBillingPortal;
 }

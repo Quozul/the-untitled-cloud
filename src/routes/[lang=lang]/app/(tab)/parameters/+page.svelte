@@ -9,11 +9,10 @@
 	$selectedTab = ServerTab.PARAMETERS;
 </script>
 
-
 {#if $server?.product.id === Products.MinecraftServer}
-	<MinecraftParameters/>
+	<MinecraftParameters />
 {:else if $server?.product.id === Products.ArkServer}
-	<SteamParameters/>
+	<SteamParameters />
 {:else}
-	<NoParameters/>
+	<NoParameters />
 {/if}

@@ -10,13 +10,13 @@ export async function getSubscriptions(page: number = 0): Promise<ApiPaginate<Ap
 	params.set("page", page.toString());
 
 	const request = api(`subscription?${params.toString()}`, options);
-	return await handleRequest(request) as ApiPaginate<ApiSubscription>;
+	return (await handleRequest(request)) as ApiPaginate<ApiSubscription>;
 }
 
 export async function getSubscription(subscriptionId: string): Promise<ApiSubscription> {
 	const options = getOptions("GET");
 	const request = api(`subscription/${subscriptionId}`, options);
-	return await handleRequest(request) as ApiSubscription;
+	return (await handleRequest(request)) as ApiSubscription;
 }
 
 export async function deleteSubscription(serviceId: string, now: boolean = true): Promise<void> {

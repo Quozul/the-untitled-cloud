@@ -1,58 +1,56 @@
 <script lang="ts">
-    import { server, fetchingServer } from "$store/store";
+	import { server, fetchingServer } from "$store/store";
 	import { onMount } from "svelte";
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import "@js-joda/timezone";
 	import { Locale } from "@js-joda/locale_fr";
 	import Button from "$shared/Button.svelte";
-    import { patchServer, refreshSelectedServer } from "$components/app/helpers";
-    import { Variant } from "$shared/constants";
-    import Modal from "$components/modal/Modal.svelte";
+	import { patchServer, refreshSelectedServer } from "$components/app/helpers";
+	import { Variant } from "$shared/constants";
+	import Modal from "$components/modal/Modal.svelte";
 
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
 	let duration: Duration = Duration.ZERO;
 	let modalVisible: boolean = false;
 
-	const formatter = DateTimeFormatter
-		.ofPattern("eeee d MMMM yyyy")
-		.withLocale(Locale.FRANCE);
+	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
 
 	onMount(() => {
-        if ($server?.state && $server?.state?.created) {
-            // Parse dates
-            started = ZonedDateTime.parse($server.state.startedAt);
-            stopped = ZonedDateTime.parse($server.state.finishedAt);
-            if (stopped.year() === 1) {
-                stopped = ZonedDateTime.now();
-            }
-            duration = Duration.between(started, stopped);
-        }
+		if ($server?.state && $server?.state?.created) {
+			// Parse dates
+			started = ZonedDateTime.parse($server.state.startedAt);
+			stopped = ZonedDateTime.parse($server.state.finishedAt);
+			if (stopped.year() === 1) {
+				stopped = ZonedDateTime.now();
+			}
+			duration = Duration.between(started, stopped);
+		}
 	});
 
 	async function startServer() {
 		await patchServer($server, "START");
-        await refreshSelectedServer();
+		await refreshSelectedServer();
 	}
 
 	async function stopServer() {
 		await patchServer($server, "STOP");
-        await refreshSelectedServer();
+		await refreshSelectedServer();
 	}
 
 	async function recreateServer() {
 		await patchServer($server, "RECREATE");
-        await refreshSelectedServer();
+		await refreshSelectedServer();
 	}
 
 	async function restartServer() {
 		await patchServer($server, "RESTART");
-        await refreshSelectedServer();
+		await refreshSelectedServer();
 	}
 
-    function openModal() {
-        modalVisible = true;
-    }
+	function openModal() {
+		modalVisible = true;
+	}
 
 	async function reset() {
 		try {
@@ -63,12 +61,6 @@
 		}
 	}
 </script>
-
-<style>
-    .element {
-        flex: 1;
-    }
-</style>
 
 <div class="bg-light p-4 d-flex flex-column element">
 	<h4>Produit</h4>
@@ -88,32 +80,62 @@
 		</div>
 	</dl>
 
-    <h4>Actions</h4>
-    {#if $server?.state.created}
-        <div class="d-flex gap-3 flex-wrap">
-            {#if !$server.state.running}
-                <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="play" onClick={startServer}>
-                    Démarrer
-                </Button>
-            {:else}
-                <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="stop" onClick={stopServer}>
-                    Arrêter
-                </Button>
-            {/if}
+	<h4>Actions</h4>
+	{#if $server?.state.created}
+		<div class="d-flex gap-3 flex-wrap">
+			{#if !$server.state.running}
+				<Button
+					variant={Variant.PRIMARY}
+					loading={$fetchingServer}
+					disabled={!$server}
+					icon="play"
+					onClick={startServer}
+				>
+					Démarrer
+				</Button>
+			{:else}
+				<Button
+					variant={Variant.PRIMARY}
+					loading={$fetchingServer}
+					disabled={!$server}
+					icon="stop"
+					onClick={stopServer}
+				>
+					Arrêter
+				</Button>
+			{/if}
 
-            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={restartServer}>
-                Redémarrer
-            </Button>
+			<Button
+				variant={Variant.PRIMARY}
+				loading={$fetchingServer}
+				disabled={!$server}
+				icon="arrow-clockwise"
+				onClick={restartServer}
+			>
+				Redémarrer
+			</Button>
 
-            <Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
+			<Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
 
-            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="trash" onClick={openModal}>
-                Réinitialiser
-            </Button>
+			<Button
+				variant={Variant.PRIMARY}
+				loading={$fetchingServer}
+				disabled={!$server}
+				icon="trash"
+				onClick={openModal}
+			>
+				Réinitialiser
+			</Button>
 
-            <Button variant={Variant.PRIMARY} loading={$fetchingServer} disabled="{!$server}" icon="arrow-clockwise" onClick={recreateServer}>
-                Recréer
-            </Button>
+			<Button
+				variant={Variant.PRIMARY}
+				loading={$fetchingServer}
+				disabled={!$server}
+				icon="arrow-clockwise"
+				onClick={recreateServer}
+			>
+				Recréer
+			</Button>
 
 			<Modal
 				bind:visible={modalVisible}
@@ -125,13 +147,17 @@
 				variant={Variant.DANGER}
 			>
 				<p>
-					Vous êtes sur le point de réinitialiser votre serveur.
-					Cette action supprimera tous les fichiers et ne seront pas récupérables.
+					Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
+					tous les fichiers et ne seront pas récupérables.
 				</p>
-				<p>
-					Êtes-vous sûr de vouloir continuer ?
-				</p>
-            </Modal>
-        </div>
-    {/if}
+				<p>Êtes-vous sûr de vouloir continuer ?</p>
+			</Modal>
+		</div>
+	{/if}
 </div>
+
+<style>
+	.element {
+		flex: 1;
+	}
+</style>

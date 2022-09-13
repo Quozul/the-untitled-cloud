@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-    <title>Connexion</title>
+	<title>Connexion</title>
 </svelte:head>
 
-<LoginForm/>
+<LoginForm />

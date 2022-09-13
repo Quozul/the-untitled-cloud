@@ -8,7 +8,14 @@
 <h4 class="mb-3">{$t("checkout")}</h4>
 <div class="my-3">
 	<div class="form-check">
-		<input id="bank" value="bank" name="paymentMethod" type="radio" class="form-check-input" bind:group={paymentMethod}>
+		<input
+			id="bank"
+			value="bank"
+			name="paymentMethod"
+			type="radio"
+			class="form-check-input"
+			bind:group={paymentMethod}
+		/>
 		<label class="form-check-label" for="bank">{$t("payment_method.bank")}</label>
 	</div>
 	<!--<div class="form-check">
@@ -17,10 +24,10 @@
 	</div>-->
 </div>
 
-<hr class="my-4">
+<hr class="my-4" />
 
 {#if paymentMethod === "bank"}
-	<StripeCheckout/>
+	<StripeCheckout />
 {:else if paymentMethod === "paypal"}
 	N/A
 {/if}

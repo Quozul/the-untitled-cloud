@@ -20,10 +20,10 @@
 
 {#if isExternalLink}
 	<a {href} class={className} target="_blank" rel="noreferrer noopener" on:click={onClick}>
-		<slot/>
+		<slot />
 	</a>
 {:else}
 	<a href={internalLink} class={className} on:click={onClick}>
-		<slot/>
+		<slot />
 	</a>
 {/if}

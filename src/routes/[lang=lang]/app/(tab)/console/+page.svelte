@@ -6,4 +6,4 @@
 	$selectedTab = ServerTab.CONSOLE;
 </script>
 
-<Console/>
+<Console />

@@ -6,4 +6,4 @@
 	$selectedTab = ServerTab.INFO;
 </script>
 
-<InfoTab/>
+<InfoTab />

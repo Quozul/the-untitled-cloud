@@ -10,13 +10,13 @@ export async function getServices(page: number = 0): Promise<ApiPaginate<ApiServ
 	params.set("page", page.toString());
 
 	const request = api(`service?${params.toString()}`, options);
-	return await handleRequest(request) as ApiPaginate<ApiService>;
+	return (await handleRequest(request)) as ApiPaginate<ApiService>;
 }
 
 export async function getService(serviceId: string): Promise<ApiService> {
 	const options = getOptions("GET");
 	const request = api(`service/${serviceId}`, options);
-	return await handleRequest(request) as ApiService;
+	return (await handleRequest(request)) as ApiService;
 }
 
 export async function patchService(serviceId: string, action: string): Promise<void> {
