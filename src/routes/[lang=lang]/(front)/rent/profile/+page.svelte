@@ -8,7 +8,7 @@
 	$checkoutStep = CheckoutSteps.PROFILE;
 
 	async function handleSubmit() {
-		await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
+		await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/products/`);
 	}
 </script>
 

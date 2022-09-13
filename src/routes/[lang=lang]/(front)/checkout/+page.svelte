@@ -26,6 +26,10 @@
 	<title>{$t("checkout")}</title>
 </svelte:head>
 
+<h1 class="text-center fw-bolder mb-5">
+	{$t("checkout")}
+</h1>
+
 <div class="row">
 	<div class="col">
 		<ul class="list-group list-group-flush">
@@ -33,7 +37,7 @@
 				{#if $checkoutStep === CheckoutSteps.LOGIN}
 					<LoginForm redirectTo={null} defaultStyle={false} on:submit={setProfileTab} />
 				{:else}
-					<div on:click={setLoginTab} class="cursor-pointer text-secondary fs-4">Connexion</div>
+					<div on:click={setLoginTab} class="cursor-pointer text-secondary fs-4">{$t("login")}</div>
 				{/if}
 			</li>
 
@@ -44,7 +48,7 @@
 					<small class="cursor-pointer text-muted" on:click={setCheckoutTab}>Skip (debug)</small>
 				{:else}
 					<div on:click={setProfileTab} class="cursor-pointer text-secondary fs-4">
-						Adresse de facturation
+						{$t("billing_address")}
 					</div>
 				{/if}
 			</li>
@@ -53,7 +57,12 @@
 				{#if $checkoutStep === CheckoutSteps.CHECKOUT}
 					<StripeCheckout />
 				{:else}
-					<div on:click={setCheckoutTab} class="cursor-pointer text-secondary fs-4 disabled">Paiement</div>
+					<div
+						on:click={setCheckoutTab}
+						class="cursor-pointer text-secondary fs-4 disabled"
+					>
+						{$t("checkout")}
+					</div>
 				{/if}
 			</li>
 		</ul>

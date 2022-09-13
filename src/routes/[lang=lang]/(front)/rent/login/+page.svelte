@@ -11,4 +11,4 @@
 	<title>Connexion</title>
 </svelte:head>
 
-<LoginForm redirectTo={$cart ? `/${$locale}/rent/profile/` : `/${$locale}/rent/products/`} />
+<LoginForm redirectTo={$cart ? `/${$locale}/rent/profile/` : `/${$locale}/products/`} />

@@ -14,7 +14,7 @@
 		</span>
 	</p>
 
-	<Link href="/rent/products/" className="btn btn-dark rounded-pill px-4 me-md-2">
+	<Link href="/products/" className="btn btn-dark rounded-pill px-4 me-md-2">
 		{$t("rent_a_server")}
 	</Link>
 </div>

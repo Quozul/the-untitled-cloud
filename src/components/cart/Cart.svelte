@@ -24,12 +24,14 @@
 	$: {
 		if ($cart) {
 			subtotal = $cart.reduce((a, b) => a + b.price, 0);
+		}
 
-			if ($promoCode?.percentOff) {
-				total = subtotal - (subtotal * $promoCode.percentOff) / 100;
-			} else if ($promoCode?.amountOff) {
-				total = subtotal - $promoCode.amountOff;
-			}
+		if ($promoCode?.percentOff) {
+			total = subtotal - (subtotal * $promoCode.percentOff) / 100;
+		} else if ($promoCode?.amountOff) {
+			total = subtotal - $promoCode.amountOff;
+		} else {
+			total = subtotal;
 		}
 	}
 
@@ -142,10 +144,15 @@
 
 			<div>
 				<div class="d-flex justify-content-between">
-				<h6 class="text-muted mb-0">{$t("taxes")}</h6>
-				<span class="fw-bold">{formatPrice(0)}</span>
+					<h6 class="text-muted mb-0">{$t("taxes")}</h6>
+					<span class="fw-bold">{formatPrice(0)}</span>
 				</div>
-				<small class="text-muted">TVA non applicable, <Link href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/">art. 293 B du CGI</Link>.</small>
+				<small class="text-muted">TVA non applicable,
+					<Link href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/">
+						art. 293 B du CGI
+					</Link>
+					.
+				</small>
 			</div>
 
 			<hr class="m-0" />

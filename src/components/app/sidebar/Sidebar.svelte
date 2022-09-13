@@ -135,7 +135,7 @@
 		{/if}
 
 		<div class="d-flex flex-column gap-3">
-			<SidebarItem href="/rent/products/" iconName="plus" className="btn-outline-secondary">
+			<SidebarItem href="/products/" iconName="plus" className="btn-outline-secondary">
 				Louer un serveur
 			</SidebarItem>
 

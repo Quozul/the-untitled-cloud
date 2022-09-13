@@ -9,5 +9,5 @@
 		Commencez par louer un serveur ou en sélectionner un sur la gauche de l'écran si vous en avez
 		déjà un.
 	</p>
-	<Link href="/rent/products/" className="btn btn-primary">Louer un serveur</Link>
+	<Link href="/products/" className="btn btn-primary">Louer un serveur</Link>
 </div>

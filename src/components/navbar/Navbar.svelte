@@ -24,7 +24,7 @@
 </script>
 
 <header
-	class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 my-lg-4"
+	class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 my-lg-4 gap-3"
 >
 	<Link href="/" className="d-flex align-items-center text-dark text-decoration-none flex-grow-1">
 		<Icon key="favicon" width="40" height="40" />
@@ -37,7 +37,7 @@
 		<li>
 			<Link
 				href="/"
-				className="nav-link {selectedPage === '/' ? 'link-secondary' : 'link-dark'}"
+				className="nav-link link-dark {selectedPage === '/' ? 'border-bottom border-dark' : ''}"
 			>
 				{$t("home")}
 			</Link>
@@ -45,9 +45,7 @@
 		<li>
 			<Link
 				href="/products"
-				className="nav-link {selectedPage.startsWith('/rent/')
-					? 'link-secondary'
-					: 'link-dark'}"
+				className="nav-link link-dark {selectedPage === '/products/' ? 'border-bottom border-dark' : ''}"
 			>
 				{$t("products")}
 			</Link>

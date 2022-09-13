@@ -3,11 +3,12 @@
 	import { Variant } from "$shared/constants";
 	import Button from "$shared/Button.svelte";
 	import { clickOutside } from "$shared/clickOutside";
+	import { t } from "svelte-intl-precompile";
 
 	export let visible = false;
 	export let icon = "";
 	export let title = "Confirmation";
-	export let closeText = "Fermer";
+	export let closeText = $t("close");
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
 	export let variant: Variant = Variant.DARK;

@@ -1,4 +1,5 @@
 <script>
+	import { t } from "svelte-intl-precompile";
 	import Icon from "./icons/Icon.svelte";
 	import Link from "$shared/Link.svelte";
 </script>
@@ -12,39 +13,39 @@
 					The Untitled Cloud
 				</h4>
 			</Link>
-			<p class="lead">Hébergeur de serveur de jeux.</p>
+			<p class="lead">{$t("game_server_host")}</p>
 		</div>
 
 		<div class="col">
-			<h5>Pages</h5>
+			<h5>{$t("pages")}</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">Accueil</Link>
+					<Link href="/" className="nav-link p-0 text-muted">{$t("home")}</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">Contact</Link>
+					<Link href="/products/" className="nav-link p-0 text-muted">{$t("products")}</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">A propos</Link>
+					<Link href="/checkout/" className="nav-link p-0 text-muted">{$t("checkout")}</Link>
 				</li>
 			</ul>
 		</div>
 
 		<div class="col">
-			<h5>Infos</h5>
+			<h5>{$t("infos")}</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">Mentions légales</Link>
+					<Link href="/legal-mentions/" className="nav-link p-0 text-muted">{$t("legal_mentions")}</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">Conditions générales</Link>
+					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">{$t("general_terms")}</Link>
 				</li>
 			</ul>
 		</div>
 	</div>
 
 	<div class="d-flex border-top pt-3 mt-3 justify-content-between">
-		<p class="text-muted">© 2022 The Untitled Cloud. Tous droits réservés.</p>
+		<p class="text-muted">© 2022 The Untitled Cloud. {$t("all_right_reserved")}</p>
 
 		<div>
 			<Link href="https://discord.gg/hbKkYVKeke" className="text-black">
