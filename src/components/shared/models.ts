@@ -10,3 +10,8 @@ export type ApiError = {
 export type ClassNames = {
 	[className: string]: boolean;
 };
+
+export type ApiResponse<T> = {
+	error: ApiError | null,
+	response: T | null,
+}

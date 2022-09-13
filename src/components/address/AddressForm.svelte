@@ -7,7 +7,7 @@
 	import { token, cart } from "$store/store";
 	import Icon from "$components/icons/Icon.svelte";
 	import jwtDecode from "jwt-decode";
-	import { getAddress, setAddress } from "$shared/helpers";
+	import { getAddress, setAddress } from "./helpers";
 	import Button from "$shared/Button.svelte";
 	import Link from "$shared/Link.svelte";
 	import { goto } from "$app/navigation";
@@ -24,27 +24,19 @@
 		const jwt = jwtDecode($token);
 		email = jwt.email;
 
-		try {
-			const response = await getAddress();
+		// TODO: Handle error
+		const { response } = await getAddress();
 
-			// If the user has an address
-			if (response) {
-				address = response;
-			}
-		} catch (e: ApiError) {
-			// TODO: Handle error
-			console.log(e);
+		// If the user has an address
+		if (response) {
+			address = response;
 		}
 	});
 
 	async function submit() {
-		try {
-			await setAddress(address);
-			await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
-		} catch (e: ApiError) {
-			// TODO: Handle error
-			console.log(e);
-		}
+		// TODO: Handle error
+		await setAddress(address);
+		await goto($cart ? `/${$locale}/rent/checkout/` : `/${$locale}/rent/products/`);
 	}
 
 	function selectCountry(event) {

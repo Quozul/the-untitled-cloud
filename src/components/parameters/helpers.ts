@@ -1,18 +1,19 @@
-import { getOptions, handleRequest } from "$shared/helpers";
+import { api, getOptions, handleRequest } from "$shared/helpers";
 import type { ApiServer } from "$models/ApiServer";
 import type { ApiService } from "$models/ApiService";
+import type { ApiResponse } from "$shared/models";
 
-export async function getParameters(selectedServer: string): Promise<ApiServer> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}/server`,
+export async function getParameters(selectedServer: string): Promise<ApiResponse<ApiServer>> {
+	const request = api(
+		`service/${selectedServer}/server`,
 		getOptions("GET")
 	);
-	return (await handleRequest(request)) as ApiServer;
+	return await handleRequest<ApiServer>(request);
 }
 
 export async function putParameters(selectedServer: string, parameters: ApiServer): Promise<void> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer}/server`,
+	const request = api(
+		`service/${selectedServer}/server`,
 		getOptions("PUT", parameters)
 	);
 	await handleRequest(request);
@@ -23,8 +24,8 @@ export async function putService(
 	name: string,
 	tag = "latest"
 ): Promise<void> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service/${selectedServer.id}`,
+	const request = api(
+		`service/${selectedServer.id}`,
 		getOptions("PUT", { name, tag })
 	);
 	await handleRequest(request);

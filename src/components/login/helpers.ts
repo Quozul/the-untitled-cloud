@@ -1,6 +1,6 @@
-import type { ApiError } from "$shared/models";
+import type { ApiError, ApiResponse } from "$shared/models";
 import type { Token } from "./models/Token";
-import { getOptions, handleRequest } from "$shared/helpers";
+import { api, getOptions, handleRequest } from "$shared/helpers";
 
 /**
  * Registers a new user
@@ -14,12 +14,12 @@ export async function signUp(
 	password: string,
 	language: string,
 	acceptTos: boolean
-): Promise<ApiError> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/signUp`,
+): Promise<ApiResponse<ApiError>> {
+	const request = api(
+		`authentication/signUp`,
 		getOptions("POST", { email, password, language, acceptTos })
 	);
-	return (await handleRequest(request)) as ApiError;
+	return await handleRequest<ApiError>(request);
 }
 
 /**
@@ -32,24 +32,24 @@ export async function signIn(
 	email: string,
 	password: string,
 	code: string | null = null
-): Promise<Token> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/signIn`,
+): Promise<ApiResponse<Token>> {
+	const request = api(
+		`authentication/signIn`,
 		getOptions("POST", { email, password, code })
 	);
-	return (await handleRequest(request)) as Token;
+	return await handleRequest<Token>(request);
 }
 
 /**
  * Sends a verification code to the given email address
  * @param email
  */
-export async function sendVerificationCode(email: string): Promise<ApiError> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/code/${email}`,
+export async function sendVerificationCode(email: string): Promise<ApiResponse<ApiError>> {
+	const request = api(
+		`authentication/code/${email}`,
 		getOptions("POST")
 	);
-	return (await handleRequest(request)) as ApiError;
+	return await handleRequest<ApiError>(request);
 }
 
 /**
@@ -62,10 +62,10 @@ export async function changePassword(
 	email: string,
 	password: string,
 	code: string
-): Promise<Token> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}authentication/password`,
+): Promise<ApiResponse<Token>> {
+	const request = api(
+		`authentication/password`,
 		getOptions("POST", { email, password, code })
 	);
-	return (await handleRequest(request)) as Token;
+	return await handleRequest<Token>(request);
 }

@@ -16,23 +16,23 @@ import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiUser } from "$models/ApiUser";
 import type { ApiBillingPortal } from "$models/ApiBillingPortal";
-import type { ApiError } from "$shared/models";
+import type { ApiResponse } from "$shared/models";
 
 export async function getAllServers(
 	page = 0,
-	ended = false
-): Promise<ApiPaginate<ApiService>> {
+	ended = false,
+): Promise<ApiResponse<ApiPaginate<ApiService>>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
 	if (ended) {
 		params.set("status", "CANCELLED");
 	}
 
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service?${params.toString()}`,
-		getOptions("GET")
+	const request = api(
+		`service?${params.toString()}`,
+		getOptions("GET"),
 	);
-	return (await handleRequest(request)) as ApiPaginate<ApiService>;
+	return await handleRequest<ApiPaginate<ApiService>>(request);
 }
 
 export async function refreshAllServers(page = 0): Promise<void> {
@@ -40,19 +40,20 @@ export async function refreshAllServers(page = 0): Promise<void> {
 	fetchServersError.set(null);
 	fetchingServers.set(true);
 
-	try {
-		const response = await getAllServers(page);
+	const { error, response } = await getAllServers(page);
+
+	if (response) {
 		if (page === 0) servers.set(response);
 		else servers.set(mergePaginate(get(servers), response));
 
 		if (!get(onProfilePage)) {
 			await setDefaultSelectedServer();
 		}
-	} catch (error: ApiError) {
+	} else if (error) {
 		fetchServersError.set(error);
-	} finally {
-		fetchingServers.set(false);
 	}
+
+	fetchingServers.set(false);
 }
 
 /**
@@ -71,16 +72,14 @@ export async function setDefaultSelectedServer(): Promise<void> {
 	}
 }
 
-export async function getServerInfo(service: ApiService): Promise<ApiService> {
+export async function getServerInfo(service: ApiService): Promise<ApiResponse<ApiService>> {
 	if (!service.id) {
-		return service;
+		return { response: service, error: null };
 	}
 
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`,
-		getOptions("GET")
-	);
-	return (await handleRequest(request)) as ApiService;
+	const request = api(`service/${service.id}`,getOptions("GET"));
+
+	return await handleRequest<ApiService>(request);
 }
 
 export async function refreshSelectedServer(): Promise<void> {
@@ -91,67 +90,53 @@ export async function refreshSelectedServer(): Promise<void> {
 	fetchServerError.set(null);
 	fetchingServer.set(true);
 
-	try {
-		const response = await getServerInfo(ss);
+	const { error, response } = await getServerInfo(ss);
+
+	if (response) {
 		server.set(response);
-	} catch (error: ApiError) {
+	} else if (error) {
 		fetchServerError.set(error);
-	} finally {
-		fetchingServer.set(false);
 	}
+
+	fetchingServer.set(false);
 }
 
 export async function patchServer(service: ApiService, action: string): Promise<void> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}service/${service.id}`,
-		getOptions("PATCH", { action })
-	);
+	const request = api(`service/${service.id}`,getOptions("PATCH", { action }));
 	await handleRequest(request);
 }
 
 export async function getSubscriptionProducts(
-	service: ApiService
-): Promise<ApiPaginate<ApiProduct>> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/products`,
-		getOptions("GET")
-	);
-	return (await handleRequest(request)) as ApiPaginate<ApiProduct>;
+	service: ApiService,
+): Promise<ApiResponse<ApiPaginate<ApiProduct>>> {
+	const request = api(`subscription/${service.subscription.id}/products`,getOptions("GET"));
+	return await handleRequest<ApiPaginate<ApiProduct>>(request);
 }
 
-export async function getSubscriptionDetails(service: ApiService): Promise<ApiSubscriptionDetails> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}/details`,
-		getOptions("GET")
-	);
-	return (await handleRequest(request)) as ApiSubscriptionDetails;
+export async function getSubscriptionDetails(service: ApiService): Promise<ApiResponse<ApiSubscriptionDetails>> {
+	const request = api(`subscription/${service.subscription.id}/details`,getOptions("GET"));
+	return await handleRequest<ApiSubscriptionDetails>(request);
 }
 
 export async function cancelSubscription(
 	service: ApiService,
-	now = true
-): Promise<ApiSubscriptionDetails> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}subscription/${service.subscription.id}`,
-		getOptions("DELETE", { now })
-	);
-	return (await handleRequest(request)) as ApiSubscriptionDetails;
+	now = true,
+): Promise<ApiResponse<ApiSubscriptionDetails>> {
+	const request = api(`subscription/${service.subscription.id}`,getOptions("DELETE", { now }));
+	return await handleRequest<ApiSubscriptionDetails>(request);
 }
 
-export async function updateDiscordAccount(code: string, redirectUri: string) {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}user/discord`,
-		getOptions("POST", { code, redirectUri })
-	);
+export async function updateDiscordAccount(code: string, redirectUri: string): Promise<void> {
+	const request = api("user/discord",getOptions("POST", { code, redirectUri }));
 	await handleRequest(request);
 }
 
-export async function getUser(): Promise<ApiUser> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user`, getOptions("GET"));
-	return (await handleRequest(request)) as ApiUser;
+export async function getUser(): Promise<ApiResponse<ApiUser>> {
+	const request = api("user", getOptions("GET"));
+	return await handleRequest<ApiUser>(request);
 }
 
-export async function getStripePortal(redirect: string | null = null): Promise<ApiBillingPortal> {
+export async function getStripePortal(redirect: string | null = null): Promise<ApiResponse<ApiBillingPortal>> {
 	const request = api(`user/portal?redirect=${redirect}`, getOptions("GET"));
-	return (await handleRequest(request)) as ApiBillingPortal;
+	return await handleRequest<ApiBillingPortal>(request);
 }

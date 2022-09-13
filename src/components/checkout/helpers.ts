@@ -3,20 +3,18 @@ import { api, getOptions, handleRequest } from "$shared/helpers";
 import type { ApiService } from "$models/ApiService";
 import { get } from "svelte/store";
 import { cart, promoCode } from "$store/store";
+import type { ApiResponse } from "$shared/models";
 
-export async function getClientSecret(): Promise<ClientSecretResponse> {
+export async function getClientSecret(): Promise<ApiResponse<ClientSecretResponse>> {
 	const options = getOptions("POST", {
 		cart: get(cart).map((p) => p.id),
 		promo: get(promoCode)?.code ?? null,
 	});
 	const request = api("payment/stripe/subscription", options);
-	return (await handleRequest(request)) as ClientSecretResponse;
+	return await handleRequest<ClientSecretResponse>(request);
 }
 
-export async function updatePaymentIntent(paymentIntentId: string): Promise<ApiService> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}payment/stripe/subscription`,
-		getOptions("PUT", { paymentIntentId })
-	);
-	return (await handleRequest(request)) as ApiService;
+export async function updatePaymentIntent(paymentIntentId: string): Promise<ApiResponse<ApiService>> {
+	const request = api("payment/stripe/subscription",getOptions("PUT", { paymentIntentId }));
+	return await handleRequest<ApiService>(request);
 }

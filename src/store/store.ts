@@ -18,7 +18,7 @@ import type { PromoCode } from "$components/cart/models";
 import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
-export const token: Writable<string> = createStoreEntry("token", null, browser && localStorage);
+export const token: Writable<string | null> = createStoreEntry("token", null, browser && localStorage);
 
 // Session store
 /**
@@ -60,14 +60,14 @@ export const fetchingServer: Writable<boolean> = writable(false);
 export const fetchServerError: Writable<ApiError | null> = writable(null);
 
 // App server parameters store
-export const parameters: Writable<ApiServer> = createStoreEntry(
+export const parameters: Writable<ApiServer | null> = createStoreEntry(
 	"parameters",
 	null,
 	browser && sessionStorage
 );
 
 // App current user
-export const user: Writable<ApiUser> = createStoreEntry("user", null, browser && sessionStorage);
+export const user: Writable<ApiUser | null> = createStoreEntry("user", null, browser && sessionStorage);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

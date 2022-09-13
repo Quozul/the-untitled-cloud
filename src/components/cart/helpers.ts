@@ -4,20 +4,21 @@ import { api, getOptions, handleRequest } from "$shared/helpers";
 import { get } from "svelte/store";
 import { cart } from "$store/store";
 import type { PromoCode } from "./models";
+import type { ApiResponse } from "$shared/models";
 
-export async function getProducts(page = 0): Promise<ApiPaginate<ApiProduct>> {
+export async function getProducts(page = 0): Promise<ApiResponse<ApiPaginate<ApiProduct>>> {
 	const options = getOptions("GET");
 
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
 
 	const request = api(`product?${params.toString()}`, options);
-	return (await handleRequest(request)) as ApiPaginate<ApiProduct>;
+	return await handleRequest<ApiPaginate<ApiProduct>>(request);
 }
 
-export async function getPromoCode(promoCode: string): Promise<PromoCode> {
+export async function getPromoCode(promoCode: string): Promise<ApiResponse<PromoCode>> {
 	const request = api(`payment/stripe/subscription/promoCode/${promoCode}`, getOptions("GET"));
-	return (await handleRequest(request)) as PromoCode;
+	return await handleRequest<PromoCode>(request);
 }
 
 export function toggleInCart(product: ApiProduct) {

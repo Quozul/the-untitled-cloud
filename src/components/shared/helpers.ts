@@ -1,4 +1,4 @@
-import type { ApiError, ClassNames } from "./models";
+import type { ApiError, ApiResponse, ClassNames } from "./models";
 import type { Address } from "$components/address/Address";
 import { token } from "$store/store";
 import { get } from "svelte/store";
@@ -37,17 +37,20 @@ export function getOptions(
 /**
  * Handle API response
  */
-export async function handleRequest<T>(response: Promise<Response>): Promise<T | null> {
-	return new Promise((resolve, reject) => {
+export async function handleRequest<T>(response: Promise<Response>): Promise<ApiResponse<T>> {
+	return new Promise(resolve => {
 		response
 			.then((response) => {
 				if (!response.ok) {
 					response
 						.json()
 						.then((err: ApiError) => {
-							reject({
-								...err,
-								translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
+							resolve({
+								error: {
+									...err,
+									translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
+								},
+								response: null,
 							});
 						})
 						.catch(() => {
@@ -58,14 +61,16 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<T |
 								message: response.statusText,
 								translatedMessage: get(t)(`error.${response.status}`),
 							};
-							reject(error);
+							resolve({ error, response: null });
 						});
 				} else {
 					response
 						.json()
-						.then(resolve)
+						.then(response => {
+							resolve({error: null, response});
+						})
 						.catch(() => {
-							resolve(null);
+							resolve({ error: null, response: null });
 						});
 				}
 			})
@@ -76,7 +81,7 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<T |
 					message: "Fetch failed",
 					translatedMessage: get(t)("error.fetch_failed"),
 				};
-				reject(error);
+				resolve({ error, response: null });
 			});
 	});
 }
@@ -85,7 +90,7 @@ export function api(uri: string, options: RequestInit): Promise<Response> {
 	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
 }
 
-export function containsService(paginate: ApiPaginate<ApiService>, id: string | undefined): ApiService | null {
+export function containsService(paginate: ApiPaginate<ApiService>, id: string | null | undefined): ApiService | null {
 	if (!id) return null;
 
 	for (const element of paginate.data) {
@@ -139,19 +144,4 @@ export function mergePaginate<T>(a: ApiPaginate<T>, b: ApiPaginate<T>): ApiPagin
 
 export function capitalize(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase().replace("_", " ");
-}
-
-// TODO: Move this function
-export async function getAddress(): Promise<Address> {
-	const request = fetch(`${import.meta.env.VITE_API_BASE_URL}user/address`, getOptions("GET"));
-	return (await handleRequest(request)) as Address;
-}
-
-// TODO: Move this function
-export async function setAddress(address: Address): Promise<void> {
-	const request = fetch(
-		`${import.meta.env.VITE_API_BASE_URL}user/address`,
-		getOptions("POST", address)
-	);
-	await handleRequest(request);
 }
