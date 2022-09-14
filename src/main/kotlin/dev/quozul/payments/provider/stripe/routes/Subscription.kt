@@ -205,37 +205,4 @@ fun Route.configureServerSubscriptionRoutes() {
 			call.response.status(HttpStatusCode.InternalServerError)
 		}
 	}
-
-	get("promoCode/{promoCode}") {
-		val promoCode = try {
-			call.parameters["promoCode"]!!
-		} catch (e: NullPointerException) {
-			call.response.status(HttpStatusCode.BadRequest)
-			return@get
-		}
-
-		try {
-			val params = PromotionCodeListParams.builder()
-				.setCode(promoCode)
-				.addExpand("data.coupon")
-				.setLimit(1)
-				.setActive(true)
-				.build()
-			val code = PromotionCode.list(params).data[0].coupon
-
-			call.respond(
-				ApiPromoCode(
-					promoCode,
-					code.amountOff?.toInt(),
-					code.percentOff?.toInt(),
-				)
-			)
-		} catch (e: StripeException) {
-			call.response.status(HttpStatusCode.NotFound)
-			call.respond(AuthenticationErrors.INVALID_PROMO_CODE.toHashMap(true))
-		} catch (e: IndexOutOfBoundsException) {
-			call.response.status(HttpStatusCode.NotFound)
-			call.respond(AuthenticationErrors.INVALID_PROMO_CODE.toHashMap(true))
-		}
-	}
 }

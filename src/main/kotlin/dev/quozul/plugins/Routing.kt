@@ -1,6 +1,7 @@
 package dev.quozul.plugins
 
 import dev.quozul.authentication.configureAuthenticationRoutes
+import dev.quozul.payments.provider.stripe.routes.configurePromoCodes
 import dev.quozul.payments.provider.stripe.routes.configureStripeWebhook
 import dev.quozul.payments.provider.stripe.routes.configureServerSubscriptionRoutes
 import dev.quozul.products.configureProductsRoutes
@@ -31,6 +32,7 @@ fun Application.configureRouting() {
 						configureServerSubscriptionRoutes()
 					}
 				}
+				configurePromoCodes()
 				configureStripeWebhook()
 			}
 		}
