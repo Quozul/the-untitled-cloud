@@ -6,9 +6,6 @@ import { api, getOptions, handleRequest } from "$shared/helpers";
  * @param code
  */
 export async function deleteAccount(password: string, code: string): Promise<void> {
-	const request = api(
-		`user`,
-		getOptions("DELETE", { password, code })
-	);
+	const request = api(`user`, getOptions("DELETE", { password, code }));
 	await handleRequest(request);
 }

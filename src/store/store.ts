@@ -19,7 +19,11 @@ import { writable } from "svelte/store";
 import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
-export const token: Writable<Token | null> = createStoreEntry("token", null, browser && localStorage);
+export const token: Writable<Token | null> = createStoreEntry(
+	"token",
+	null,
+	browser && localStorage
+);
 
 // Session store
 /**
@@ -68,7 +72,11 @@ export const parameters: Writable<ApiServer | null> = createStoreEntry(
 );
 
 // App current user
-export const user: Writable<ApiUser | null> = createStoreEntry("user", null, browser && sessionStorage);
+export const user: Writable<ApiUser | null> = createStoreEntry(
+	"user",
+	null,
+	browser && sessionStorage
+);
 
 // In memory store
 export const credentials: Writable<Credentials | null> = writable(null);

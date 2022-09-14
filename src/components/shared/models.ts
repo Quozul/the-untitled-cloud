@@ -12,6 +12,6 @@ export type ClassNames = {
 };
 
 export type ApiResponse<T> = {
-	error: ApiError | null,
-	response: T | null,
-}
+	error: ApiError | null;
+	response: T | null;
+};

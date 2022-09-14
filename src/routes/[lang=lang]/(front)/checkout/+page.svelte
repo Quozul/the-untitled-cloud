@@ -22,6 +22,6 @@
 	</div>
 
 	<div class="col-12 col-lg-6">
-		<CheckoutAccordion/>
+		<CheckoutAccordion />
 	</div>
 </div>

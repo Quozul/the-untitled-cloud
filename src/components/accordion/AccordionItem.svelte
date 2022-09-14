@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from "svelte";
 
 	// Constants
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 
 	// Props
 	export let name: string;

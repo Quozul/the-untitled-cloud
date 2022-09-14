@@ -96,7 +96,14 @@
 
 		<div class="col-md-4">
 			<label class="form-label" for="search-country">{$t("address.country")}</label>
-			<Select {items} {value} className="w-100" on:select={selectCountry} placeholder={$t("search_country")} id="search-country" />
+			<Select
+				{items}
+				{value}
+				className="w-100"
+				on:select={selectCountry}
+				placeholder={$t("search_country")}
+				id="search-country"
+			/>
 		</div>
 
 		<div class="col-md-5">

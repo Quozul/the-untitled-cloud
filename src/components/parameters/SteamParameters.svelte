@@ -30,6 +30,12 @@
 
 	<div>
 		<label class="form-label" for="game-search">Jeu</label>
-		<Select items={games} {value} placeholder="Chercher un jeu..." on:select={handleSelect} id="game-search" />
+		<Select
+			items={games}
+			{value}
+			placeholder="Chercher un jeu..."
+			on:select={handleSelect}
+			id="game-search"
+		/>
 	</div>
 </div>

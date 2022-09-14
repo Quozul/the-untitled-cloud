@@ -20,7 +20,7 @@ import type { ApiResponse } from "$shared/models";
 
 export async function getAllServers(
 	page = 0,
-	ended = false,
+	ended = false
 ): Promise<ApiResponse<ApiPaginate<ApiService>>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
@@ -28,10 +28,7 @@ export async function getAllServers(
 		params.set("status", "CANCELLED");
 	}
 
-	const request = api(
-		`service?${params.toString()}`,
-		getOptions("GET"),
-	);
+	const request = api(`service?${params.toString()}`, getOptions("GET"));
 	return await handleRequest<ApiPaginate<ApiService>>(request);
 }
 
@@ -77,7 +74,7 @@ export async function getServerInfo(service: ApiService): Promise<ApiResponse<Ap
 		return { response: service, error: null };
 	}
 
-	const request = api(`service/${service.id}`,getOptions("GET"));
+	const request = api(`service/${service.id}`, getOptions("GET"));
 
 	return await handleRequest<ApiService>(request);
 }
@@ -102,32 +99,34 @@ export async function refreshSelectedServer(): Promise<void> {
 }
 
 export async function patchServer(service: ApiService, action: string): Promise<void> {
-	const request = api(`service/${service.id}`,getOptions("PATCH", { action }));
+	const request = api(`service/${service.id}`, getOptions("PATCH", { action }));
 	await handleRequest(request);
 }
 
 export async function getSubscriptionProducts(
-	service: ApiService,
+	service: ApiService
 ): Promise<ApiResponse<ApiPaginate<ApiProduct>>> {
-	const request = api(`subscription/${service.subscription.id}/products`,getOptions("GET"));
+	const request = api(`subscription/${service.subscription.id}/products`, getOptions("GET"));
 	return await handleRequest<ApiPaginate<ApiProduct>>(request);
 }
 
-export async function getSubscriptionDetails(service: ApiService): Promise<ApiResponse<ApiSubscriptionDetails>> {
-	const request = api(`subscription/${service.subscription.id}/details`,getOptions("GET"));
+export async function getSubscriptionDetails(
+	service: ApiService
+): Promise<ApiResponse<ApiSubscriptionDetails>> {
+	const request = api(`subscription/${service.subscription.id}/details`, getOptions("GET"));
 	return await handleRequest<ApiSubscriptionDetails>(request);
 }
 
 export async function cancelSubscription(
 	service: ApiService,
-	now = true,
+	now = true
 ): Promise<ApiResponse<ApiSubscriptionDetails>> {
-	const request = api(`subscription/${service.subscription.id}`,getOptions("DELETE", { now }));
+	const request = api(`subscription/${service.subscription.id}`, getOptions("DELETE", { now }));
 	return await handleRequest<ApiSubscriptionDetails>(request);
 }
 
 export async function updateDiscordAccount(code: string, redirectUri: string): Promise<void> {
-	const request = api("user/discord",getOptions("POST", { code, redirectUri }));
+	const request = api("user/discord", getOptions("POST", { code, redirectUri }));
 	await handleRequest(request);
 }
 
@@ -136,7 +135,9 @@ export async function getUser(): Promise<ApiResponse<ApiUser>> {
 	return await handleRequest<ApiUser>(request);
 }
 
-export async function getStripePortal(redirect: string | null = null): Promise<ApiResponse<ApiBillingPortal>> {
+export async function getStripePortal(
+	redirect: string | null = null
+): Promise<ApiResponse<ApiBillingPortal>> {
 	const request = api(`user/portal?redirect=${redirect}`, getOptions("GET"));
 	return await handleRequest<ApiBillingPortal>(request);
 }

@@ -4,7 +4,7 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, promoCode, selectedServer } from "$store/store";
+	import { cart, checkoutStep, promoCode } from "$store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
@@ -99,11 +99,7 @@
 			</label>
 		</small>
 
-		<button
-			class="w-100 btn btn-dark my-3"
-			type="submit"
-			disabled={processing || !cgv}
-		>
+		<button class="w-100 btn btn-dark my-3" type="submit" disabled={processing || !cgv}>
 			{#if processing}
 				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
 			{/if}

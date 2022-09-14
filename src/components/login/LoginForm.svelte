@@ -12,7 +12,7 @@
 	 * Set to null to disable redirection
 	 */
 	export let redirectTo: string | null = "/";
-	export let defaultStyle: boolean = true;
+	export let defaultStyle = true;
 
 	const dispatch = createEventDispatcher();
 
@@ -58,7 +58,11 @@
 	{/if}
 
 	{#if $loginMode !== LoginMode.VERIFICATION && $loginMode !== LoginMode.CHANGE_PASSWORD}
-		<button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0 text-start">
+		<button
+			type="button"
+			on:click={toggleMode}
+			class="d-block btn btn-sm btn-link p-0 text-start"
+		>
 			{#if $loginMode === LoginMode.LOGIN}
 				{$t("no_account_yet_question_mark")}
 			{:else}

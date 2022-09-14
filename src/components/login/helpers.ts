@@ -33,10 +33,7 @@ export async function signIn(
 	password: string,
 	code: string | null = null
 ): Promise<ApiResponse<Token>> {
-	const request = api(
-		`authentication/signIn`,
-		getOptions("POST", { email, password, code })
-	);
+	const request = api(`authentication/signIn`, getOptions("POST", { email, password, code }));
 	return await handleRequest<Token>(request);
 }
 
@@ -45,10 +42,7 @@ export async function signIn(
  * @param email
  */
 export async function sendVerificationCode(email: string): Promise<ApiResponse<ApiError>> {
-	const request = api(
-		`authentication/code/${email}`,
-		getOptions("POST")
-	);
+	const request = api(`authentication/code/${email}`, getOptions("POST"));
 	return await handleRequest<ApiError>(request);
 }
 
@@ -63,9 +57,6 @@ export async function changePassword(
 	password: string,
 	code: string
 ): Promise<ApiResponse<Token>> {
-	const request = api(
-		`authentication/password`,
-		getOptions("POST", { email, password, code })
-	);
+	const request = api(`authentication/password`, getOptions("POST", { email, password, code }));
 	return await handleRequest<Token>(request);
 }

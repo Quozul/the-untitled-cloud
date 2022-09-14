@@ -4,7 +4,9 @@ import { api, getOptions, handleRequest } from "$shared/helpers";
 import type { ApiResponse } from "$shared/models";
 
 // TODO: Add filters
-export async function getSubscriptions(page = 0): Promise<ApiResponse<ApiPaginate<ApiSubscription>>> {
+export async function getSubscriptions(
+	page = 0
+): Promise<ApiResponse<ApiPaginate<ApiSubscription>>> {
 	const options = getOptions("GET");
 
 	const params = new URLSearchParams();
@@ -14,7 +16,9 @@ export async function getSubscriptions(page = 0): Promise<ApiResponse<ApiPaginat
 	return await handleRequest<ApiPaginate<ApiSubscription>>(request);
 }
 
-export async function getSubscription(subscriptionId: string): Promise<ApiResponse<ApiSubscription>> {
+export async function getSubscription(
+	subscriptionId: string
+): Promise<ApiResponse<ApiSubscription>> {
 	const options = getOptions("GET");
 	const request = api(`subscription/${subscriptionId}`, options);
 	return await handleRequest<ApiSubscription>(request);

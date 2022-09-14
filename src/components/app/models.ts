@@ -1,4 +1,3 @@
-import type { ApiServiceStatus } from "$enums/ApiServiceStatus";
 import type { ApiPaginate } from "$models/ApiPaginate";
 
 export const EmptyPaginate: ApiPaginate<any> = {

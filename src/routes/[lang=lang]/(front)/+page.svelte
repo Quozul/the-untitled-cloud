@@ -18,7 +18,7 @@
 
 	<Numbers />
 
-	<Features/>
+	<Features />
 
-	<NotConvinced/>
+	<NotConvinced />
 </div>

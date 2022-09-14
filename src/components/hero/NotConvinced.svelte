@@ -10,7 +10,8 @@
 	<p class="lead d-flex align-items-center gap-2">
 		<Icon key="percent" />
 		<span>
-			Utilisez le code “<strong>WELCOME</strong>” pour avoir 10% de réduction sur votre premier achat !
+			Utilisez le code “<strong>WELCOME</strong>” pour avoir 10% de réduction sur votre
+			premier achat !
 		</span>
 	</p>
 

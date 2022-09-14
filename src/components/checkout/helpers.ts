@@ -14,7 +14,9 @@ export async function getClientSecret(): Promise<ApiResponse<ClientSecretRespons
 	return await handleRequest<ClientSecretResponse>(request);
 }
 
-export async function updatePaymentIntent(paymentIntentId: string): Promise<ApiResponse<ApiService>> {
-	const request = api("payment/stripe/subscription",getOptions("PUT", { paymentIntentId }));
+export async function updatePaymentIntent(
+	paymentIntentId: string
+): Promise<ApiResponse<ApiService>> {
+	const request = api("payment/stripe/subscription", getOptions("PUT", { paymentIntentId }));
 	return await handleRequest<ApiService>(request);
 }

@@ -13,10 +13,11 @@
 		items.push({ label: version, value: version });
 	}
 
-	let value: SelectItem = {
-		value: $parameters.version,
-		label: $parameters.version,
-	} || items[0];
+	let value: SelectItem =
+		{
+			value: $parameters.version,
+			label: $parameters.version,
+		} || items[0];
 
 	function handleSelect(event) {
 		value = event.detail;

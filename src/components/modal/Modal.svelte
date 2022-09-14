@@ -42,7 +42,8 @@
 
 			<div class="modal-footer">
 				{#if closeText !== null}
-					<Button variant={Variant.DARK} outline={true} onClick={hide}>{closeText}</Button>
+					<Button variant={Variant.DARK} outline={true} onClick={hide}>{closeText}</Button
+					>
 				{/if}
 
 				{#if okText !== null}

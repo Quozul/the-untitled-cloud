@@ -37,7 +37,7 @@ export function getOptions(
  * Handle API response
  */
 export async function handleRequest<T>(response: Promise<Response>): Promise<ApiResponse<T>> {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		response
 			.then((response) => {
 				if (!response.ok) {
@@ -65,8 +65,8 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 				} else {
 					response
 						.json()
-						.then(response => {
-							resolve({error: null, response});
+						.then((response) => {
+							resolve({ error: null, response });
 						})
 						.catch(() => {
 							resolve({ error: null, response: null });
@@ -89,7 +89,10 @@ export function api(uri: string, options: RequestInit): Promise<Response> {
 	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
 }
 
-export function containsService(paginate: ApiPaginate<ApiService>, id: string | null | undefined): ApiService | null {
+export function containsService(
+	paginate: ApiPaginate<ApiService>,
+	id: string | null | undefined
+): ApiService | null {
 	if (!id) return null;
 
 	for (const element of paginate.data) {

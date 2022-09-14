@@ -76,12 +76,17 @@
 				<CartRow {product} {canEdit} {background} />
 			{/each}
 		{:else}
-			<li class="list-group-item d-flex justify-content-between lh-sm" class:bg-light={background}>
+			<li
+				class="list-group-item d-flex justify-content-between lh-sm"
+				class:bg-light={background}
+			>
 				<div class="d-flex flex-column align-items-center w-100 gap-2">
-					<Icon key="bag-plus" height="32" width="32"/>
+					<Icon key="bag-plus" height="32" width="32" />
 					<h6 class="my-0">{$t("cart_is_empty")}</h6>
 					<p class="text-muted">{$t("add_a_product")}</p>
-					<Link href="/products/" onClick={closeCartModal} className="btn btn-dark">{$t("add_product")}</Link>
+					<Link href="/products/" onClick={closeCartModal} className="btn btn-dark">
+						{$t("add_product")}
+					</Link>
 				</div>
 			</li>
 		{/if}
@@ -104,7 +109,12 @@
 							bind:value={codeInput}
 						/>
 
-						<Button type="submit" onClick={setPromoCode} variant={Variant.DARK} disabled={!codeInput?.length}>
+						<Button
+							type="submit"
+							onClick={setPromoCode}
+							variant={Variant.DARK}
+							disabled={!codeInput?.length}
+						>
 							{$t("use")}
 						</Button>
 					</div>
@@ -126,9 +136,17 @@
 				<div class="d-flex justify-content-between border-0">
 					<div class="d-flex align-items-center gap-2">
 						<h6 class="mb-0 text-muted">{$t("promotion")}</h6>
-						<span class="badge text-bg-secondary rounded-pill d-flex align-items-center gap-1">
+						<span
+							class="badge text-bg-secondary rounded-pill d-flex align-items-center gap-1"
+						>
 							{$promoCode.code}
-							<Icon key="x-lg" className="cursor-pointer" onClick={removePromoCode} height="10" width="10" />
+							<Icon
+								key="x-lg"
+								className="cursor-pointer"
+								onClick={removePromoCode}
+								height="10"
+								width="10"
+							/>
 						</span>
 					</div>
 
@@ -147,11 +165,13 @@
 					<h6 class="text-muted mb-0">{$t("taxes")}</h6>
 					<span class="fw-bold">{formatPrice(0)}</span>
 				</div>
-				<small class="text-muted">TVA non applicable,
-					<Link href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/">
+				<small class="text-muted"
+					>TVA non applicable,
+					<Link
+						href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/"
+					>
 						art. 293 B du CGI
-					</Link>
-					.
+					</Link>.
 				</small>
 			</div>
 

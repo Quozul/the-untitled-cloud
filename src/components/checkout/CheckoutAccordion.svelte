@@ -26,7 +26,7 @@
 	}
 
 	function handleClick(event) {
-		const {opened, id} = event.detail;
+		const { opened, id } = event.detail;
 
 		if (opened) {
 			$checkoutStep = id;
@@ -35,16 +35,33 @@
 </script>
 
 <div class="accordion accordion-flush border-top border-bottom">
-	<AccordionItem name={$t("login")} on:click={handleClick} id={CheckoutSteps.LOGIN} bind:opened={loginOpened}>
+	<AccordionItem
+		name={$t("login")}
+		on:click={handleClick}
+		id={CheckoutSteps.LOGIN}
+		bind:opened={loginOpened}
+	>
 		<LoginForm redirectTo={null} defaultStyle={false} on:submit={setProfileTab} />
 	</AccordionItem>
 
-	<AccordionItem name={$t("billing_address")} disabled={!$token} on:click={handleClick} id={CheckoutSteps.PROFILE} bind:opened={addressOpened}>
+	<AccordionItem
+		name={$t("billing_address")}
+		disabled={!$token}
+		on:click={handleClick}
+		id={CheckoutSteps.PROFILE}
+		bind:opened={addressOpened}
+	>
 		<AddressForm on:submit={setCheckoutTab} />
 		<small class="cursor-pointer text-muted" on:click={setCheckoutTab}>Skip (debug)</small>
 	</AccordionItem>
 
-	<AccordionItem name={$t("checkout")} disabled={!$token || $cart.length === 0} on:click={handleClick} id={CheckoutSteps.CHECKOUT} bind:opened={checkoutOpened}>
+	<AccordionItem
+		name={$t("checkout")}
+		disabled={!$token || $cart.length === 0}
+		on:click={handleClick}
+		id={CheckoutSteps.CHECKOUT}
+		bind:opened={checkoutOpened}
+	>
 		<StripeCheckout />
 	</AccordionItem>
 </div>

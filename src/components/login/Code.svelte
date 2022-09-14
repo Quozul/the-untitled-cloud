@@ -30,11 +30,13 @@
 			placeholder="123456"
 			bind:value={code}
 			maxlength="6"
-			disabled="{!email}"
+			disabled={!email}
 			autocomplete="one-time-code"
 		/>
 
-		<Button variant={Variant.SECONDARY} onClick={getCode} disabled={!email}>{$t("get_code")}</Button>
+		<Button variant={Variant.SECONDARY} onClick={getCode} disabled={!email}
+			>{$t("get_code")}</Button
+		>
 	</div>
 </div>
 

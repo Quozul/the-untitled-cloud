@@ -11,7 +11,6 @@
 	import { onDestroy, onMount } from "svelte";
 	import type { Unsubscriber } from "svelte/store";
 	import { subscribe } from "svelte/internal";
-	import Product from "../cart/Product.svelte";
 
 	let edited = false;
 	let unsubscribe: Unsubscriber | null = null;

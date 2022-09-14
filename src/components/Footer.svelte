@@ -7,11 +7,12 @@
 <footer class="py-5 mt-4">
 	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5">
 		<div class="flex-grow-1 col">
-			<Link href="/" className="d-flex align-items-center mb-3 link-dark text-decoration-none">
+			<Link
+				href="/"
+				className="d-flex align-items-center mb-3 link-dark text-decoration-none"
+			>
 				<Icon key="favicon" width="40" height="40" />
-				<h4 class="ms-2 mb-0 fw-bold">
-					The Untitled Cloud
-				</h4>
+				<h4 class="ms-2 mb-0 fw-bold">The Untitled Cloud</h4>
 			</Link>
 			<p class="lead">{$t("game_server_host")}</p>
 		</div>
@@ -23,10 +24,14 @@
 					<Link href="/" className="nav-link p-0 text-muted">{$t("home")}</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/products/" className="nav-link p-0 text-muted">{$t("products")}</Link>
+					<Link href="/products/" className="nav-link p-0 text-muted">
+						{$t("products")}
+					</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/checkout/" className="nav-link p-0 text-muted">{$t("checkout")}</Link>
+					<Link href="/checkout/" className="nav-link p-0 text-muted">
+						{$t("checkout")}
+					</Link>
 				</li>
 			</ul>
 		</div>
@@ -35,10 +40,14 @@
 			<h5>{$t("infos")}</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
-					<Link href="/legal-mentions/" className="nav-link p-0 text-muted">{$t("legal_mentions")}</Link>
+					<Link href="/legal-mentions/" className="nav-link p-0 text-muted">
+						{$t("legal_mentions")}
+					</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">{$t("general_terms")}</Link>
+					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">
+						{$t("general_terms")}
+					</Link>
 				</li>
 			</ul>
 		</div>

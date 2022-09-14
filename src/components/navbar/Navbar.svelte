@@ -37,24 +37,26 @@
 				<Icon key="list" width="32" height="32" />
 			</button>
 
-			<Link href="/" className="d-flex align-items-center text-dark text-decoration-none flex-lg-grow-1">
+			<Link
+				href="/"
+				className="d-flex align-items-center text-dark text-decoration-none flex-lg-grow-1"
+			>
 				<Icon key="favicon" width="40" height="40" />
-				<h4 class="ms-2 mb-0 fw-bold d-none d-lg-block">
-					The Untitled Cloud
-				</h4>
+				<h4 class="ms-2 mb-0 fw-bold d-none d-lg-block">The Untitled Cloud</h4>
 			</Link>
 
-			<Button onClick={openCartModal} className="text-black order-lg-4" variant={Variant.NONE}>
+			<Button
+				onClick={openCartModal}
+				className="text-black order-lg-4"
+				variant={Variant.NONE}
+			>
 				<Icon key={$cart.length > 0 ? "bag-check" : "bag"} />
 			</Button>
 
 			<div class="collapse navbar-collapse flex-grow-0 gap-lg-3" class:show={navbarVisible}>
 				<ul class="navbar-nav mb-2 mb-lg-0 gap-lg-3">
 					<li class="nav-item">
-						<Link
-							href="/"
-							className="nav-link {selectedPage === '/' ? 'active' : ''}"
-						>
+						<Link href="/" className="nav-link {selectedPage === '/' ? 'active' : ''}">
 							{$t("home")}
 						</Link>
 					</li>
@@ -74,7 +76,10 @@
 							{$t("my_servers")}
 						</Link>
 					{:else}
-						<Link href="/login/?redirect=/{$locale}/app" className="btn btn-dark rounded-pill">
+						<Link
+							href="/login/?redirect=/{$locale}/app"
+							className="btn btn-dark rounded-pill"
+						>
 							{$t("to_login")}
 						</Link>
 					{/if}

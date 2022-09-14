@@ -4,9 +4,7 @@
 	import Link from "$shared/Link.svelte";
 </script>
 
-<h1 class="display-5 fw-bolder lh-1 mb-3">
-	The Untitled Cloud
-</h1>
+<h1 class="display-5 fw-bolder lh-1 mb-3">The Untitled Cloud</h1>
 
 <p class="lead my-5">
 	{$t("hero.lead")}

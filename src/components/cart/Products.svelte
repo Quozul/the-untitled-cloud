@@ -8,7 +8,7 @@
 	let products: ApiPaginate<ApiProduct>;
 
 	onMount(async () => {
-		const {response} = await getProducts();
+		const { response } = await getProducts();
 		products = response;
 	});
 </script>
