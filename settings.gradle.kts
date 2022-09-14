@@ -1,1 +1,1 @@
-rootProject.name = "mc host api"
+rootProject.name = "the-untitled-cloud-api"
