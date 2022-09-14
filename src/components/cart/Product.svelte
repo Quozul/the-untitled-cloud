@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
-	import { cart } from "$store/store";
+	import { cart, cartModalVisible } from "$store/store";
 	import type { ApiProduct } from "$models/ApiProduct";
 	import { formatPrice } from "$shared/helpers.js";
 	import { toggleInCart } from "./helpers";
@@ -14,7 +14,10 @@
 	$: isInCart = !!$cart?.find((p) => p.id === product.id);
 
 	function handleOnClick() {
-		toggleInCart(product);
+		const added = toggleInCart(product);
+		if (added) {
+			$cartModalVisible = true;
+		}
 	}
 </script>
 
@@ -31,12 +34,13 @@
 		<Button
 			onClick={handleOnClick}
 			className="w-100 justify-content-center"
-			disabled={!product.inStocks}
+			disabled={!product.inStocks || isInCart}
 			variant={Variant.DARK}
-			icon={isInCart ? "bag-dash" : "bag-plus"}
+			outline={isInCart}
+			icon={isInCart ? "bag-check" : "bag-plus"}
 		>
 			{#if isInCart}
-				{$t("remove_from_cart")}
+				{$t("in_cart")}
 			{:else if !product.inStocks}
 				{$t("out_of_stock")}
 			{:else}

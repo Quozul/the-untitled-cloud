@@ -47,8 +47,6 @@
 	const items = IsoCountries.map((i) => ({ label: $t(`country.${i}`), value: i }));
 </script>
 
-<h4 class="mb-1">{$t("billing_address")}</h4>
-
 <div class="fs-6 mb-3">
 	{$t("logged_in_as")}&nbsp;
 	<div class="text-muted d-inline">
@@ -96,14 +94,12 @@
 			/>
 		</div>
 
-		<div class="col-md-5">
-			<label class="form-label" for="search-country">
-				{$t("address.country")}
-				<Select {items} {value} className="mt-2" on:select={selectCountry} placeholder={$t("search_country")} id="search-country" />
-			</label>
+		<div class="col-md-4">
+			<label class="form-label" for="search-country">{$t("address.country")}</label>
+			<Select {items} {value} className="w-100" on:select={selectCountry} placeholder={$t("search_country")} id="search-country" />
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<label for="city" class="form-label">{$t("address.city")}</label>
 			<input
 				type="text"
@@ -126,9 +122,11 @@
 				bind:value={address.postal_code}
 			/>
 		</div>
-	</div>
 
-	<Button type="submit" variant={Variant.DARK} className="w-100" onClick={submit}>
-		{$t("next")}
-	</Button>
+		<div class="col-12">
+			<Button type="submit" variant={Variant.DARK} className="w-100" onClick={submit}>
+				{$t("next")}
+			</Button>
+		</div>
+	</div>
 </form>

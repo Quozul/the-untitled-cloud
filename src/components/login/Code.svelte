@@ -31,6 +31,7 @@
 			bind:value={code}
 			maxlength="6"
 			disabled="{!email}"
+			autocomplete="one-time-code"
 		/>
 
 		<Button variant={Variant.SECONDARY} onClick={getCode} disabled={!email}>{$t("get_code")}</Button>

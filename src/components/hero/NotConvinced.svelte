@@ -4,7 +4,7 @@
 	import Link from "$shared/Link.svelte";
 </script>
 
-<div class="rounded-3 bg-light p-lg-5 my-lg-5 p-4 my-3">
+<div class="rounded-3 bg-light p-lg-5 p-4 my-lg-5 my-3">
 	<h2 class="fw-bolder">Toujours pas convaincu ?</h2>
 
 	<p class="lead d-flex align-items-center gap-2">

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
 	import type { ApiError } from "$shared/models";
-	import { redirect } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { credentials, loginMode } from "$store/store";
@@ -9,7 +8,7 @@
 	import { signUp } from "./helpers";
 	import Link from "$shared/Link.svelte";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();
@@ -50,13 +49,13 @@
 </script>
 
 <form>
-	<h4>{$t("signup")}</h4>
 	<div class="mb-3">
 		<label for="email" class="form-label">{$t("email_address")}</label>
 		<input
 			id="email"
 			type="email"
 			name="email"
+			autocomplete="email"
 			class="form-control"
 			placeholder={$t("email_address")}
 			bind:value={email}
@@ -69,6 +68,7 @@
 			id="password"
 			type="password"
 			name="password"
+			autocomplete="new-password"
 			class="form-control"
 			placeholder={$t("password")}
 			bind:value={password}
@@ -81,6 +81,7 @@
 			id="confirm"
 			type="password"
 			name="password"
+			autocomplete="new-password"
 			class="form-control"
 			placeholder={$t("confirm")}
 			bind:value={confirmPassword}

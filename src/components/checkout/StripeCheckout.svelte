@@ -84,8 +84,6 @@
 	}
 </script>
 
-<h4 class="mb-1">{$t("checkout")}</h4>
-
 {#if stripe && !!clientSecret}
 	<form on:submit|preventDefault={submit}>
 		<Elements {stripe} {clientSecret} bind:elements>

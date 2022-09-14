@@ -16,7 +16,7 @@
 <div class="row g-3">
 	{#if products?.data}
 		{#each products.data as product}
-			<div class="col-6">
+			<div class="col-12 col-lg-6">
 				<Product {product} />
 			</div>
 		{/each}

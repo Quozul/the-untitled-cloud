@@ -17,11 +17,11 @@ export async function getProducts(page = 0): Promise<ApiResponse<ApiPaginate<Api
 }
 
 export async function getPromoCode(promoCode: string): Promise<ApiResponse<PromoCode>> {
-	const request = api(`payment/stripe/subscription/promoCode/${promoCode}`, getOptions("GET"));
+	const request = api(`payment/stripe/promoCode/${promoCode}`, getOptions("GET"));
 	return await handleRequest<PromoCode>(request);
 }
 
-export function toggleInCart(product: ApiProduct) {
+export function toggleInCart(product: ApiProduct): boolean {
 	const c = get(cart) ?? [];
 	const isInCart = c.find((p) => p.id === product.id);
 
@@ -30,7 +30,10 @@ export function toggleInCart(product: ApiProduct) {
 	} else {
 		removeFromCart(isInCart);
 	}
+
 	cart.set(c);
+
+	return !isInCart;
 }
 
 export function removeFromCart(product: ApiProduct) {

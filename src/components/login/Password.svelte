@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
 	import type { ApiError } from "$shared/models";
-	import { redirect } from "$shared/helpers";
 	import Button from "$shared/Button.svelte";
 	import { AuthenticationErrors } from "./models/AuthenticationErrors";
 	import { credentials, loginMode, token } from "$store/store";
@@ -10,7 +9,7 @@
 	import Icon from "$components/icons/Icon.svelte";
 	import Code from "$components/login/Code.svelte";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();
@@ -43,8 +42,6 @@
 </script>
 
 <form>
-	<h4 class="mb-0">{$t("password_change")}</h4>
-
 	<button type="button" on:click={back} class="d-block btn btn-sm btn-link p-0 mb-3">
 		<Icon key="chevron-left" height="12" width="12" className="me-1" />
 		{$t("back")}
@@ -56,6 +53,7 @@
 			id="email"
 			type="email"
 			name="email"
+			autocomplete="email"
 			class="form-control"
 			placeholder={$t("email_address")}
 			bind:value={email}
@@ -68,6 +66,7 @@
 			id="password"
 			type="password"
 			name="password"
+			autocomplete="new-password"
 			class="form-control"
 			placeholder={$t("password")}
 			bind:value={password}
@@ -80,6 +79,7 @@
 			id="confirm"
 			type="password"
 			name="password"
+			autocomplete="new-password"
 			class="form-control"
 			placeholder={$t("confirm")}
 			bind:value={confirmPassword}

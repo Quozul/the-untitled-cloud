@@ -44,17 +44,21 @@
 
 <div class:fixed-width={defaultStyle}>
 	{#if $loginMode === LoginMode.VERIFICATION}
-		<Verification on:submit={handleSubmit} />
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("verification")}</h4>
+		<Verification on:submit={handleSubmit} {defaultStyle} />
 	{:else if $loginMode === LoginMode.SIGNUP}
-		<Signup on:submit={handleSubmit} />
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("signup")}</h4>
+		<Signup on:submit={handleSubmit} {defaultStyle} />
 	{:else if $loginMode === LoginMode.CHANGE_PASSWORD}
-		<ForgotPassword on:submit={handleSubmit} />
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("password_change")}</h4>
+		<ForgotPassword on:submit={handleSubmit} {defaultStyle} />
 	{:else}
-		<Login on:submit={handleSubmit} />
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("login")}</h4>
+		<Login on:submit={handleSubmit} {defaultStyle} />
 	{/if}
 
 	{#if $loginMode !== LoginMode.VERIFICATION && $loginMode !== LoginMode.CHANGE_PASSWORD}
-		<button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0">
+		<button type="button" on:click={toggleMode} class="d-block btn btn-sm btn-link p-0 text-start">
 			{#if $loginMode === LoginMode.LOGIN}
 				{$t("no_account_yet_question_mark")}
 			{:else}

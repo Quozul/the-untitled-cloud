@@ -7,7 +7,7 @@
 	import { LoginMode } from "./models/LoginMode";
 	import { signIn } from "./helpers";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();
@@ -48,13 +48,13 @@
 </script>
 
 <form>
-	<h4>{$t("login")}</h4>
 	<div class="mb-3">
 		<label for="email" class="form-label">{$t("email_address")}</label>
 		<input
 			id="email"
 			type="email"
 			name="email"
+			autocomplete="email"
 			class="form-control"
 			placeholder={$t("email_address")}
 			bind:value={email}
@@ -67,6 +67,7 @@
 			id="password"
 			type="password"
 			name="password"
+			autocomplete="current-password"
 			class="form-control"
 			placeholder={$t("password")}
 			bind:value={password}

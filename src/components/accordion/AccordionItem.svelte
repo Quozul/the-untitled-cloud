@@ -1,10 +1,18 @@
 <script lang="ts">
-	export let name: string;
+	import { createEventDispatcher } from "svelte";
 
-	let isOpened = false;
+	// Constants
+	const dispatch = createEventDispatcher()
+
+	// Props
+	export let name: string;
+	export let disabled = false;
+	export let id: string | null = null;
+	export let opened = false;
 
 	function toggleOpen() {
-		isOpened = !isOpened;
+		opened = !opened;
+		dispatch("click", { opened, id });
 	}
 </script>
 
@@ -12,14 +20,19 @@
 	<h2 class="accordion-header">
 		<button
 			class="accordion-button"
-			class:collapsed={!isOpened}
+			class:text-muted={disabled}
+			class:collapsed={!opened}
 			type="button"
 			on:click|preventDefault={toggleOpen}
+			{disabled}
 		>
 			{name}
 		</button>
 	</h2>
-	<div class="accordion-collapse collapse p-3" class:show={isOpened}>
-		<slot />
-	</div>
+
+	{#if opened}
+		<div class="accordion-collapse collapse p-3" class:show={opened}>
+			<slot />
+		</div>
+	{/if}
 </div>
