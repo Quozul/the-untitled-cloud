@@ -9,7 +9,7 @@
 	import { Variant } from "$shared/constants";
 	import { t } from "svelte-intl-precompile";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
-	import { Products } from "$components/cart/constants.js";
+	import { Products } from "$components/cart/constants";
 
 	// State
 	let started: ZonedDateTime = null;

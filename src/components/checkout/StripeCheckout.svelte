@@ -11,9 +11,9 @@
 	import type { ApiError } from "$shared/models";
 	import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 	import Link from "$shared/Link.svelte";
-	import { formatPrice } from "$shared/helpers.js";
+	import { formatPrice } from "$shared/helpers";
 	import Alert from "$shared/Alert.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	let stripe: Stripe | null = null;
 	let processing = false;

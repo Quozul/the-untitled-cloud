@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 	import Button from "$shared/Button.svelte";
 	import Modal from "$components/modal/Modal.svelte";
 	import Code from "$components/login/Code.svelte";
-	import { token, user } from "$store/store.js";
+	import { token, user } from "$store/store";
 	import { deleteAccount } from "./helpers";
 	import { locale, t } from "svelte-intl-precompile";
 	import type { ApiError } from "shared/models";

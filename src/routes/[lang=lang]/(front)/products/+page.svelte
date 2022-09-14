@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
-	import Products from "$components/cart/Products.svelte";
+	import Products from "$components/product/Products.svelte";
 </script>
 
 <svelte:head>

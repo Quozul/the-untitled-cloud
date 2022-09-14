@@ -3,7 +3,7 @@
 	import { parameters, server } from "$store/store";
 	import { getParameters, putService } from "./helpers";
 	import Button from "$shared/Button.svelte";
-	import { putParameters } from "./helpers.js";
+	import { putParameters } from "./helpers";
 	import { patchServer, refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
 	import AdvancedParameters from "./AdvancedParameters.svelte";
 	import Icon from "$components/icons/Icon.svelte";

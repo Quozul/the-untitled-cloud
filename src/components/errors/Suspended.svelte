@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { getStripePortal } from "../app/helpers";
+	import { getStripePortal } from "$components/app/helpers";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	async function redirectToStripe() {
 		const redirect = $page.url.href;

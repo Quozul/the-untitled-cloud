@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ApiError } from "$shared/models";
 	import { t } from "svelte-intl-precompile";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 	import { sendVerificationCode } from "./helpers";
 	import Button from "$shared/Button.svelte";
 	import Alert from "$shared/Alert.svelte";

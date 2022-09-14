@@ -4,7 +4,7 @@
 	import { t } from "svelte-intl-precompile";
 	import CartRow from "./CartRow.svelte";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 	import Icon from "$components/icons/Icon.svelte";
 	import { getPromoCode } from "./helpers";
 	import type { ApiError } from "$shared/models";

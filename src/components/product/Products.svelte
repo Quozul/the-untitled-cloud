@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { getProducts } from "./helpers";
+	import { getProducts } from "$components/cart/helpers";
 	import type { ApiPaginate } from "$models/ApiPaginate";
 	import type { ApiProduct } from "$models/ApiProduct";
 	import { onMount } from "svelte";
-	import Product from "$components/cart/Product.svelte";
+	import Product from "./Product.svelte";
+	import type { ApiError } from "$shared/models";
+	import Alert from "$shared/Alert.svelte";
+	import { Variant } from "$shared/constants";
 
 	let products: ApiPaginate<ApiProduct>;
+	let apiError: ApiError;
 
 	onMount(async () => {
-		const { response } = await getProducts();
+		const { error, response } = await getProducts();
 		products = response;
+		apiError = error;
 	});
 </script>
 
@@ -22,3 +27,9 @@
 		{/each}
 	{/if}
 </div>
+
+{#if apiError}
+	<Alert variant={Variant.DANGER}>
+		{apiError.translatedMessage}
+	</Alert>
+{/if}

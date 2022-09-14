@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from "svelte-intl-precompile";
 	import type { Address } from "./Address";
-	import type { SelectItem } from "../select/SelectItem";
+	import type { SelectItem } from "$components/select/SelectItem";
 	import { createEventDispatcher, onMount } from "svelte";
 	import { token } from "$store/store";
 	import jwtDecode from "jwt-decode";
@@ -9,7 +9,7 @@
 	import Button from "$shared/Button.svelte";
 	import Select from "$components/select/Select.svelte";
 	import { EmptyAddress, IsoCountries } from "./constants";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();

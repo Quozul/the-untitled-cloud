@@ -3,7 +3,7 @@
 	import { sidebarCollapsed } from "$store/store";
 	import Link from "$shared/Link.svelte";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	export let onClick: VoidFunction = null;
 	export let href: string = null;

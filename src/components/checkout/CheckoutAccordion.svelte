@@ -6,7 +6,7 @@
 	import StripeCheckout from "$components/checkout/StripeCheckout.svelte";
 	import { t } from "svelte-intl-precompile";
 	import AccordionItem from "$components/accordion/AccordionItem.svelte";
-	import { cart } from "$store/store.js";
+	import { cart } from "$store/store";
 
 	$checkoutStep = $token ? CheckoutSteps.PROFILE : CheckoutSteps.LOGIN;
 

@@ -56,9 +56,13 @@
 	<div class="d-flex border-top pt-3 mt-3 justify-content-between">
 		<p class="text-muted">© 2022 The Untitled Cloud. {$t("all_right_reserved")}</p>
 
-		<div>
+		<div class="d-flex gap-3">
 			<Link href="https://discord.gg/hbKkYVKeke" className="text-black">
 				<Icon key="discord" />
+			</Link>
+
+			<Link href="https://github.com/the-untitled-cloud" className="text-black">
+				<Icon key="github" />
 			</Link>
 		</div>
 	</div>

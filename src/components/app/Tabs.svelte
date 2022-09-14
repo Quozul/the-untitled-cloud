@@ -3,7 +3,7 @@
 	import { ServerTab } from "$components/app/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { locale } from "svelte-intl-precompile";
-	import { Products } from "$components/cart/constants.js";
+	import { Products } from "$components/cart/constants";
 	import Button from "$shared/Button.svelte";
 	import Modal from "$components/modal/Modal.svelte";
 	import { getStripePortal } from "./helpers";

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { server } from "$store/store.js";
+	import { server } from "$store/store";
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column">

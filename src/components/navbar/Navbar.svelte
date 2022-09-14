@@ -7,9 +7,9 @@
 	import Modal from "$components/modal/Modal.svelte";
 	import Cart from "$components/cart/Cart.svelte";
 	import { goto } from "$app/navigation";
-	import { cartModalVisible } from "$store/store.js";
+	import { cartModalVisible } from "$store/store";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	let selectedPage: string;
 	let navbarVisible = false;

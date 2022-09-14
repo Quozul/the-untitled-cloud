@@ -2,10 +2,10 @@
 	import { t } from "svelte-intl-precompile";
 	import { cart, cartModalVisible } from "$store/store";
 	import type { ApiProduct } from "$models/ApiProduct";
-	import { formatPrice } from "$shared/helpers.js";
-	import { toggleInCart } from "./helpers";
+	import { formatPrice } from "$shared/helpers";
+	import { toggleInCart } from "$components/cart/helpers";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
+	import { Variant } from "$shared/constants";
 
 	export let product: ApiProduct;
 

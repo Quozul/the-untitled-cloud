@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ApiProduct } from "$models/ApiProduct";
 	import { removeFromCart } from "./helpers";
-	import { formatPrice } from "$shared/helpers.js";
+	import { formatPrice } from "$shared/helpers";
 	import Icon from "$components/icons/Icon.svelte";
 
 	export let product: ApiProduct;
