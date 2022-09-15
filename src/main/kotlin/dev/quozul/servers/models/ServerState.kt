@@ -1,6 +1,7 @@
 package dev.quozul.servers.models
 
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
+import dev.quozul.database.enums.ContainerStatus
 import kotlinx.serialization.Serializable
 
 enum class ServerStatus {
@@ -9,6 +10,7 @@ enum class ServerStatus {
 	RUNNING,
 
 	// Custom statuses
+	PENDING,
 	UNAVAILABLE,
 	STARTING,
 	STOPPED,
@@ -17,6 +19,7 @@ enum class ServerStatus {
 @Serializable
 data class ServerState(
 	val status: ServerStatus,
+	val pending: Boolean,
 	val created: Boolean,
 	val running: Boolean,
 	val starting: Boolean,
@@ -24,9 +27,13 @@ data class ServerState(
 	val finishedAt: String?,
 ) {
 	companion object {
-		fun fromContainerState(containerState: ContainerState?): ServerState {
+		fun fromContainerState(containerState: ContainerState?, containerStatus: ContainerStatus?): ServerState {
 			val status = if (containerState == null) {
-				ServerStatus.UNAVAILABLE
+				if (containerStatus === ContainerStatus.DOWNLOADING || containerStatus === ContainerStatus.CREATING) {
+					ServerStatus.PENDING
+				} else {
+					ServerStatus.UNAVAILABLE
+				}
 			} else if (containerState.health?.status == "starting") {
 				ServerStatus.STARTING
 			} else if (containerState.restarting == true) {
@@ -39,6 +46,7 @@ data class ServerState(
 
 			return ServerState(
 				status,
+				containerStatus === ContainerStatus.DOWNLOADING || containerStatus === ContainerStatus.CREATING,
 				containerState != null,
 				containerState?.running == true,
 				containerState?.health?.status == "starting",

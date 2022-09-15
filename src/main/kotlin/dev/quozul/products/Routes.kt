@@ -1,6 +1,10 @@
 package dev.quozul.products
 
 import dev.quozul.database.models.Product
+import dev.quozul.database.models.Products
+import dev.quozul.database.models.SubscriptionItem
+import dev.quozul.database.models.User
+import dev.quozul.products.models.Stats
 import dev.quozul.servers.models.Paginate
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -34,7 +38,11 @@ fun Route.configureProductsRoutes() {
 		)
 	}
 
-	get("{productId}") {
-
+	get("stats") {
+		call.respond(Stats(
+			transaction { User.count() },
+			transaction { SubscriptionItem.count() },
+			transaction { Product.count() },
+		))
 	}
 }

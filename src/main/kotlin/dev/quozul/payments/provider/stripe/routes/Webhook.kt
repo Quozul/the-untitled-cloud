@@ -5,6 +5,8 @@ import com.stripe.model.*
 import com.stripe.model.Subscription
 import com.stripe.net.Webhook
 import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.extensions.subscriptionItem.createContainer
+import dev.quozul.database.extensions.subscriptionItem.remove
 import dev.quozul.database.models.*
 import dev.quozul.payments.provider.stripe.getUserFromStripeId
 import io.ktor.http.*
@@ -40,6 +42,7 @@ fun Route.configureStripeWebhook() {
 		val stripeObject: StripeObject = if (dataObjectDeserializer.getObject().isPresent) {
 			dataObjectDeserializer.getObject().get()
 		} else {
+			println("Could not decode Stripe object")
 			call.response.status(HttpStatusCode.InternalServerError)
 			return@post
 		}

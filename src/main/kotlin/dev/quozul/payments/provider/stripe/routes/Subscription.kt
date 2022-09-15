@@ -4,7 +4,6 @@ import com.stripe.exception.InvalidRequestException
 import com.stripe.exception.StripeException
 import com.stripe.model.PaymentIntent
 import com.stripe.model.PromotionCode
-import com.stripe.model.Subscription as StripeSubscription
 import com.stripe.param.PaymentIntentRetrieveParams
 import com.stripe.param.PromotionCodeListParams
 import com.stripe.param.SubscriptionCreateParams
@@ -12,9 +11,8 @@ import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.models.*
 import dev.quozul.payments.provider.stripe.getOrCreateStripeCustomer
-import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.ApiCart
-import dev.quozul.payments.provider.stripe.models.ApiPromoCode
+import dev.quozul.payments.provider.stripe.models.ApiPaymentIntentUpdate
 import dev.quozul.payments.provider.stripe.models.SubscriptionCreateResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -28,6 +26,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
+import com.stripe.model.Subscription as StripeSubscription
 
 fun Route.configureServerSubscriptionRoutes() {
 	// Subscription intent

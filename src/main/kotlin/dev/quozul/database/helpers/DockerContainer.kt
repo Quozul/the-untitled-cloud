@@ -1,8 +1,10 @@
 package dev.quozul.database.helpers
 
 import com.github.dockerjava.api.command.CreateContainerResponse
+import com.github.dockerjava.api.command.InspectContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState
 import com.github.dockerjava.api.command.PullImageResultCallback
+import com.github.dockerjava.api.exception.DockerException
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.NetworkSettings
 import com.github.dockerjava.api.model.Volume
@@ -18,9 +20,19 @@ open class DockerContainer(var containerId: String) {
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: List<Volume>? = null
+			volumes: List<Volume>? = null,
 		) = createContainer(image, name, tag, env, hostConfig, volumes)?.let {
 			DockerContainer(it.id)
+		}
+
+		fun pullImage(
+			image: String,
+			tag: String? = "latest",
+		) {
+			dockerClient.pullImageCmd(image)
+				.withTag(tag)
+				.exec(PullImageResultCallback())
+				.awaitCompletion()
 		}
 
 		private suspend fun createContainer(
@@ -29,13 +41,8 @@ open class DockerContainer(var containerId: String) {
 			tag: String? = "latest",
 			env: List<String>? = null,
 			hostConfig: HostConfig? = null,
-			volumes: List<Volume>? = null
+			volumes: List<Volume>? = null,
 		): CreateContainerResponse? = coroutineScope {
-			dockerClient.pullImageCmd(image)
-				.withTag(tag)
-				.exec(PullImageResultCallback())
-				.awaitCompletion()
-
 			dockerClient.createContainerCmd("$image:$tag")
 				.withImage("$image:$tag")
 				.apply {
@@ -49,40 +56,60 @@ open class DockerContainer(var containerId: String) {
 	}
 
 	var name: String
-		get() = inspect().name
+		get() = inspect()?.name ?: ""
 		set(value) {
 			dockerClient.renameContainerCmd(containerId).withName(value).exec()
 		}
 
-	val state: ContainerState
-		get() = inspect().state
+	val state: ContainerState?
+		get() = inspect()?.state
 
-	val networkSettings: NetworkSettings
-		get() = inspect().networkSettings
+	val networkSettings: NetworkSettings?
+		get() = inspect()?.networkSettings
 
-	fun inspect() = dockerClient.inspectContainerCmd(containerId).exec()
+	private fun inspect(): InspectContainerResponse? = try {
+		dockerClient.inspectContainerCmd(containerId).exec()
+	} catch (_: DockerException) {
+		null
+	}
 
-	fun start() = dockerClient.startContainerCmd(containerId).exec()
+	fun start(): Boolean = try {
+		dockerClient.startContainerCmd(containerId).exec()
+		true
+	} catch (_: DockerException) {
+		false
+	}
 
-	fun stop() = dockerClient.stopContainerCmd(containerId).exec()
+	fun stop(): Boolean = try {
+		dockerClient.stopContainerCmd(containerId).exec()
+		true
+	} catch (_: DockerException) {
+		false
+	}
 
-	fun restart() = dockerClient.restartContainerCmd(containerId).exec()
+	fun restart(): Boolean = try {
+		dockerClient.restartContainerCmd(containerId).exec()
+		true
+	} catch (_: DockerException) {
+		false
+	}
 
-	fun remove() = dockerClient.removeContainerCmd(containerId).exec()
+	fun remove(): Boolean = try {
+		dockerClient.removeContainerCmd(containerId).exec()
+		true
+	} catch (_: DockerException) {
+		false
+	}
 
 	fun removeVolumes() {
-		inspect().volumes?.forEach {
+		inspect()?.volumes?.forEach {
 			println("${it.hostPath}, ${it.containerPath}")
 			try {
 				val folder = File(it.hostPath)
 				folder.deleteRecursively()
-			} catch (_: Exception) {
+			} catch (e: Exception) {
+				e.printStackTrace()
 			}
 		}
-	}
-
-	// TODO: Remove all volumes and recreate
-	fun reset() {
-		TODO("Not implemented")
 	}
 }

@@ -1,10 +1,8 @@
 package dev.quozul.database.models
 
 import com.github.dockerjava.api.exception.NotFoundException
-import com.github.dockerjava.api.model.ExposedPort
+import dev.quozul.database.extensions.subscriptionItem.port
 import dev.quozul.database.helpers.ApiContainer
-import dev.quozul.database.helpers.DockerContainer
-import dev.quozul.database.helpers.GameServer
 import dev.quozul.servers.models.ServerState
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -42,7 +40,8 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 				container?.dockerContainer?.state
 			} catch (_: NotFoundException) {
 				null
-			}
+			},
+			transaction { container?.containerStatus }
 		)
 
 		return ApiContainer(
@@ -56,62 +55,6 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 		)
 	}
 
-	suspend fun createContainer(start: Boolean = false) {
-		GameServer.new(this@SubscriptionItem)
-
-		if (start) {
-			transaction {
-				container?.dockerContainer?.start()
-			}
-		}
-	}
-
-	suspend fun recreate() {
-		val wasRunning = dockerContainer?.state?.running == true
-
-		// If container is running, stop it
-		if (wasRunning) {
-			dockerContainer?.stop()
-		}
-
-		dockerContainer?.remove() // Remove previous container
-
-		// Create container
-		createContainer(wasRunning)
-	}
-
-	fun remove() {
-		try {
-			dockerContainer?.stop()
-		} catch (_: Exception) {
-		}
-		try {
-			dockerContainer?.removeVolumes()
-		} catch (_: Exception) {
-		}
-		try {
-			dockerContainer?.remove()
-		} catch (_: Exception) {
-		}
-	}
-
-	val port: String?
-		get() =
-			product.gameServer.ports.firstOrNull()?.let { exposedPort ->
-				try {
-					dockerContainer?.let { dc ->
-						dc.networkSettings.ports.bindings[exposedPort]?.first()?.hostPortSpec
-					}
-				} catch (_: NotFoundException) {
-					null
-				}
-			}
-
-	var dockerContainer: DockerContainer?
-		get() = transaction { container?.dockerContainer }
-		set(value) = transaction {
-			container?.dockerContainer = value
-		}
 }
 
 fun findItemWithOwnership(id: UUID, owner: UUID) = transaction {

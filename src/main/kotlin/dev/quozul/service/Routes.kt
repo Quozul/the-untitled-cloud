@@ -4,6 +4,7 @@ import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.extensions.subscriptionItem.*
 import dev.quozul.database.helpers.ApiContainer
 import dev.quozul.database.helpers.ApiServer
 import dev.quozul.database.helpers.ApiServiceUpdate
@@ -20,9 +21,11 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -88,7 +91,8 @@ fun Route.configureServiceRoutes() {
 						container?.dockerContainer?.state
 					} catch (_: NotFoundException) {
 						null
-					}
+					},
+					container?.containerStatus
 				)
 
 				ApiContainer(
@@ -186,11 +190,9 @@ fun Route.configureServiceRoutes() {
 
 		try {
 			findItemWithOwnership(serviceId, ownerId)?.let {
-				val subscriptionStatus = transaction {
-					it.subscription.subscriptionStatus
-				}
+				val isActive = transaction { it.isActive }
 
-				if (subscriptionStatus != SubscriptionStatus.ACTIVE) {
+				if (!isActive && action != Action.RECREATE) {
 					call.response.status(HttpStatusCode.Forbidden)
 					call.respond(AuthenticationErrors.ACTION_NOT_ALLOWED.toHashMap(true))
 					return@patch
@@ -210,17 +212,12 @@ fun Route.configureServiceRoutes() {
 					}
 
 					Action.RECREATE -> {
-						try {
-							it.recreate()
-						} catch (_: NotFoundException) {
-							it.createContainer()
-						} catch (_: NullPointerException) {
-							it.createContainer()
-						}
+						it.recreate()
 					}
 
 					Action.RESET -> {
-						it.dockerContainer?.reset()
+						it.remove()
+						it.createContainer()
 					}
 				}
 			}

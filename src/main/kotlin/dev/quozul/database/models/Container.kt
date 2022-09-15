@@ -1,7 +1,6 @@
 package dev.quozul.database.models
 
-import com.github.dockerjava.api.exception.NotFoundException
-import com.github.dockerjava.api.model.ExposedPort
+import dev.quozul.database.enums.ContainerStatus
 import dev.quozul.database.helpers.DockerContainer
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -20,6 +19,7 @@ object Containers : UUIDTable("container") {
 
 	// TODO: Make name unique
 	val name = varchar("name", 32).nullable() // User given name of their product
+	val containerStatus = enumeration<ContainerStatus>("status").default(ContainerStatus.REGISTERED)
 }
 
 class Container(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -28,6 +28,7 @@ class Container(id: EntityID<UUID>) : UUIDEntity(id) {
 	var containerId by Containers.containerId
 	var containerTag by Containers.containerTag
 	var name by Containers.name
+	var containerStatus by Containers.containerStatus
 
 	var dockerContainer: DockerContainer?
 		get() = containerId?.let { DockerContainer(it) }
