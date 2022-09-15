@@ -57,11 +57,11 @@
 		<p class="text-muted">© 2022 The Untitled Cloud. {$t("all_right_reserved")}</p>
 
 		<div class="d-flex gap-3">
-			<Link href="https://discord.gg/hbKkYVKeke" className="text-black">
+			<Link href="https://discord.gg/hbKkYVKeke" className="text-dark">
 				<Icon key="discord" />
 			</Link>
 
-			<Link href="https://github.com/the-untitled-cloud" className="text-black">
+			<Link href="https://github.com/the-untitled-cloud" className="text-dark">
 				<Icon key="github" />
 			</Link>
 		</div>

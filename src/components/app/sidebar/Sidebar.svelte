@@ -59,17 +59,17 @@
 </script>
 
 <div
-	class="d-flex flex-column flex-shrink-0 p-3 bg-light sidebar shadow-sm"
+	class="d-flex flex-column flex-shrink-0 bg-light sidebar shadow-sm py-3"
 	class:collapsed={$sidebarCollapsed}
 >
-	<Link href="/" className="d-flex align-items-center me-md-auto link-dark text-decoration-none">
+	<Link href="/" className="d-flex align-items-center me-md-auto link-dark text-decoration-none px-3">
 		<Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "me-2"} />
 		{#if !$sidebarCollapsed}
 			<span class="fs-4">The Untitled Cloud</span>
 		{/if}
 	</Link>
 
-	<div class="d-flex gap-3">
+	<div class="d-flex gap-3 px-3">
 		<SidebarItem
 			iconName={$sidebarCollapsed ? "chevron-double-right" : "chevron-double-left"}
 			className="btn-outline-secondary mt-3 collapse-button flex-grow-1"
@@ -89,7 +89,7 @@
 
 	<hr />
 
-	<div class="mb-auto">
+	<div class="mb-auto px-3">
 		{#if $fetchingServers}
 			<p class="placeholder-glow">
 				<button class="btn btn-secondary w-100 placeholder" disabled />
@@ -185,7 +185,7 @@
 
 	<hr />
 
-	<ul class="nav flex-column gap-3">
+	<ul class="nav flex-column gap-3 px-3">
 		<SidebarItem
 			href="/app/profile/"
 			iconName="person"
@@ -202,20 +202,20 @@
 			Se déconnecter
 		</SidebarItem>
 	</ul>
-
-	<Modal
-		visible={$fetchServersError?.code === 401}
-		icon="warning"
-		title="Non connecté"
-		closeText={null}
-		okText="Se connecter"
-		onClick={redirectToLogin}
-	>
-		<div class="p-3">
-			Veuillez vous reconnecter pour utiliser l'application.
-		</div>
-	</Modal>
 </div>
+
+<Modal
+	visible={$fetchServersError?.code === 401}
+	icon="warning"
+	title="Non connecté"
+	closeText={null}
+	okText="Se connecter"
+	onClick={redirectToLogin}
+>
+	<div class="p-3">
+		Veuillez vous reconnecter pour utiliser l'application.
+	</div>
+</Modal>
 
 <style lang="scss" global>
 	@include media-breakpoint-down(sm) {

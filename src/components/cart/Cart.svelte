@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cart, promoCode, cartModalVisible } from "$store/store";
+	import { cart, promoCode, cartModalVisible, clientSecret } from "$store/store";
 	import { formatPrice } from "$shared/helpers";
 	import { t } from "svelte-intl-precompile";
 	import CartRow from "./CartRow.svelte";
@@ -55,10 +55,12 @@
 	}
 
 	async function setPromoCode() {
+		$clientSecret = null;
 		await fetchCode(codeInput);
 	}
 
 	function removePromoCode() {
+		$clientSecret = null;
 		$promoCode = EmptyPromoCode;
 		promotionCodeError = null;
 	}
@@ -139,13 +141,15 @@
 							class="badge text-bg-secondary rounded-pill d-flex align-items-center gap-1"
 						>
 							{$promoCode.code}
-							<Icon
-								key="x-lg"
-								className="cursor-pointer"
-								onClick={removePromoCode}
-								height="10"
-								width="10"
-							/>
+							{#if canEdit}
+								<Icon
+									key="x-lg"
+									className="cursor-pointer"
+									onClick={removePromoCode}
+									height="10"
+									width="10"
+								/>
+							{/if}
 						</span>
 					</div>
 
@@ -170,7 +174,7 @@
 						href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/"
 					>
 						art. 293 B du CGI
-					</Link>.
+					</Link>
 				</small>
 			</div>
 

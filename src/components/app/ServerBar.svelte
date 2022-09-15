@@ -10,6 +10,7 @@
 	import { t } from "svelte-intl-precompile";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { Products } from "$components/cart/constants";
+	import { page } from "$app/stores";
 
 	// State
 	let started: ZonedDateTime = null;
@@ -138,7 +139,7 @@
 						{#if !$server.port}
 							Démarrez le serveur pour avoir une adresse de connexion.
 						{:else if $server.product.id === Products.MinecraftServer}
-							quozul.com:{$server.port}
+							{$page.url.hostname}:{$server.port}
 						{:else if $server.product.id === Products.ArkServer}
 							<a href="steam://connect/theuntitledcloud.com:{$server.port}/"
 								>Lien de connexion Steam</a

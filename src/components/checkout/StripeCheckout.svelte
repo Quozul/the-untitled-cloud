@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { locale, t } from "svelte-intl-precompile";
 	import type { PaymentIntentResult, Stripe } from "@stripe/stripe-js/types/stripe-js/stripe";
-	import { loadStripe } from "@stripe/stripe-js";
+	import { loadStripe, type PaymentIntent } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
 	import { cart, checkoutStep, clientSecret, promoCode } from "$store/store";
@@ -21,6 +21,7 @@
 	let elements;
 	let cgv = false;
 	let totalPrice = 0;
+	let paymentIntent: PaymentIntent | null = null;
 
 	function alertUnload(e) {
 		e.preventDefault();
@@ -37,11 +38,15 @@
 
 			if (response) {
 				$clientSecret = response.clientSecret;
-				totalPrice = response.totalPrice;
 			}
 
 			checkoutError = error;
 		}
+
+		// Get payment intent
+		const response = await stripe.retrievePaymentIntent($clientSecret);
+		paymentIntent = response.paymentIntent
+		totalPrice = paymentIntent.amount;
 	});
 
 	onDestroy(() => {
@@ -85,6 +90,15 @@
 		}
 	}
 </script>
+
+<Alert>
+	<div>
+		Le service n'étant pas encore activé, je vous invite à utiliser une
+		<Link href="https://stripe.com/docs/testing#cards">
+			carte de test
+		</Link>
+	</div>
+</Alert>
 
 {#if stripe && !!$clientSecret}
 	<form on:submit|preventDefault={submit}>

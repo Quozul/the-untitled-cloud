@@ -7,6 +7,7 @@
 	import { createEventDispatcher, onDestroy, onMount } from "svelte";
 	import ForgotPassword from "./Password.svelte";
 	import { t } from "svelte-intl-precompile";
+	import { redirect } from "$shared/helpers";
 
 	/**
 	 * Set to null to disable redirection
@@ -35,7 +36,7 @@
 
 	async function handleSubmit() {
 		if (redirectTo) {
-			await require(redirectTo);
+			await redirect(redirectTo);
 		}
 
 		dispatch("submit");

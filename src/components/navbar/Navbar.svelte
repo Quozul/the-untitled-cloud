@@ -60,7 +60,7 @@
 				onClick={openCartModal}
 				className="order-lg-4 text-dark"
 				variant={Variant.NONE}
-				icon={$cart.length > 0 ? "bag-check" : "bag"}
+				icon={$cart?.length === 0 ? "bag" : "bag-check"}
 			/>
 
 			<div class="collapse navbar-collapse flex-grow-0 gap-lg-3" class:show={navbarVisible}>
@@ -111,7 +111,7 @@
 	<Modal
 		bind:visible={$cartModalVisible}
 		onClick={redirectToCheckout}
-		okText={$cart.length > 0 ? $t("checkout") : null}
+		okText={$cart?.length === 0 ? null : $t("checkout")}
 		title={$t("cart")}
 		closeText={$t("continue_shopping")}
 	>
