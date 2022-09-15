@@ -19,7 +19,7 @@
 			justify-content: center;
 
 			& + .number {
-				border-left: solid 1px black;
+				border-left: solid 1px currentColor;
 			}
 
 			&:first-of-type {

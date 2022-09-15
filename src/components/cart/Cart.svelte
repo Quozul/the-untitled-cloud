@@ -49,10 +49,9 @@
 		if (response) {
 			$promoCode = response;
 			codeInput = null;
-		} else if (error) {
-			$promoCode = EmptyPromoCode;
-			promotionCodeError = error;
 		}
+
+		promotionCodeError = error;
 	}
 
 	async function setPromoCode() {

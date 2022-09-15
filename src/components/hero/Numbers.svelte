@@ -1,12 +1,28 @@
-<script>
+<script lang="ts">
 	import Number from "$components/hero/Number.svelte";
+	import type { Stats } from "$components/product/models";
+	import { onMount } from "svelte";
+	import { getStats } from "$components/product/helpers";
+
+	let stats: Stats = {
+		users: 0,
+		sold: 0,
+		products: 0,
+	};
+
+	onMount(async () => {
+		const {response} = await getStats();
+		if (response) {
+			stats = response;
+		}
+	});
 </script>
 
 <div class="container my-lg-5 my-3 d-none d-lg-block">
 	<div class="row">
-		<Number text="Serveurs loués" number="10+" />
-		<Number text="Joueurs" number="20+" />
-		<Number text="Jeux disponibles" number="2" />
+		<Number text="Serveurs loués" number="{stats.sold}+" />
+		<Number text="Joueurs" number="{stats.users}+" />
+		<Number text="Jeux disponibles" number="{stats.products}" />
 	</div>
 </div>
 

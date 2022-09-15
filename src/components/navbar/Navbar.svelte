@@ -10,9 +10,15 @@
 	import { cartModalVisible } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
+	import { onMount } from "svelte";
 
 	let selectedPage: string;
 	let navbarVisible = false;
+	let theme: string;
+
+	onMount(() => {
+		theme = document.body.getAttribute("data-bs-theme");
+	});
 
 	$: selectedPage = $page.url.pathname.replace(`/${$locale}`, "");
 
@@ -27,6 +33,11 @@
 	async function redirectToCheckout() {
 		await goto(`/${$locale}/checkout/`);
 		$cartModalVisible = false;
+	}
+
+	function toggleTheme() {
+		theme = theme === "light" ? "dark" : "light";
+		document.body.setAttribute("data-bs-theme", theme);
 	}
 </script>
 
@@ -47,11 +58,10 @@
 
 			<Button
 				onClick={openCartModal}
-				className="text-black order-lg-4"
+				className="order-lg-4 text-dark"
 				variant={Variant.NONE}
-			>
-				<Icon key={$cart.length > 0 ? "bag-check" : "bag"} />
-			</Button>
+				icon={$cart.length > 0 ? "bag-check" : "bag"}
+			/>
 
 			<div class="collapse navbar-collapse flex-grow-0 gap-lg-3" class:show={navbarVisible}>
 				<ul class="navbar-nav mb-2 mb-lg-0 gap-lg-3">
@@ -70,7 +80,7 @@
 					</li>
 				</ul>
 
-				<div class="order-lg-3">
+				<div class="order-lg-3 d-inline-block">
 					{#if $token}
 						<Link href="/app/" className="btn btn-dark rounded-pill">
 							{$t("my_servers")}
@@ -83,6 +93,14 @@
 							{$t("to_login")}
 						</Link>
 					{/if}
+				</div>
+
+				<div class="order-lg-4 d-inline-block">
+					<Button
+						onClick={toggleTheme}
+						className="text-dark"
+						variant={Variant.NONE}
+						icon={theme === "light" ? "sun" : "moon"} />
 				</div>
 			</div>
 		</div>

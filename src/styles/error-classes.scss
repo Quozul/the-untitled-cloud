@@ -1,0 +1,13 @@
+.undefined, .false, .true, .null, .NaN {
+	position: relative;
+
+	&:after {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10000;
+		color: red;
+		font-weight: bolder;
+		content: "css class error";
+	}
+}

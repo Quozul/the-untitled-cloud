@@ -85,7 +85,7 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 	});
 }
 
-export function api(uri: string, options: RequestInit): Promise<Response> {
+export function api(uri: string, options: RequestInit = getOptions("GET")): Promise<Response> {
 	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
 }
 

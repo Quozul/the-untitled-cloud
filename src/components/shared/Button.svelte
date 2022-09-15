@@ -20,7 +20,7 @@
 
 	$: classes = classNames({
 		btn: true,
-		[`btn${outline ? "-outline" : ""}-${variant}`]: true,
+		[`btn${outline ? "-outline" : ""}-${variant}`]: !!variant,
 		placeholder: loading,
 		"rounded-pill": pill,
 		[`text-${variant}`]: loading,

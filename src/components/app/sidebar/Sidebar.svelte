@@ -189,7 +189,7 @@
 		<SidebarItem
 			href="/app/profile/"
 			iconName="person"
-			className="btn-outline-dark {$onProfilePage && 'active'}"
+			className="btn-outline-dark {$onProfilePage ? 'active' : ''}"
 		>
 			Mon profil
 		</SidebarItem>

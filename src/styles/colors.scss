@@ -1,0 +1,37 @@
+[data-bs-theme="dark"] {
+	--bs-body-color: #{$gray-200};
+
+	.bg-light {
+		background-color: $gray-800 !important;
+	}
+
+	.text-muted {
+		color: $gray-500 !important;
+	}
+
+	.text-dark {
+		color: $gray-200 !important;
+	}
+
+	.accordion-button {
+		color: $body-color-dark !important;
+	}
+
+	.form-control {
+		color: $gray-800 !important;
+	}
+
+	.btn-outline-dark {
+		--bs-btn-color: #{$gray-200};
+		--bs-btn-hover-bg: #424649;
+	}
+
+	.btn-dark {
+		--bs-btn-color: #{$gray-200};
+		--bs-btn-bg: #{$gray-800};
+	}
+
+	.link-dark {
+		color: $gray-200 !important;
+	}
+}
