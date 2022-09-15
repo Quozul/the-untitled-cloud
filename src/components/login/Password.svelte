@@ -89,7 +89,7 @@
 	<Code {email} bind:code />
 
 	<div class:visually-hidden={!passwordError} class="text-danger mb-3">
-		Erreur : {passwordError?.translatedMessage}
+		{passwordError?.translatedMessage}
 	</div>
 
 	<Button type="submit" variant={Variant.DARK} onClick={submit} className="w-100">

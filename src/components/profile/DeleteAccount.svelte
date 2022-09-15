@@ -28,12 +28,11 @@
 	}
 
 	async function handleSubmit() {
-		try {
-			await deleteAccount(password, code);
+		const { error } = await deleteAccount(password, code);
+
+		if (!error) {
 			$token = null;
 			await goto(`/${$locale}`);
-		} catch (e: ApiError) {
-			error = e;
 		}
 	}
 </script>
