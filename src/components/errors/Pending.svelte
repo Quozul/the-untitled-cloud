@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
 
-	function refresh() {
-		refreshAllServers();
-		refreshSelectedServer();
+	async function refresh() {
+		await Promise.all([refreshAllServers(), refreshSelectedServer()]);
 	}
 </script>
 

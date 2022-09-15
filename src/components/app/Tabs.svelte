@@ -26,8 +26,8 @@
 
 	async function redirectToStripe() {
 		const redirect = $page.url.href;
-		const url = await getStripePortal(redirect);
-		window.open(url.url);
+		const { response } = await getStripePortal(redirect);
+		window.open(response.url);
 		modalVisible = false;
 	}
 </script>
@@ -75,5 +75,7 @@
 </nav>
 
 <Modal bind:visible={modalVisible} okText="Gérer mes abonnements" onClick={redirectToStripe}>
-	Vous allez être redirigé vers notre partenaire pour gérer vos abonnements.
+	<div class="p-3">
+		Vous allez être redirigé vers notre partenaire pour gérer vos abonnements.
+	</div>
 </Modal>

@@ -211,7 +211,9 @@
 		okText="Se connecter"
 		onClick={redirectToLogin}
 	>
-		Veuillez vous reconnecter pour utiliser l'application.
+		<div class="p-3">
+			Veuillez vous reconnecter pour utiliser l'application.
+		</div>
 	</Modal>
 </div>
 

@@ -23,17 +23,19 @@
 	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
 
 	$: {
-		if ($server && $server.state.created) {
-			// Parse dates
-			started = ZonedDateTime.parse($server.state.startedAt);
-			stopped = ZonedDateTime.parse($server.state.finishedAt);
-			if (stopped.year() === 1) {
-				stopped = ZonedDateTime.now();
+		if ($server) {
+			if ($server.state.created) {
+				// Parse dates
+				started = ZonedDateTime.parse($server.state.startedAt);
+				stopped = ZonedDateTime.parse($server.state.finishedAt);
+				if (stopped.year() === 1) {
+					stopped = ZonedDateTime.now();
+				}
+				duration = Duration.between(started, stopped);
+				formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
 			}
-			duration = Duration.between(started, stopped);
-			formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
 
-			if ($server.subscription.status === ApiSubscriptionStatus.PENDING) {
+			if ($server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending) {
 				icon = "hourglass";
 			} else if ($server.subscription.status === ApiSubscriptionStatus.SUSPENDED) {
 				icon = "pause";
@@ -73,7 +75,7 @@
 				{icon}
 				iconSize="28"
 			>
-				{#if $server.subscription.status === ApiSubscriptionStatus.PENDING}
+				{#if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
 					<h3 class="m-0">En attente</h3>
 				{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
 					<h3 class="m-0">Suspendu</h3>
@@ -105,7 +107,7 @@
 							minutes)
 						{:else if $server.state.created}
 							{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-						{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING}
+						{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
 							En attente
 						{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
 							Suspendu

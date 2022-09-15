@@ -1,4 +1,5 @@
 export enum DockerStatus {
+	PENDING = "pending",
 	CREATED = "created",
 	RESTARTING = "restarting",
 	RUNNING = "running",

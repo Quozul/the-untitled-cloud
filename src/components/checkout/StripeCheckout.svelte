@@ -4,7 +4,7 @@
 	import { loadStripe } from "@stripe/stripe-js";
 	import { Elements, PaymentElement } from "svelte-stripe";
 	import { onDestroy, onMount } from "svelte";
-	import { cart, checkoutStep, promoCode } from "$store/store";
+	import { cart, checkoutStep, clientSecret, promoCode } from "$store/store";
 	import { CheckoutSteps } from "./constants";
 	import { goto } from "$app/navigation";
 	import { getClientSecret, updatePaymentIntent } from "./helpers";
@@ -21,7 +21,6 @@
 	let elements;
 	let cgv = false;
 	let totalPrice = 0;
-	let clientSecret: string | null = null;
 
 	function alertUnload(e) {
 		e.preventDefault();
@@ -33,11 +32,14 @@
 		window.addEventListener("beforeunload", alertUnload);
 		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-		const { error, response } = await getClientSecret();
-		if (response) {
-			clientSecret = response.clientSecret;
-			totalPrice = response.totalPrice;
-		} else if (error) {
+		if (!$clientSecret) {
+			const { error, response } = await getClientSecret();
+
+			if (response) {
+				$clientSecret = response.clientSecret;
+				totalPrice = response.totalPrice;
+			}
+
 			checkoutError = error;
 		}
 	});
@@ -77,16 +79,31 @@
 			window.removeEventListener("beforeunload", alertUnload);
 			await goto(`/${$locale}/app`);
 			$checkoutStep = CheckoutSteps.PRODUCTS;
-			clientSecret = null;
+			$clientSecret = null;
 			$cart = null;
 			$promoCode = null;
 		}
 	}
 </script>
 
-{#if stripe && !!clientSecret}
+{#if stripe && !!$clientSecret}
 	<form on:submit|preventDefault={submit}>
-		<Elements {stripe} {clientSecret} bind:elements>
+		<Elements
+			{stripe}
+			clientSecret={$clientSecret}
+			bind:elements
+			theme="flat"
+			variables={{
+				colorPrimary: "#000000",
+				colorBackground: "#ffffff",
+				borderRadius: "0",
+			}}
+			rules={{
+				".Input": {
+					border: "1px solid #ced4da",
+				}
+			}}
+		>
 			<PaymentElement />
 		</Elements>
 

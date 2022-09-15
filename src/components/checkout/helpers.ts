@@ -20,3 +20,11 @@ export async function updatePaymentIntent(
 	const request = api("payment/stripe/subscription", getOptions("PUT", { paymentIntentId }));
 	return await handleRequest<ApiService>(request);
 }
+
+
+export async function cancelPaymentIntent(
+	paymentIntentId: string
+): Promise<ApiResponse<ApiService>> {
+	const request = api("payment/stripe/subscription", getOptions("DELETE", { paymentIntentId }));
+	return await handleRequest<ApiService>(request);
+}

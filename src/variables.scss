@@ -5,6 +5,11 @@
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
+$font-family-sans-serif: "Raleway", sans-serif;
+
+$font-weight-lighter: 200;
+$font-weight-bolder: 800;
+
 // Remove background from accordion
 $accordion-button-active-bg: transparent;
 $accordion-button-active-color: $black;

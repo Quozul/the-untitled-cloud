@@ -14,7 +14,7 @@
 	let containerNotFound: boolean;
 
 	$: {
-		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
+		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING || $server?.state?.pending;
 		isSuspended = $server?.subscription.status === ApiSubscriptionStatus.SUSPENDED;
 		containerNotFound =
 			$server?.subscription.status === ApiSubscriptionStatus.ACTIVE &&

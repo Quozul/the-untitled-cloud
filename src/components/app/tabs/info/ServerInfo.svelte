@@ -143,11 +143,13 @@
 				closeText="Annuler"
 				variant={Variant.DANGER}
 			>
-				<p>
-					Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
-					tous les fichiers et ne seront pas récupérables.
-				</p>
-				<p>Êtes-vous sûr de vouloir continuer ?</p>
+				<div class="p-3">
+					<p>
+						Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
+						tous les fichiers et ne seront pas récupérables.
+					</p>
+					<p>Êtes-vous sûr de vouloir continuer ?</p>
+				</div>
 			</Modal>
 		</div>
 	{/if}
