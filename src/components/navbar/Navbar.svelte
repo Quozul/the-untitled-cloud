@@ -82,12 +82,12 @@
 
 				<div class="order-lg-3 d-inline-block">
 					{#if $token}
-						<Link href="/app/" className="btn btn-dark rounded-pill">
+						<Link href="/dashboard/" className="btn btn-dark rounded-pill">
 							{$t("my_servers")}
 						</Link>
 					{:else}
 						<Link
-							href="/login/?redirect=/{$locale}/app"
+							href="/login/?redirect=/{$locale}/dashboard/"
 							className="btn btn-dark rounded-pill"
 						>
 							{$t("to_login")}

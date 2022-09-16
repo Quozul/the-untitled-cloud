@@ -46,8 +46,11 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 						.then((err: ApiError) => {
 							resolve({
 								error: {
-									...err,
+									code: err.code,
+									isError: err.isError,
+									message: err.message,
 									translatedMessage: get(t)(`error.${err.code.toLowerCase()}`),
+									httpCode: response.status,
 								},
 								response: null,
 							});
@@ -59,6 +62,7 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 								isError: true,
 								message: response.statusText,
 								translatedMessage: get(t)(`error.${response.status}`),
+								httpCode: response.status,
 							};
 							resolve({ error, response: null });
 						});
@@ -69,7 +73,15 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 							resolve({ error: null, response });
 						})
 						.catch(() => {
-							resolve({ error: null, response: null });
+							// The parsing of JSON is wrong
+							const error: ApiError = {
+								code: AuthenticationErrors.PARSING_ERROR,
+								isError: true,
+								message: "Parsing error",
+								translatedMessage: get(t)("error.parsing_error"),
+								httpCode: response.status,
+							};
+							resolve({ error, response: null });
 						});
 				}
 			})
@@ -79,6 +91,7 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 					isError: true,
 					message: "Fetch failed",
 					translatedMessage: get(t)("error.fetch_failed"),
+					httpCode: null,
 				};
 				resolve({ error, response: null });
 			});

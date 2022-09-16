@@ -16,12 +16,12 @@
 	</Link>
 
 	{#if $token}
-		<Link href="/app/" className="btn btn-outline-dark rounded-pill btn-lg px-4">
+		<Link href="/dashboard/" className="btn btn-outline-dark rounded-pill btn-lg px-4">
 			{$t("my_servers")}
 		</Link>
 	{:else}
 		<Link
-			href="/login/?redirect=/{$locale}/app"
+			href="/login/?redirect=/{$locale}/dashboard/"
 			className="btn btn-outline-dark rounded-pill btn-lg px-4"
 		>
 			{$t("to_login")}

@@ -13,6 +13,7 @@ export enum AuthenticationErrors {
 	// Client side errors
 	FETCH_FAILED = "FETCH_FAILED",
 	HTTP_ERROR = "HTTP_ERROR",
+	PARSING_ERROR = "PARSING_ERROR",
 
 	// Form validation codes
 	PASSWORDS_DIFFER = "PASSWORDS_DIFFER",

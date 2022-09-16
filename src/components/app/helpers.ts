@@ -46,9 +46,9 @@ export async function refreshAllServers(page = 0): Promise<void> {
 		if (!get(onProfilePage)) {
 			await setDefaultSelectedServer();
 		}
-	} else if (error) {
-		fetchServersError.set(error);
 	}
+
+	fetchServersError.set(error);
 
 	fetchingServers.set(false);
 }

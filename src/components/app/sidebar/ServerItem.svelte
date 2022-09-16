@@ -38,7 +38,7 @@
 		$server = service;
 		if ($onProfilePage) {
 			$onProfilePage = false;
-			await goto(`/${$locale}/app/`);
+			await goto(`/${$locale}/dashboard/`);
 		}
 		await refreshSelectedServer();
 	}

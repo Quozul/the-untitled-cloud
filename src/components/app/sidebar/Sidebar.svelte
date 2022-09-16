@@ -50,7 +50,7 @@
 
 	async function redirectToLogin() {
 		$token = null;
-		await goto(`/${$locale}/login/?redirect=/${$locale}/app/`);
+		await goto(`/${$locale}/login/?redirect=/${$locale}/dashboard/`);
 	}
 
 	const toggleCollapsed = () => {
@@ -100,8 +100,7 @@
 
 		{#if $fetchServersError}
 			<div class="d-flex flex-column gap-3">
-				<SidebarItem className="btn-outline-danger" onClick={refreshAllServers}>
-					<Icon key="warning" />
+				<SidebarItem className="btn-outline-danger" iconName="warning" onClick={refreshAllServers}>
 					Rafraichir la liste
 				</SidebarItem>
 			</div>
@@ -187,7 +186,7 @@
 
 	<ul class="nav flex-column gap-3 px-3">
 		<SidebarItem
-			href="/app/profile/"
+			href="/dashboard/profile/"
 			iconName="person"
 			className="btn-outline-dark {$onProfilePage ? 'active' : ''}"
 		>
@@ -205,7 +204,7 @@
 </div>
 
 <Modal
-	visible={$fetchServersError?.code === 401}
+	visible={$fetchServersError?.httpCode === 401}
 	icon="warning"
 	title="Non connecté"
 	closeText={null}

@@ -69,7 +69,7 @@
 		<div class="d-flex justify-content-between server-bar">
 			<Button
 				onClick={toggleServerState}
-				className="d-flex align-items-center"
+				className="d-flex align-items-center overflow-hidden"
 				disabled={!$server.state.created ||
 					$server.subscription.status !== ApiSubscriptionStatus.ACTIVE}
 				variant={Variant.LIGHT}

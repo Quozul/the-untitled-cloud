@@ -82,7 +82,7 @@
 
 			// Clear everything and redirect to app
 			window.removeEventListener("beforeunload", alertUnload);
-			await goto(`/${$locale}/app`);
+			await goto(`/${$locale}/dashboard/`);
 			$checkoutStep = CheckoutSteps.PRODUCTS;
 			$clientSecret = null;
 			$cart = null;

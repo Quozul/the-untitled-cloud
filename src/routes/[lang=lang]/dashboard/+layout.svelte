@@ -10,7 +10,7 @@
 
 	onMount(async () => {
 		if (!$token) {
-			await goto(`/${$locale}/login?redirect=/${$locale}/app`);
+			await goto(`/${$locale}/login?redirect=/${$locale}/dashboard/`);
 		}
 
 		await refreshSelectedServer();

@@ -37,7 +37,7 @@
 		class="nav-link"
 		class:active={!$fetchingServer && $selectedTab === ServerTab.INFO}
 		class:disabled={$fetchingServer || isEnded}
-		href="/{$locale}/app/"
+		href="/{$locale}/dashboard/"
 	>
 		Informations
 	</a>
@@ -47,7 +47,7 @@
 			class="nav-link"
 			class:active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
 			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/app/parameters/"
+			href="/{$locale}/dashboard/parameters/"
 		>
 			Paramètres
 		</a>
@@ -58,7 +58,7 @@
 			class="nav-link"
 			class:active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
 			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/app/console/"
+			href="/{$locale}/dashboard/console/"
 		>
 			Console
 		</a>
