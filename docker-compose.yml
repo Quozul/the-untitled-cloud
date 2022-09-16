@@ -64,6 +64,7 @@ services:
       - "${CONTAINER_DIRECTORY}:/servers"
     ports:
       - "21:21"
+      - "7000-8000:7000-8000"
     networks:
       mc_host_network:
     depends_on:
