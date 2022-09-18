@@ -31,3 +31,5 @@ services:
       - "./data:/data"
     networks:
       app:
+    env_file:
+      - .env
