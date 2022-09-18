@@ -3,15 +3,11 @@ volumes:
 
 networks:
   app:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 10.5.0.0/16
-         gateway: 10.5.0.1
 
 services:
   postgres:
     image: postgres:latest
+    hostname: postgres
     environment:
       - POSTGRES_PASSWORD=postgrespw
     expose:
@@ -22,17 +18,16 @@ services:
       - data:/var/lib/postgresql
     networks:
       app:
-        ipv4_address: 10.5.0.5
-    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
 
-  myapp:
+  ftp:
     build: .
-    networks:
-      app:
-        ipv4_address: 10.5.0.6
     ports:
       - 21:21
       - 20:20
       - 1024-1048:1024-1048
     depends_on:
       - postgres
+    volumes:
+      - "./data:/data"
+    networks:
+      app:
