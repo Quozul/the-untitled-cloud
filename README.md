@@ -9,6 +9,7 @@ PASSWORD=<password to the database>
 USERNAME_COLUMN=<column where the usernames are stored>
 PWD_COLUMN=<column where the passwords are stored>
 PW_TYPE=<password hash algorithm>
+PASV_ADDRESS=<remote address of the ftp server>
 ```
 
 ### Example
@@ -22,6 +23,7 @@ PASSWORD=postgrespw
 USERNAME_COLUMN=username
 PWD_COLUMN=password
 PW_TYPE=md5
+PASV_ADDRESS=127.0.0.1
 ```
 
 For further documentation, read the GitHub page of [pam-pgsql](https://github.com/pam-pgsql/pam-pgsql).
