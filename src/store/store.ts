@@ -19,7 +19,7 @@ import { writable } from "svelte/store";
 import { EmptyPromoCode } from "$components/cart/constants";
 
 // Persistent store
-export const token: Writable<Token | null> = createStoreEntry(
+export const token: Writable<string | null> = createStoreEntry(
 	"token",
 	null,
 	browser && localStorage

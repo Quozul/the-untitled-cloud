@@ -47,7 +47,7 @@
 	const items = IsoCountries.map((i) => ({ label: $t(`country.${i}`), value: i }));
 </script>
 
-<div class="fs-6 mb-3">
+<div class="mb-3">
 	{$t("logged_in_as")}&nbsp;
 	<div class="text-muted d-inline">
 		{email}

@@ -17,4 +17,5 @@ export enum Variant {
 	DANGER = "danger",
 	LIGHT = "light",
 	DARK = "dark",
+	LINK = "link",
 }

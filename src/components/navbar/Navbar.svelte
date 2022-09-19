@@ -107,14 +107,12 @@
 	</nav>
 </header>
 
-{#if $cartModalVisible}
-	<Modal
-		bind:visible={$cartModalVisible}
-		onClick={redirectToCheckout}
-		okText={$cart?.length === 0 ? null : $t("checkout")}
-		title={$t("cart")}
-		closeText={$t("continue_shopping")}
-	>
-		<Cart />
-	</Modal>
-{/if}
+<Modal
+	bind:visible={$cartModalVisible}
+	onClick={redirectToCheckout}
+	okText={$cart?.length === 0 ? null : $t("checkout")}
+	title={$t("cart")}
+	closeText={$t("continue_shopping")}
+>
+	<Cart />
+</Modal>

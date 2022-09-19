@@ -18,7 +18,6 @@
 	import { mergePaginate } from "$shared/helpers";
 	import type { ApiService } from "$models/ApiService";
 	import type { ApiPaginate } from "$models/ApiPaginate";
-	import Modal from "$components/modal/Modal.svelte";
 	import { locale } from "svelte-intl-precompile";
 
 	// State
@@ -46,11 +45,6 @@
 		$token = null;
 		$user = null;
 		await goto(`/${$locale}/`);
-	}
-
-	async function redirectToLogin() {
-		$token = null;
-		await goto(`/${$locale}/login/?redirect=/${$locale}/dashboard/`);
 	}
 
 	const toggleCollapsed = () => {
@@ -202,19 +196,6 @@
 		</SidebarItem>
 	</ul>
 </div>
-
-<Modal
-	visible={$fetchServersError?.httpCode === 401}
-	icon="warning"
-	title="Non connecté"
-	closeText={null}
-	okText="Se connecter"
-	onClick={redirectToLogin}
->
-	<div class="p-3">
-		Veuillez vous reconnecter pour utiliser l'application.
-	</div>
-</Modal>
 
 <style lang="scss" global>
 	@include media-breakpoint-down(sm) {

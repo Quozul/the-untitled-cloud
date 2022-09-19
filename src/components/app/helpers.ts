@@ -16,11 +16,12 @@ import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiUser } from "$models/ApiUser";
 import type { ApiBillingPortal } from "$models/ApiBillingPortal";
+import type { ApiFtpPassword } from "$models/ApiFtpPassword";
 import type { ApiResponse } from "$shared/models";
 
 export async function getAllServers(
 	page = 0,
-	ended = false
+	ended = false,
 ): Promise<ApiResponse<ApiPaginate<ApiService>>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
@@ -104,14 +105,14 @@ export async function patchServer(service: ApiService, action: string): Promise<
 }
 
 export async function getSubscriptionProducts(
-	service: ApiService
+	service: ApiService,
 ): Promise<ApiResponse<ApiPaginate<ApiProduct>>> {
 	const request = api(`subscription/${service.subscription.id}/products`, getOptions("GET"));
 	return await handleRequest<ApiPaginate<ApiProduct>>(request);
 }
 
 export async function getSubscriptionDetails(
-	service: ApiService
+	service: ApiService,
 ): Promise<ApiResponse<ApiSubscriptionDetails>> {
 	const request = api(`subscription/${service.subscription.id}/details`, getOptions("GET"));
 	return await handleRequest<ApiSubscriptionDetails>(request);
@@ -119,7 +120,7 @@ export async function getSubscriptionDetails(
 
 export async function cancelSubscription(
 	service: ApiService,
-	now = true
+	now = true,
 ): Promise<ApiResponse<ApiSubscriptionDetails>> {
 	const request = api(`subscription/${service.subscription.id}`, getOptions("DELETE", { now }));
 	return await handleRequest<ApiSubscriptionDetails>(request);
@@ -136,8 +137,13 @@ export async function getUser(): Promise<ApiResponse<ApiUser>> {
 }
 
 export async function getStripePortal(
-	redirect: string | null = null
+	redirect: string | null = null,
 ): Promise<ApiResponse<ApiBillingPortal>> {
 	const request = api(`user/portal?redirect=${redirect}`, getOptions("GET"));
 	return await handleRequest<ApiBillingPortal>(request);
+}
+
+export async function resetFtpPassword(service: ApiService, password: string): Promise<ApiResponse<ApiFtpPassword>> {
+	const request = api(`service/${service.id}/ftp`, getOptions("PATCH", { password }));
+	return await handleRequest<ApiFtpPassword>(request);
 }

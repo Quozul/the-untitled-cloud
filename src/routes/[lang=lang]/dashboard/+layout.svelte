@@ -7,6 +7,7 @@
 	import Icons from "$components/icons/Icons.svelte";
 	import "$root/app.scss";
 	import { locale } from "svelte-intl-precompile";
+	import SessionExpiredModal from "$components/errors/SessionExpiredModal.svelte";
 
 	onMount(async () => {
 		if (!$token) {
@@ -30,6 +31,8 @@
 		<slot />
 	</div>
 </div>
+
+<SessionExpiredModal/>
 
 <style lang="scss">
 	@include media-breakpoint-down(sm) {

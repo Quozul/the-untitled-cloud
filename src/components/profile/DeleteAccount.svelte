@@ -57,7 +57,7 @@
 	<hr class="m-0" />
 
 	<div class="p-3">
-		<div class="fs-6 mb-3">
+		<div class="mb-3">
 			{$t("logged_in_as")}
 			<div class="text-muted d-inline">
 				{email}

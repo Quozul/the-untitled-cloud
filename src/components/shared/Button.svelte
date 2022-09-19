@@ -18,18 +18,23 @@
 
 	let classes: string;
 
-	$: classes = classNames({
-		btn: true,
-		[`btn${outline ? "-outline" : ""}-${variant}`]: !!variant,
-		placeholder: loading,
-		"rounded-pill": pill,
-		[`text-${variant}`]: loading,
-		disabled: loading || disabled || processing,
-		"d-inline-flex": !!icon,
-		"align-items-center": !!icon,
-		"gap-2": true,
-		[className]: !!className,
-	});
+	$: {
+		let validVariant = variant && variant !== Variant.NONE && variant !== Variant.LINK;
+
+		classes = classNames({
+			btn: true,
+			[`btn${outline ? "-outline" : ""}-${variant}`]: validVariant,
+			placeholder: loading,
+			"rounded-pill": pill,
+			[`text-${variant}`]: validVariant && loading,
+			disabled: loading || disabled || processing,
+			"d-inline-flex": !!icon,
+			"align-items-center": !!icon,
+			"gap-2": true,
+			[className]: !!className,
+			"btn-link": variant === Variant.LINK,
+		});
+	}
 
 	async function handleClick() {
 		try {
