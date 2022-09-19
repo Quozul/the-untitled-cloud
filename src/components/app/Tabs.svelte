@@ -38,7 +38,7 @@
 <nav class="d-flex gap-lg-2">
 	<ButtonLink
 		active={!$fetchingServer && $selectedTab === ServerTab.INFO}
-		className="justify-content-center w-100 border-0"
+		className="justify-content-center w-100 border-0 py-3 p-lg-2"
 		disabled={$fetchingServer || isEnded}
 		href="/{$locale}/dashboard/"
 		icon="info"
@@ -50,7 +50,7 @@
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
 		<ButtonLink
 			active={!$fetchingServer && $selectedTab === ServerTab.FILES}
-			className="justify-content-center w-100 border-0"
+			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}
 			href="/{$locale}/dashboard/files/"
 			icon="directory"
@@ -63,7 +63,7 @@
 	{#if $server?.product.id === Products.MinecraftServer}
 		<ButtonLink
 			active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
-			className="justify-content-center w-100 border-0"
+			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}
 			href="/{$locale}/dashboard/console/"
 			icon="terminal"
@@ -74,7 +74,7 @@
 	{/if}
 
 	<Button
-		className="justify-content-center w-100 border-0"
+		className="justify-content-center w-100 border-0 py-3 p-lg-2"
 		disabled={$fetchingServer}
 		icon="credit-card"
 		onClick={showModal}
