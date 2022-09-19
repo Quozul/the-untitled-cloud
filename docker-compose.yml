@@ -53,7 +53,7 @@ services:
     environment:
       DATABASE: ${DATABASE_NAME}
       TABLE: subscription_item
-      HOST: postgres
+      HOST: database
       PORT: 5432
       USERNAME: ${DATABASE_USER}
       PASSWORD: ${DATABASE_PASS}
