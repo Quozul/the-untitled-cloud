@@ -44,8 +44,6 @@ services:
       - "${DATABASE_VOLUME}:/var/lib/postgresql/data"
     expose:
       - 5432
-#    ports:
-#      - "5444:5432"
     networks:
       mc_host_network:
       internal:
@@ -53,18 +51,22 @@ services:
   mc_host_ftp:
     build: mc-host-ftp
     environment:
-      PGHOST: database
-      PGUSER: ${DATABASE_USER}
-      PGPASSWORD: ${DATABASE_PASS}
-      PGDATABASE: ${DATABASE_NAME}
-      PGPORT: 5432
-      SALT: ${SALT}
-      PEPPER: ${PEPPER}
+      DATABASE: ${DATABASE_NAME}
+      TABLE: subscription_item
+      HOST: postgres
+      PORT: 5432
+      USERNAME: ${DATABASE_USER}
+      PASSWORD: ${DATABASE_PASS}
+      USERNAME_COLUMN: id
+      PWD_COLUMN: ftp_password
+      PW_TYPE: md5
+      PASV_ADDRESS: ${PUBLIC_ADDRESS}
     volumes:
-      - "${CONTAINER_DIRECTORY}:/servers"
+      - "${CONTAINER_DIRECTORY}:/data"
     ports:
-      - "21:21"
-      - "7000-8000:7000-8000"
+      - "20-21:20-21"
+      - "989-990:989-990"
+      - "1024-1048:1024-1048"
     networks:
       mc_host_network:
     depends_on:

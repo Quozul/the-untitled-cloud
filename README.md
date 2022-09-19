@@ -44,6 +44,9 @@ SMTP_FROM_NAME=No reply
 JWT_SECRET=secret
 SALT=salt # For stronger password hashing
 PEPPER=pepper
+
+# Environment
+PUBLIC_ADDRESS=127.0.0.1 # Public address of the host machine
 ```
 
 ## Start
