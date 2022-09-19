@@ -1,35 +1,17 @@
-volumes:
-  data:
-
-networks:
-  app:
-
 services:
-  postgres:
-    image: postgres:latest
-    hostname: postgres
-    environment:
-      - POSTGRES_PASSWORD=postgrespw
-    expose:
-      - 5432
-    ports:
-      - 5432:5432
-    volumes:
-      - data:/var/lib/postgresql
-    networks:
-      app:
-
   ftp:
     build: .
     ports:
       - 21:21
       - 20:20
       - 1024-1048:1024-1048
-    depends_on:
-      - postgres
     volumes:
-      - "./data:/data"
-    networks:
-      app:
+      - "/home/mchost/servers/7fb39116-f6cb-4e75-bc59-7efefe7cbc84:/data"
     env_file:
       - .env
+    networks:
+      - the-untitled-cloud-api_dev-database
+
+networks:
+  the-untitled-cloud-api_dev-database:
+    external: true
