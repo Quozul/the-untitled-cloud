@@ -22,3 +22,8 @@ data class VerificationCredentials(
     val password: String,
     val code: String,
 )
+
+@Serializable
+data class PasswordCredentials(
+    val password: String,
+)

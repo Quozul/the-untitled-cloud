@@ -9,6 +9,7 @@ data class ApiContainer(
 	val product: ApiProductInfo,
 	val tag: String?,
 	val name: String?,
+	val hasFtpPassword: Boolean,
 
 	// Docker details
 	val port: String?,

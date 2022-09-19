@@ -56,7 +56,7 @@ fun SubscriptionItem.remove() {
 
 private fun SubscriptionItem.removeFolder() {
 	val baseDirectory = transaction {
-		"$containerDirectory${subscription.owner.id.value}/${this@removeFolder.id}"
+		"$containerDirectory${this@removeFolder.id}"
 	}
 	println("Deleting $baseDirectory")
 

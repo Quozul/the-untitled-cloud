@@ -43,3 +43,8 @@ build -t -x test -i
 # Ktor run program arguments
 -config=src/main/resources/application-dev.conf
 ```
+
+```sh
+# Run the Docker compose file
+docker compose -f docker-compose.dev.yml up -d
+```

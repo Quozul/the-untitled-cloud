@@ -2,7 +2,9 @@ package dev.quozul.service
 
 import com.github.dockerjava.api.exception.NotFoundException
 import com.github.dockerjava.api.exception.NotModifiedException
+import dev.quozul.authentication.hashString
 import dev.quozul.authentication.models.AuthenticationErrors
+import dev.quozul.authentication.models.PasswordCredentials
 import dev.quozul.database.enums.SubscriptionStatus
 import dev.quozul.database.extensions.subscriptionItem.*
 import dev.quozul.database.helpers.ApiContainer
@@ -14,6 +16,7 @@ import dev.quozul.servers.models.Action
 import dev.quozul.servers.models.Paginate
 import dev.quozul.servers.models.ServerActionRequest
 import dev.quozul.servers.models.ServerState
+import dev.quozul.service.models.FtpPassword
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -21,16 +24,17 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 
 fun Route.configureServiceRoutes() {
+	val salt = environment!!.config.property("passwords.salt").getString()
+	val pepper = environment!!.config.property("passwords.pepper").getString()
+
 	get {
 		// Get the user from the JWT
 		val principal = call.principal<JWTPrincipal>()
@@ -56,6 +60,7 @@ fun Route.configureServiceRoutes() {
 				.fullJoin(Containers)
 				.slice(
 					SubscriptionItems.id,
+					SubscriptionItems.ftpPassword,
 					Containers.id,
 					Products.id,
 					Subscriptions.id,
@@ -100,6 +105,7 @@ fun Route.configureServiceRoutes() {
 					product = product.toApiProductInfo(),
 					tag = row.getOrNull(Containers.containerTag),
 					name = row.getOrNull(Containers.name),
+					hasFtpPassword = row[SubscriptionItems.ftpPassword] != null,
 					port = item.port,
 					state = state,
 					subscription = subscription.toApiSubscription(),
@@ -288,5 +294,47 @@ fun Route.configureServiceRoutes() {
 				call.response.status(HttpStatusCode.NoContent)
 			} ?: call.response.status(HttpStatusCode.NotFound)
 		}
+	}
+
+	patch("{serviceId}/ftp") {
+		val credentials = try {
+			call.receive<PasswordCredentials>()
+		} catch (e: SerializationException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@patch
+		}
+
+		val serviceId = try {
+			UUID.fromString(call.parameters["serviceId"]!!)
+		} catch (e: NullPointerException) {
+			call.response.status(HttpStatusCode.BadRequest)
+			return@patch
+		}
+
+		val principal = call.principal<JWTPrincipal>()
+		val ownerId = UUID.fromString(principal!!.payload.getClaim("id").asString())
+
+		// TODO: Find a better way to hash password
+		val hash = hashString("SHA-256", salt + credentials.password + pepper)
+
+		val user = transaction {
+			User.find {
+				(Users.id eq ownerId) and (Users.password eq hash)
+			}.firstOrNull()
+		}
+
+		if (user == null) {
+			call.response.status(HttpStatusCode.BadRequest)
+			call.respond(AuthenticationErrors.INVALID_CREDENTIALS.toHashMap(true))
+			return@patch
+		}
+
+		findItemWithOwnership(serviceId, ownerId)?.let {
+			val password = getRandomString(32)
+			transaction {
+				it.ftpPassword = hashString("MD5", password)
+			}
+			call.respond(FtpPassword(password))
+		} ?: call.response.status(HttpStatusCode.NotFound)
 	}
 }

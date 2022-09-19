@@ -21,6 +21,7 @@ object SubscriptionItems : UUIDTable("subscription_item") {
 	val subscription = reference("subscription", Subscriptions, onDelete = ReferenceOption.CASCADE)
 	val product = reference("product", Products, onDelete = ReferenceOption.RESTRICT)
 	val container = reference("container", Containers, onDelete = ReferenceOption.SET_NULL).nullable()
+	val ftpPassword = char("ftp_password", 32).nullable()
 
 	init {
 		index(true, subscription, product, container)
@@ -33,6 +34,7 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 	var subscription by Subscription referencedOn SubscriptionItems.subscription
 	var product by Product referencedOn SubscriptionItems.product
 	var container by Container optionalReferencedOn SubscriptionItems.container
+	var ftpPassword by SubscriptionItems.ftpPassword
 
 	fun toApiContainer(): ApiContainer {
 		val state: ServerState = ServerState.fromContainerState(
@@ -49,12 +51,12 @@ class SubscriptionItem(id: EntityID<UUID>) : UUIDEntity(id) {
 			product = product.toApiProductInfo(),
 			tag = container?.containerTag,
 			name = container?.name,
+			hasFtpPassword = ftpPassword != null,
 			port = port,
 			state = state,
 			subscription = subscription.toApiSubscription(),
 		)
 	}
-
 }
 
 fun findItemWithOwnership(id: UUID, owner: UUID) = transaction {

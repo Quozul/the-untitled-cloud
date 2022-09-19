@@ -37,7 +37,7 @@ fun Route.configureAuthenticationRoutes() {
 			.withIssuer(issuer)
 			.withClaim("id", user.id.value.toString())
 			.withClaim("email", user.email)
-			.withExpiresAt(Date(System.currentTimeMillis() + 86400000 /* One day */))
+			.withExpiresAt(Date(System.currentTimeMillis() + 86400000 /* 86400000 One day */))
 			.sign(Algorithm.HMAC256(secret))
 	}
 

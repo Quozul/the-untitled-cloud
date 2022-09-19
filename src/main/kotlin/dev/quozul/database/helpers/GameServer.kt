@@ -32,7 +32,7 @@ class GameServer(private val subscriptionItem: SubscriptionItem) {
 
 		// Create volume bindings
 		val baseDirectory = transaction {
-			"$containerDirectory${subscriptionItem.subscription.owner.id.value}/${subscriptionItem.id}"
+			"$containerDirectory${subscriptionItem.id}"
 		}
 
 		gameServer.volumes.forEach {
