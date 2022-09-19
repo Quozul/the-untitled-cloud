@@ -5,8 +5,6 @@
 	import { Products } from "$components/cart/constants";
 	import NoParameters from "$components/errors/NoParameters.svelte";
 	import SteamParameters from "$components/parameters/SteamParameters.svelte";
-
-	$selectedTab = ServerTab.PARAMETERS;
 </script>
 
 {#if $server?.product.id === Products.MinecraftServer}

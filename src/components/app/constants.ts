@@ -32,6 +32,6 @@ export enum ServerType {
 
 export enum ServerTab {
 	INFO,
-	PARAMETERS,
 	CONSOLE,
+	FILES,
 }

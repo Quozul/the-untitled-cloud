@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Sidebar from "$components/app/sidebar/Sidebar.svelte";
+	import Sidebar from "$components/sidebar/Sidebar.svelte";
 	import { token } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
@@ -27,17 +27,9 @@
 <div class="d-flex vh-100">
 	<Sidebar />
 
-	<div class="content overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3">
-		<slot />
+	<div class="overflow-auto flex-grow-1 d-flex flex-column gap-lg-3">
+		<slot/>
 	</div>
 </div>
 
 <SessionExpiredModal/>
-
-<style lang="scss">
-	@include media-breakpoint-down(sm) {
-		.content {
-			margin-left: 74px;
-		}
-	}
-</style>

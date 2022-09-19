@@ -35,7 +35,6 @@
 			onClick={handleOnClick}
 			className="w-100 justify-content-center"
 			disabled={!product.inStocks || isInCart}
-			variant={Variant.DARK}
 			outline={isInCart}
 			icon={isInCart ? "bag-check" : "bag-plus"}
 		>

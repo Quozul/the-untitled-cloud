@@ -82,7 +82,7 @@
 		{loginError?.translatedMessage}
 	</div>
 
-	<Button type="submit" variant={Variant.DARK} onClick={submit} className="w-100">
+	<Button type="submit" onClick={submit} className="w-100">
 		{$t("to_login")}
 	</Button>
 </form>

@@ -82,7 +82,6 @@
 		<div class="d-flex gap-3 flex-wrap">
 			{#if !$server.state.running}
 				<Button
-					variant={Variant.PRIMARY}
 					loading={$fetchingServer}
 					disabled={!$server}
 					icon="play"
@@ -92,7 +91,6 @@
 				</Button>
 			{:else}
 				<Button
-					variant={Variant.PRIMARY}
 					loading={$fetchingServer}
 					disabled={!$server}
 					icon="stop"
@@ -103,7 +101,6 @@
 			{/if}
 
 			<Button
-				variant={Variant.PRIMARY}
 				loading={$fetchingServer}
 				disabled={!$server}
 				icon="arrow-clockwise"
@@ -115,23 +112,12 @@
 			<Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
 
 			<Button
-				variant={Variant.PRIMARY}
 				loading={$fetchingServer}
 				disabled={!$server}
 				icon="trash"
 				onClick={openModal}
 			>
 				Réinitialiser
-			</Button>
-
-			<Button
-				variant={Variant.PRIMARY}
-				loading={$fetchingServer}
-				disabled={!$server}
-				icon="arrow-clockwise"
-				onClick={recreateServer}
-			>
-				Recréer
 			</Button>
 
 			<Modal

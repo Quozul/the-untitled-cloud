@@ -8,6 +8,9 @@
 	import Modal from "$components/modal/Modal.svelte";
 	import { getStripePortal } from "./helpers";
 	import { page } from "$app/stores";
+	import Icon from "$components/icons/Icon.svelte";
+	import ButtonLink from "$shared/ButtonLink.svelte";
+	import { Variant } from "$shared/constants.js";
 
 	let isPending: boolean;
 	let isEnded: boolean;
@@ -32,45 +35,52 @@
 	}
 </script>
 
-<nav class="nav nav-pills nav-fill flex-column flex-lg-row">
-	<a
-		class="nav-link"
-		class:active={!$fetchingServer && $selectedTab === ServerTab.INFO}
-		class:disabled={$fetchingServer || isEnded}
+<nav class="d-flex gap-lg-2">
+	<ButtonLink
+		active={!$fetchingServer && $selectedTab === ServerTab.INFO}
+		className="justify-content-center w-100 border-0"
+		disabled={$fetchingServer || isEnded}
 		href="/{$locale}/dashboard/"
+		icon="info"
+		outline={true}
 	>
-		Informations
-	</a>
+		<span class="d-none d-lg-inline">Informations</span>
+	</ButtonLink>
 
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
-		<a
-			class="nav-link"
-			class:active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
-			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/dashboard/parameters/"
+		<ButtonLink
+			active={!$fetchingServer && $selectedTab === ServerTab.FILES}
+			className="justify-content-center w-100 border-0"
+			disabled={$fetchingServer || isPending || isEnded || isSuspended}
+			href="/{$locale}/dashboard/files/"
+			icon="directory"
+			outline={true}
 		>
-			Paramètres
-		</a>
+			<span class="d-none d-lg-inline">Fichiers</span>
+		</ButtonLink>
 	{/if}
 
 	{#if $server?.product.id === Products.MinecraftServer}
-		<a
-			class="nav-link"
-			class:active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
-			class:disabled={$fetchingServer || isPending || isEnded || isSuspended}
+		<ButtonLink
+			active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
+			className="justify-content-center w-100 border-0"
+			disabled={$fetchingServer || isPending || isEnded || isSuspended}
 			href="/{$locale}/dashboard/console/"
+			icon="terminal"
+			outline={true}
 		>
-			Console
-		</a>
+			<span class="d-none d-lg-inline">Console</span>
+		</ButtonLink>
 	{/if}
 
 	<Button
-		className="nav-link justify-content-center"
+		className="justify-content-center w-100 border-0"
 		disabled={$fetchingServer}
-		icon="box-arrow-up-right"
+		icon="credit-card"
 		onClick={showModal}
+		outline={true}
 	>
-		Abonnement
+		<span class="d-none d-lg-inline">Abonnement</span>
 	</Button>
 </nav>
 

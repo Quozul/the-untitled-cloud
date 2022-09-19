@@ -3,7 +3,7 @@
 	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
 	import { DockerStatus } from "./constants";
 	import { Locale } from "@js-joda/locale_fr";
-	import { server } from "$store/store";
+	import { server, sidebarCollapsed } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "./helpers";
 	import { Variant } from "$shared/constants";
@@ -11,6 +11,7 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { Products } from "$components/cart/constants";
 	import { page } from "$app/stores";
+	import { toggleSidebarCollapsed } from "$components/sidebar/helpers.js";
 
 	// State
 	let started: ZonedDateTime = null;
@@ -56,46 +57,35 @@
 		}
 		await refreshSelectedServer();
 	}
-
-	function toggleMenu() {
-		menu = !menu;
-	}
 </script>
 
 {#if $server}
-	<div
-		class="bg-light p-4 d-flex flex-column flex-lg-row align-items-start align-content-lg-center gap-3 gap-lg-5"
-	>
-		<div class="d-flex justify-content-between server-bar">
+	<div class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 gap-lg-5 w-100 px-3">
+		<div class="sidebar-header d-flex align-items-center gap-2">
+			<Button icon="list" onClick={toggleSidebarCollapsed} variant={Variant.LIGHT} className="d-inline d-lg-none" />
 			<Button
 				onClick={toggleServerState}
-				className="d-flex align-items-center overflow-hidden"
+				className="d-flex align-items-center overflow-hidden p-0"
 				disabled={!$server.state.created ||
 					$server.subscription.status !== ApiSubscriptionStatus.ACTIVE}
 				variant={Variant.LIGHT}
 				{icon}
 				iconSize="28"
 			>
-				{#if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
-					<h3 class="m-0">En attente</h3>
-				{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-					<h3 class="m-0">Suspendu</h3>
-				{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-					<h3 class="m-0">Terminé</h3>
-				{:else if $server.state.created}
-					<h3 class="m-0">{$server.name ?? $server.product.name}</h3>
-				{:else}
-					<h3 class="m-0">Introuvable</h3>
-				{/if}
+				<span class="fw-bolder m-0 fs-5 text-nowrap">
+					{#if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
+						En attente
+					{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
+						Suspendu
+					{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
+						Terminé
+					{:else if $server.state.created}
+						{$server.name ?? $server.product.name}
+					{:else}
+						Introuvable
+					{/if}
+				</span>
 			</Button>
-
-			<button
-				class="btn btn-light d-lg-none"
-				type="button"
-				on:click|preventDefault={toggleMenu}
-			>
-				<Icon key="list" width="28" height="28" />
-			</button>
 		</div>
 
 		<div class="collapse navbar-collapse d-lg-block" class:show={menu}>
@@ -141,8 +131,9 @@
 						{:else if $server.product.id === Products.MinecraftServer}
 							{$page.url.hostname}:{$server.port}
 						{:else if $server.product.id === Products.ArkServer}
-							<a href="steam://connect/theuntitledcloud.com:{$server.port}/"
-								>Lien de connexion Steam</a
+							<a
+								href="steam://connect/theuntitledcloud.com:{$server.port}/"
+							>Lien de connexion Steam</a
 							>
 						{:else}
 							Impossible de déterminer l'adresse de connexion.

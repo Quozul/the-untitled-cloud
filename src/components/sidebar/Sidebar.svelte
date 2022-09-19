@@ -14,11 +14,13 @@
 	import SidebarItem from "./SidebarItem.svelte";
 	import ServerItem from "./ServerItem.svelte";
 	import { getAllServers, refreshAllServers } from "$components/app/helpers";
-	import Link from "$shared/Link.svelte";
 	import { mergePaginate } from "$shared/helpers";
 	import type { ApiService } from "$models/ApiService";
 	import type { ApiPaginate } from "$models/ApiPaginate";
 	import { locale } from "svelte-intl-precompile";
+	import Button from "$shared/Button.svelte";
+	import { Variant } from "$shared/constants.js";
+	import { toggleSidebarCollapsed } from "$components/sidebar/helpers.js";
 
 	// State
 	let endedServers: ApiPaginate<ApiService>;
@@ -46,39 +48,16 @@
 		$user = null;
 		await goto(`/${$locale}/`);
 	}
-
-	const toggleCollapsed = () => {
-		$sidebarCollapsed = !$sidebarCollapsed;
-	};
 </script>
 
 <div
-	class="d-flex flex-column flex-shrink-0 bg-light sidebar shadow-sm py-3"
-	class:collapsed={$sidebarCollapsed}
+	class="d-flex flex-column flex-shrink-0 bg-light sidebar shadow-sm py-3 d-lg-flex"
+	class:d-none={$sidebarCollapsed}
 >
-	<Link href="/" className="d-flex align-items-center me-md-auto link-dark text-decoration-none px-3">
-		<Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "me-2"} />
-		{#if !$sidebarCollapsed}
-			<span class="fs-4">The Untitled Cloud</span>
-		{/if}
-	</Link>
-
-	<div class="d-flex gap-3 px-3">
-		<SidebarItem
-			iconName={$sidebarCollapsed ? "chevron-double-right" : "chevron-double-left"}
-			className="btn-outline-secondary mt-3 collapse-button flex-grow-1"
-			onClick={toggleCollapsed}
-		>
-			Réduire
-		</SidebarItem>
-
-		{#if !$sidebarCollapsed}
-			<SidebarItem
-				iconName="arrow-clockwise"
-				className="btn-outline-secondary mt-3 collapse-button"
-				onClick={refreshAllServers}
-			/>
-		{/if}
+	<div class="sidebar-header d-flex align-items-center gap-2 px-3">
+		<Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "d-none d-lg-inline"} />
+		<Button icon="x-lg" onClick={toggleSidebarCollapsed} variant={Variant.LIGHT} className="d-inline d-lg-none"/>
+		<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
 	</div>
 
 	<hr />
@@ -104,7 +83,7 @@
 
 		{#if $servers?.data?.length > 0}
 			<div class="d-flex flex-column gap-3">
-				<h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+				<h6 class="px-2 py-1 m-0 fw-bold">
 					<Icon />
 					Mes services ({$servers.totalElements})
 				</h6>
@@ -147,7 +126,7 @@
 			<hr />
 
 			<div class="d-flex flex-column gap-3">
-				<h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+				<h6 class="px-2 py-1 m-0 fw-bold">
 					<Icon />
 					Anciens serveurs ({endedServers.totalElements})
 				</h6>
@@ -169,7 +148,7 @@
 		{:else if endedServers && endedServers.data.length === 0}
 			<hr />
 
-			<h6 class="px-2 py-1 m-0 fw-bold" class:visually-hidden={$sidebarCollapsed}>
+			<h6 class="px-2 py-1 m-0 fw-bold">
 				<Icon />
 				Aucun anciens serveur
 			</h6>
@@ -212,10 +191,6 @@
 		width: 300px;
 		height: 100%;
 		overflow-y: auto;
-
-		&.collapsed {
-			width: 74px;
-		}
 
 		.sidebar-item {
 			height: 38px;

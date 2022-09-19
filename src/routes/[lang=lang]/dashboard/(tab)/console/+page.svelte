@@ -6,4 +6,6 @@
 	$selectedTab = ServerTab.CONSOLE;
 </script>
 
-<Console />
+<div class="d-flex flex-column gap-2 h-100">
+	<Console />
+</div>

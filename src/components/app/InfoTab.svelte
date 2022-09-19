@@ -8,6 +8,7 @@
 	import InternalError from "$components/errors/InternalError.svelte";
 	import { refreshSelectedServer } from "./helpers";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
+	import Parameters from "$components/parameters/Parameters.svelte";
 
 	let isPending: boolean;
 	let isSuspended: boolean;
@@ -31,8 +32,8 @@
 {:else if $fetchServerError}
 	<InternalError refresh={refreshSelectedServer} />
 {:else}
-	<div class="d-flex gap-3 flex-column flex-xl-row">
+	<div class="d-flex gap-3 flex-column">
 		<ServerInfo />
-		<ServerFtp />
+		<Parameters />
 	</div>
 {/if}

@@ -3,18 +3,16 @@
 	import Icon from "$components/icons/Icon.svelte";
 	import { classNames } from "./helpers";
 
-	export let variant: Variant = Variant.DARK;
-	export let outline = false;
+	export let active: boolean = false;
 	export let className = "";
 	export let disabled = false;
-	export let type = "button";
-	export let onClick: VoidFunction = null;
-	export let loading = false;
+	export let href: string;
 	export let icon: string = null;
 	export let iconSize = "16";
+	export let outline = false;
 	export let pill = false;
-
-	let processing = false;
+	export let type = "button";
+	export let variant: Variant = Variant.DARK;
 
 	let classes: string;
 
@@ -24,39 +22,27 @@
 		classes = classNames({
 			btn: true,
 			[`btn${outline ? "-outline" : ""}-${variant}`]: validVariant,
-			placeholder: loading,
 			"rounded-pill": pill,
-			[`text-${variant}`]: validVariant && loading,
-			disabled: loading || disabled || processing,
+			disabled: disabled,
 			"d-inline-flex": !!icon,
 			"align-items-center": !!icon,
 			"gap-2": true,
 			[className]: !!className,
 			"btn-link": variant === Variant.LINK,
+			"active": active,
 		});
-	}
-
-	async function handleClick() {
-		try {
-			processing = true;
-			await onClick();
-		} finally {
-			processing = false;
-		}
 	}
 </script>
 
-<button
+<a
 	{type}
+	{href}
 	class={classes}
-	disabled={disabled || processing || loading}
-	on:click|preventDefault={handleClick}
+	disabled={disabled}
 >
-	{#if processing}
-		<span class="icon spinner-border spinner-border-sm" />
-	{:else if icon}
+	{#if icon}
 		<Icon key={icon} width={iconSize} height={iconSize} />
 	{/if}
 
 	<slot />
-</button>
+</a>

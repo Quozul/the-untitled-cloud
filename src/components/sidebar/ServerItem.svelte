@@ -11,7 +11,7 @@
 	export let service: ApiService;
 	let iconName = "box";
 	let text: string = service.name ?? service.product.name;
-	let className = "btn-outline-primary";
+	let className = "btn-outline-dark";
 	let classes = "";
 
 	if (service.subscription.status === ApiSubscriptionStatus.PENDING) {

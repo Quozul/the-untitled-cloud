@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from "$components/icons/Icon.svelte";
-	import { sidebarCollapsed } from "$store/store";
 	import Link from "$shared/Link.svelte";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
@@ -17,15 +16,11 @@
 			<Icon key={iconName} />
 		{/if}
 
-		{#if !$sidebarCollapsed}
-			<slot />
-		{/if}
+		<slot />
 	</Link>
 {:else}
 	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={Variant.NONE}>
-		{#if !$sidebarCollapsed}
-			<slot />
-		{/if}
+		<slot />
 	</Button>
 {/if}
 

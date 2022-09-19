@@ -82,7 +82,7 @@
 		{verificationError?.translatedMessage}
 	</div>
 
-	<Button variant={Variant.DARK} type="submit" onClick={submit} className="w-100">
+	<Button type="submit" onClick={submit} className="w-100">
 		{$t("to_login")}
 	</Button>
 

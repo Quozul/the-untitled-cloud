@@ -131,7 +131,7 @@
 		</div>
 
 		<div class="col-12">
-			<Button type="submit" variant={Variant.DARK} className="w-100" onClick={submit}>
+			<Button type="submit" className="w-100" onClick={submit}>
 				{$t("next")}
 			</Button>
 		</div>

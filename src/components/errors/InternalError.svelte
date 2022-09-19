@@ -10,5 +10,5 @@
 		Nous n'avons pas réussi à contacter notre serveur.<br />
 		Vérifiez votre connexion internet puis essayer de rafraichir la page.
 	</p>
-	<Button onClick={refresh} className="btn btn-primary">Rafraichir</Button>
+	<Button onClick={refresh}>Rafraichir</Button>
 </div>

@@ -113,7 +113,6 @@
 						<Button
 							type="submit"
 							onClick={setPromoCode}
-							variant={Variant.DARK}
 							disabled={!codeInput?.length}
 						>
 							{$t("use")}

@@ -69,7 +69,7 @@
 		Votre serveur doit être démarré pour pouvoir accéder à la console.
 	</div>
 {:else if !socket}
-	<div class="d-flex justify-content-center align-items-center">
+	<div class="d-flex justify-content-center align-items-center mt-2">
 		<button class="btn btn-secondary" on:click={connect}> Se connecter à la console </button>
 	</div>
 {:else}
@@ -85,7 +85,7 @@
 		</div>
 	</div>
 
-	<div class="alert alert-info">
+	<div class="alert alert-info d-none d-lg-block">
 		<h6 class="fw-bold d-flex align-items-center gap-2">
 			<Icon key="question" />
 			Pourquoi je ne vois pas les logs dans la console ?

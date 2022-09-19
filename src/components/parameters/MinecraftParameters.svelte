@@ -52,7 +52,6 @@
 	}
 
 	async function handleApply() {
-		await saveParameters();
 		await patchServer($server, "RECREATE");
 		await fullRefresh();
 	}
@@ -111,10 +110,10 @@
 	</div>
 
 	<div class="d-flex gap-3 mt-3">
-		<Button onClick={handleSave} disabled={!edited}>Sauvegarder</Button>
+		<Button onClick={handleSave} disabled={!edited} icon="save">Sauvegarder</Button>
 
-		<Button onClick={handleApply} disabled={!edited}>
-			Sauvegarder et appliquer les changements
+		<Button onClick={handleApply} disabled={!edited} icon="arrow-clockwise">
+			Appliquer
 		</Button>
 	</div>
 </div>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { refreshAllServers, refreshSelectedServer } from "$components/app/helpers";
+	import Button from "$shared/Button.svelte";
 
 	async function refresh() {
 		await Promise.all([refreshAllServers(), refreshSelectedServer()]);
@@ -14,5 +15,5 @@
 		Rafraichissez la liste pour voir son nouvel état.
 	</p>
 
-	<button class="btn btn-primary" on:click|preventDefault={refresh}>Rafraichir</button>
+	<Button onClick={refresh}>Rafraichir</Button>
 </div>
