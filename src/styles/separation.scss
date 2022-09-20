@@ -30,3 +30,11 @@
 		text-align: end;
 	}
 }
+
+
+@include media-breakpoint-up(xl) {
+	.separation-xl-none {
+		padding: 0;
+		border-top: none !important;
+	}
+}

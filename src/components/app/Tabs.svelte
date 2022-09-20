@@ -49,6 +49,19 @@
 
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
 		<ButtonLink
+			active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
+			className="justify-content-center w-100 border-0 py-3 p-lg-2"
+			disabled={$fetchingServer || isPending || isEnded || isSuspended}
+			href="/{$locale}/dashboard/parameters/"
+			icon="gear"
+			outline={true}
+		>
+			<span class="d-none d-lg-inline">Paramètres</span>
+		</ButtonLink>
+	{/if}
+
+	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
+		<ButtonLink
 			active={!$fetchingServer && $selectedTab === ServerTab.FILES}
 			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}

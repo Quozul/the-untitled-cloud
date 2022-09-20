@@ -32,8 +32,5 @@
 {:else if $fetchServerError}
 	<InternalError refresh={refreshSelectedServer} />
 {:else}
-	<div class="d-flex gap-3 flex-column">
-		<ServerInfo />
-		<Parameters />
-	</div>
+	<ServerInfo />
 {/if}

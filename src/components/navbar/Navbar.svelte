@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { locale, t } from "svelte-intl-precompile";
 	import Icon from "$components/icons/Icon.svelte";
-	import { token, cart } from "$store/store";
+	import { token, cart, theme } from "$store/store";
 	import { page } from "$app/stores";
 	import Link from "$shared/Link.svelte";
 	import Modal from "$components/modal/Modal.svelte";
@@ -14,11 +14,6 @@
 
 	let selectedPage: string;
 	let navbarVisible = false;
-	let theme: string;
-
-	onMount(() => {
-		theme = document.body.getAttribute("data-bs-theme");
-	});
 
 	$: selectedPage = $page.url.pathname.replace(`/${$locale}`, "");
 
@@ -36,8 +31,8 @@
 	}
 
 	function toggleTheme() {
-		theme = theme === "light" ? "dark" : "light";
-		document.body.setAttribute("data-bs-theme", theme);
+		$theme = $theme === "light" ? "dark" : "light";
+		document.body.setAttribute("data-bs-theme", $theme);
 	}
 </script>
 

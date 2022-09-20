@@ -24,6 +24,11 @@ export const token: Writable<string | null> = createStoreEntry(
 	null,
 	browser && localStorage
 );
+export const theme: Writable<string> = createStoreEntry(
+	"theme",
+	"light",
+	browser && localStorage
+);
 
 // Session store
 /**

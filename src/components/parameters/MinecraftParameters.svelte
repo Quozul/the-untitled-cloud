@@ -102,7 +102,7 @@
 	</div>
 
 	<h4 class="mb-0">Paramètres du serveur</h4>
-	<div class="d-flex align-items-stretch gap-3">
+	<div class="d-flex flex-column flex-lg-row align-items-stretch gap-3">
 		{#if $parameters}
 			<ServerType />
 			<AdvancedParameters />

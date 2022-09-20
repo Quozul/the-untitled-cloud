@@ -7,6 +7,7 @@
 	import { patchServer, refreshSelectedServer } from "$components/app/helpers";
 	import { Variant } from "$shared/constants";
 	import Modal from "$components/modal/Modal.svelte";
+	import ServerBarInfo from "$components/app/ServerBarInfo.svelte";
 
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
@@ -59,90 +60,99 @@
 	}
 </script>
 
-<div class="bg-light p-4 d-flex flex-column element">
-	<h4>Produit</h4>
-	<dl class="d-flex flex-column m-0 mb-3">
-		<div class="separation">
-			<dt>Nom</dt>
-			<dd>
-				{$server.product.name}
-			</dd>
-		</div>
+<div class="bg-light p-4 d-flex flex-column element gap-3">
+	<div class="d-block d-xl-none">
+		<h4>État</h4>
+		<ServerBarInfo />
+	</div>
 
-		<div class="separation">
-			<dt>Description</dt>
-			<dd>
-				{$server.product.description}
-			</dd>
-		</div>
-	</dl>
+	<div>
+		<h4>Produit</h4>
+		<dl class="d-flex flex-column m-0 mb-3">
+			<div class="separation">
+				<dt>Nom</dt>
+				<dd>
+					{$server.product.name}
+				</dd>
+			</div>
 
-	<h4>Actions</h4>
-	{#if $server?.state.created}
-		<div class="d-flex gap-3 flex-wrap">
-			{#if !$server.state.running}
+			<div class="separation">
+				<dt>Description</dt>
+				<dd>
+					{$server.product.description}
+				</dd>
+			</div>
+		</dl>
+	</div>
+
+	<div>
+		<h4>Actions</h4>
+		{#if $server?.state.created}
+			<div class="d-flex gap-3 flex-wrap">
+				{#if !$server.state.running}
+					<Button
+						loading={$fetchingServer}
+						disabled={!$server}
+						icon="play"
+						onClick={startServer}
+					>
+						Démarrer
+					</Button>
+				{:else}
+					<Button
+						loading={$fetchingServer}
+						disabled={!$server}
+						icon="stop"
+						onClick={stopServer}
+					>
+						Arrêter
+					</Button>
+				{/if}
+
 				<Button
 					loading={$fetchingServer}
 					disabled={!$server}
-					icon="play"
-					onClick={startServer}
+					icon="arrow-clockwise"
+					onClick={restartServer}
 				>
-					Démarrer
+					Redémarrer
 				</Button>
-			{:else}
+
+				<Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
+
 				<Button
 					loading={$fetchingServer}
 					disabled={!$server}
-					icon="stop"
-					onClick={stopServer}
+					icon="trash"
+					onClick={openModal}
 				>
-					Arrêter
+					Réinitialiser
 				</Button>
-			{/if}
 
-			<Button
-				loading={$fetchingServer}
-				disabled={!$server}
-				icon="arrow-clockwise"
-				onClick={restartServer}
-			>
-				Redémarrer
-			</Button>
-
-			<Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
-
-			<Button
-				loading={$fetchingServer}
-				disabled={!$server}
-				icon="trash"
-				onClick={openModal}
-			>
-				Réinitialiser
-			</Button>
-
-			<Modal
-				bind:visible={modalVisible}
-				icon="trash"
-				onClick={reset}
-				title="Réinitialisation"
-				okText="Réinitialiser"
-				closeText="Annuler"
-				variant={Variant.DANGER}
-			>
-				<div class="p-3">
-					<p>
-						Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
-						tous les fichiers et ne seront pas récupérables.
-					</p>
-					<p>Êtes-vous sûr de vouloir continuer ?</p>
-				</div>
-			</Modal>
-		</div>
-	{/if}
+				<Modal
+					bind:visible={modalVisible}
+					icon="trash"
+					onClick={reset}
+					title="Réinitialisation"
+					okText="Réinitialiser"
+					closeText="Annuler"
+					variant={Variant.DANGER}
+				>
+					<div class="p-3">
+						<p>
+							Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
+							tous les fichiers et ne seront pas récupérables.
+						</p>
+						<p>Êtes-vous sûr de vouloir continuer ?</p>
+					</div>
+				</Modal>
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style>
-	.element {
-		flex: 1;
-	}
+    .element {
+        flex: 1;
+    }
 </style>

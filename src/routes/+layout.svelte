@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Modal from "$components/modal/Modal.svelte";
 	import { onMount } from "svelte";
+	import { theme } from "../store/store";
 
 	let errorModalVisible = false;
 	let error: string | null = null;
@@ -8,6 +9,7 @@
 	onMount(() => {
 		window.onunhandledrejection = handleUnhandledRejection;
 		window.onerror = handleError;
+		document.body.setAttribute("data-bs-theme", $theme);
 	});
 
 	function handleError(...args) {

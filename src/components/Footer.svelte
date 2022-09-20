@@ -33,6 +33,11 @@
 						{$t("checkout")}
 					</Link>
 				</li>
+				<li class="nav-item mb-2">
+					<Link href="https://status.theuntitledcloud.com" className="nav-link p-0 text-muted">
+						{$t("status")}
+					</Link>
+				</li>
 			</ul>
 		</div>
 
@@ -53,7 +58,7 @@
 		</div>
 	</div>
 
-	<div class="d-flex border-top pt-3 mt-3 justify-content-between">
+	<div class="d-flex flex-column flex-lg-row border-top pt-3 mt-3 justify-content-between">
 		<p class="text-muted">© 2022 The Untitled Cloud. {$t("all_right_reserved")}</p>
 
 		<div class="d-flex gap-3">

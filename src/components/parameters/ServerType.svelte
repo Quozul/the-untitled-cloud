@@ -33,7 +33,7 @@
 </script>
 
 <div class="d-flex flex-column gap-3 justify-content-start">
-	<div class="d-flex gap-3 justify-content-start">
+	<div class="d-flex flex-column flex-lg-row gap-3 justify-content-start">
 		<div>
 			<label class="form-label" for="server-type">Type de serveur</label>
 			<Select
@@ -48,7 +48,7 @@
 		<ServerVersion />
 	</div>
 
-	<div class="d-flex gap-3 justify-content-start">
+	<div class="d-flex flex-column flex-lg-row gap-3 justify-content-start">
 		{#if $parameters.serverType === ServerType.FORGE}
 			<div>
 				<label for="forgeVersion" class="form-label">Version de Forge</label>
