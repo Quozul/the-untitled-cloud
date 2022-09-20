@@ -110,7 +110,7 @@
 							<button
 								type="button"
 								on:click={showResetModal}
-								class="d-block btn btn-sm btn-link p-0 text-start"
+								class="d-block btn btn-sm btn-link p-0 text-start text-center w-100"
 							>
 								{$t("files.ftp.reset_password")}
 							</button>
@@ -175,7 +175,7 @@
 	<div class="p-3">
 		<p>{$t("files.new_password.warn")}</p>
 
-		<h6>{$t("files.new_password.generated_password")}</h6>
+		<h6>{$t("files.new_password.generated_password_colon")}</h6>
 
 		<div class="d-flex align-items-center">
 			<div class="user-select-all d-inline me-2">

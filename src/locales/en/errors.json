@@ -1,0 +1,20 @@
+{
+	"error.verify_account": "Code sent, please check your inbox.",
+	"error.invalid_credentials": "Invalid credentials.",
+	"error.accept_tos": "You must accept the TOS.",
+	"error.invalid_code": "Invalid code.",
+	"error.expired_code": "Code expired.",
+	"error.cancel_error": "We were unable to cancel your subscription.",
+	"error.stripe_error": "An error occurred during the checkout process.",
+	"error.fetch_failed": "We were unable to contact our server.",
+	"error.password_differ": "Passwords must be the same.",
+	"error.already_exists": "This email address is already used for an account.",
+	"error.invalid_promo_code": "Invalid promotional code.",
+	"error.wait": "A code have already been sent to you.",
+	"error.have_active_subscription": "You still have active subscriptions, please cancel them before deleting your account.",
+	"error.empty": "Empty",
+	"error.500": "An internal error occured.",
+	"error.parsing_error": "We can't communicate with our remote server.",
+	"error.already_owns": "You already own a product from your cart.",
+	"error.server_address": "Unable to determine the server address."
+}

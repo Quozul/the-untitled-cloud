@@ -1,0 +1,106 @@
+{
+	"cart": {
+		"add_a_product": "Start by adding a product.",
+		"add_to_cart": "Add to cart",
+		"cart_is_empty": "Cart empty",
+		"continue_shopping": "Continue shopping",
+		"in_cart": "In cart",
+		"remove_from_cart": "Remove from cart"
+	},
+	"address": {
+		"city": "City",
+		"country": "Country",
+		"line1": "Line 1",
+		"line2": "Line 2",
+		"postal_code": "Zip code",
+		"state": "State",
+		"billing_address": "Billing address",
+		"full_name": "Full name",
+		"search_country": "Search a country..."
+	},
+	"checkout": {
+		"not_activated": "As the service is not yet activated, I invite you to use one of the",
+		"proceed": "Proceed to checkout",
+		"test_cards": "test cards",
+		"complete_profile": "Complete the profile",
+		"sub_total": "Sub-total",
+		"taxes": "Taxes",
+		"total": "Total",
+		"promo_code": "Promo code",
+		"promotion": "Promotion",
+		"vat_not_applicable": "VAT not applicable"
+	},
+	"authentication": {
+		"already_have_account_question_mark": "Already have an account? Login.",
+		"code_sent_check_mailbox": "Code sent, check your inbox.",
+		"code_sent_conditional": "If an account is associated with this email address, a code has been sent to you.",
+		"get_code": "Get a code",
+		"logged_in_as": "Logged in as",
+		"new_confirm_password": "Confirm the new password",
+		"new_password": "New password",
+		"verification": "Verification",
+		"verification_code": "Verification",
+		"update_password": "Update the password",
+		"to_login": "Login",
+		"to_signup": "Signup",
+		"login": "Connection",
+		"password": "Password",
+		"confirm_password": "Confirm the password",
+		"password_change": "Change password",
+		"password_lost_question_mark": "Password lost?",
+		"resend_code": "Send a new code",
+		"signup": "Signup",
+		"no_account_yet_question_mark": "Don't have an account yet? Signup.",
+		"please_enter_verification_code": "Please enter in the field below the verification code that was sent to you by email.",
+		"to_logout": "Logout",
+		"logout": "Logout",
+		"disconnected": "Logged out",
+		"please_login": "Please log in again to use the application.",
+		"delete_account_warn": "You are about to delete your account. This action is effective as soon as you send this form and is irreversible.",
+		"all_subs_must_be_cancelled": "All your subscription must be cancelled before proceeding.",
+		"delete_account": "Delete my account",
+		"deleting_account": "Delete account"
+	},
+	"product": {
+		"choose_product": "Choose the product",
+		"configuration": "Configuration",
+		"choose": "Choose",
+		"of": "of",
+		"memory": "memory",
+		"cores": "cores",
+		"out_of_stock": "Out of stock",
+		"add_product": "Add a product"
+	},
+	"hero": {
+		"lead": "Cum haec taliaque sollicitas eius aures everberarent expositas semper eius modi rumoribus et patentes, varia animo tum miscente consilia, tandem id ut optimum factu elegit.",
+		"server_available_quick": {
+			"title": "Server available in the next minute",
+			"description": "Primi igitur omnium statuuntur Epigonus et Eusebius ob nominum gentilitatem oppressi. praediximus enim Montium sub ipso vivendi termino his vocabulis appellatos fabricarum culpasse tribunos ut adminicula futurae molitioni pollicitos."
+		},
+		"numbers": {
+			"server_rented": "Server rented",
+			"players": "Players",
+			"games_available": "Games available"
+		},
+		"not_convinced": {
+			"title": "Still not convinced?",
+			"use_code": "Use the code",
+			"to_get": "to get 10% off your first month!"
+		}
+	},
+	"feature": {
+		"click_and_play": {
+			"title": "Click & play",
+			"description": "The server is available for play upon receipt of payment. No additional configuration is required."
+		},
+		"customer_service": {
+			"title": "Customer service",
+			"description": "Need help managing your server? We will do our best to help you!"
+		}
+	},
+	"i_acknowledge_and_accept": "I acknowledge and accept the",
+	"month": "month",
+	"terms_of_sale": "terms of sale",
+	"terms_of_service": "terms of use",
+	"unit.gigabyte": "GB"
+}

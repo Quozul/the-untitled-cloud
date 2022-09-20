@@ -93,8 +93,8 @@
 
 <Alert>
 	<div>
-		Le service n'étant pas encore activé, je vous invite à utiliser une
-		<Link href="https://stripe.com/docs/testing#cards">carte de test</Link>
+		{$t("checkout.not_activated")}
+		<Link href="https://stripe.com/docs/testing#cards">{$t("checkout.test_cards")}</Link>
 	</div>
 </Alert>
 

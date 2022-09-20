@@ -1,0 +1,133 @@
+{
+	"latest_version": "Latest",
+	"snapshot_version": "Snapshot",
+	"sidebar": {
+		"my_profile": "My profile",
+		"no_old_servers": "No previous server",
+		"old_servers": "Previous servers",
+		"load_old_servers": "Load previous servers",
+		"refresh_list": "Refresh list"
+	},
+	"server_bar": {
+		"minutes": "minutes",
+		"state": "State",
+		"last_startup": "Last startup",
+		"address": "Connection address",
+		"steam_link": "Steam connection link",
+		"server_is_stopped": "Server is stopped"
+	},
+	"server_status": {
+		"restarting": "Restarting",
+		"running": "Running",
+		"unavailable": "Unavailable",
+		"starting": "Starting",
+		"stopped": "Stopped",
+		"pending": "Pending",
+		"suspended": "Suspended",
+		"cancelled": "Cancelled",
+		"not_found": "Not found"
+	},
+	"tabs": {
+		"information": "Information",
+		"parameters": "Parameters",
+		"files": "Files",
+		"console": "Console",
+		"subscription": "Subscription",
+		"manage_subs": "Manage my subscriptions",
+		"redirect_to_stripe": "You are going to get redirected to our partner to manage your subscriptions."
+	},
+	"server_info": {
+		"name": "Name",
+		"description": "Description",
+		"actions": "Actions"
+	},
+	"action": {
+		"start": "Start",
+		"stop": "Stop",
+		"restart": "Restart",
+		"refresh": "Refresh",
+		"reset": "Reset",
+		"to_reset": "Reset",
+		"reset.warn": "You are about to reset your server. This action will delete all files and will not be recoverable.",
+		"proceed_question": "Are you sure you want to proceed?",
+		"recreate": "Recreate"
+	},
+	"files": {
+		"ftp": {
+			"ftp": "FTP",
+			"instruction": "Download an FTP client of your choice and use the information below to connect.",
+			"address": "FTP server address",
+			"address_copied": "Address copied to clipboard!",
+			"username": "Login",
+			"username_copied": "Login copied to clipboard!",
+			"password": "Password",
+			"password_alert": "Your password is hidden for added security. If you lose your password, you will have to reset it.",
+			"reset_password": "Reset the password",
+			"generate_password": "Generate a new password"
+		},
+		"reset_password": {
+			"title": "Password reset",
+			"ok": "Get a new password",
+			"warn": "You are about to reset the password to access the FTP server.",
+			"instruction": "Please enter your account password to generate a new password for the FTP server."
+		},
+		"new_password": {
+			"title": "Password",
+			"warn": "Remember to write down or save the password.",
+			"generated_password_colon": "Generated password :",
+			"password_copied": "Password copied to clipboard!"
+		}
+	},
+	"console": {
+		"server_is_starting": "Your server is warming up, please wait.",
+		"server_must_be_started": "Your server must be started in order to use the console.",
+		"connect_to_console": "Login to the console"
+	},
+	"parameters": {
+		"server_name": "Server name",
+		"random_name": "Random name",
+		"environment": "Environment",
+		"server_type": "Server type",
+		"search_type": "Search a type...",
+		"forge_version": "Forge version",
+		"fabric_launcher_version": "Fabric launcher version",
+		"fabric_version": "Fabric version",
+		"quilt_launcher_version": "Quilt launcher version",
+		"quilt_version": "Quilt version",
+		"ftb_modpack_id": "Feed The Beast ID",
+		"ftb_modpack_version": "Modpack version",
+		"minecraft_version": "Minecraft version",
+		"search_version": "Search a version...",
+		"use_the": "Use the",
+		"aikar_flags": "Aikar's flags",
+		"jvm_flags": "JVM flags"
+	},
+	"dashboard_errors": {
+		"internal_error": {
+			"title": "Internal error",
+			"description": "We were unable to contact our server. Check your internet connection or try refreshing the page."
+		},
+		"no_parameters": {
+			"title": "No parameters",
+			"description": "There are no parameters for this server"
+		},
+		"no_server": {
+			"title": "It's empty",
+			"description": "It looks like you don't have a server yet. Start by renting a server or select one on the left of the screen if you already have one."
+		},
+		"not_found": {
+			"description": "We were unable to find your server. Please try to recreate it."
+		},
+		"pending": {
+			"description": "Your server is being prepared. Refresh the list to see its new status."
+		},
+		"suspended": {
+			"description": "Your server is suspended. This may be due to a payment problem or because you have cancelled the subscription. See the Subscription tab for more information.",
+			"cta": "View my subscription"
+		}
+	},
+	"profile": {
+		"title": "This page is under construction.",
+		"description": "For any request related to the management of your data (deletion, modification, recovery, ...), please contact us by email at "
+	}
+}

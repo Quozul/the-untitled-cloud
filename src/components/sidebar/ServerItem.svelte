@@ -6,7 +6,7 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import type { ApiService } from "$models/ApiService";
 	import { ApiServiceStatus } from "$enums/ApiServiceStatus";
-	import { locale } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 
 	export let service: ApiService;
 	let iconName = "box";
@@ -16,19 +16,19 @@
 
 	if (service.subscription.status === ApiSubscriptionStatus.PENDING) {
 		iconName = "hourglass";
-		text = "En attente";
+		text = $t("server_status.pending");
 		className = "btn-outline-info";
 	} else if (service.subscription.status === ApiSubscriptionStatus.CANCELLED) {
 		iconName = "archive";
-		text = "Terminé";
+		text = $t("server_status.cancelled");
 		className = "btn-outline-info";
 	} else if (service.subscription.status === ApiSubscriptionStatus.SUSPENDED) {
 		iconName = "pause";
-		text = "Suspendu";
+		text = $t("server_status.suspended");
 		className = "btn-outline-info";
 	} else if (service.state.status === ApiServiceStatus.UNAVAILABLE) {
 		iconName = "warning";
-		text = "Serveur introuvable";
+		text = $t("server_status.not_found");
 		className = "btn-outline-danger";
 	}
 

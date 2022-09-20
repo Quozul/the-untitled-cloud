@@ -23,7 +23,7 @@
 	<div class="row">
 		<Number text={$t("hero.numbers.server_rented")} number="{stats.sold}+" />
 		<Number text={$t("hero.numbers.players")} number="{stats.users}+" />
-		<Number text={$t("hero.numbers.games_avalable")} number={stats.products} />
+		<Number text={$t("hero.numbers.games_available")} number={stats.products} />
 	</div>
 </div>
 

@@ -38,7 +38,7 @@
 		"logged_in_as": "Connecté en tant que",
 		"new_confirm_password": "Confirmer le nouveau mot de passe",
 		"new_password": "Nouveau mot de passe",
-		"verification": "Verification",
+		"verification": "Vérification",
 		"verification_code": "Code de vérification",
 		"update_password": "Mettre à jour le mot de passe",
 		"to_login": "Se connecter",
@@ -81,7 +81,7 @@
 		"numbers": {
 			"server_rented": "Serveurs loués",
 			"players": "Joueurs",
-			"games_avalable": "Jeux disponibles"
+			"games_available": "Jeux disponibles"
 		},
 		"not_convinced": {
 			"title": "Toujours pas convaincu ?",

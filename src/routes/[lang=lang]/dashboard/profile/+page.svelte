@@ -11,7 +11,8 @@
 	$onProfilePage = true;
 
 	onMount(async () => {
-		$user = await getUser();
+		const { response } = await getUser();
+		$user = response;
 	});
 </script>
 
@@ -19,18 +20,16 @@
 	<h4>{$t("common.profile")}</h4>
 	<p class="d-flex align-items-center gap-2 lead">
 		<Icon key="tools" />
-		Cette page est en cours de construction.
+		{$t("profile.title")}
 	</p>
 	<p>
-		Pour toute demande en rapport avec la gestion de vos données (suppression, modification,
-		récupération, ...), veuillez entrer en contact par email à l'adresse
+		{$t("profile.description")}
 		<a href="mailto:contact@theuntitledcloud.com">
 			contact@theuntitledcloud.com
 		</a>
 	</p>
 
 	<div>
-		<Button disabled>Télécharger mes données</Button>
 		<DeleteAccount />
 	</div>
 </div>

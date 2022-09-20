@@ -3,7 +3,7 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { DockerStatus } from "$components/app/constants";
 	import { Products } from "$components/cart/constants";
-	import { t } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import { page } from "$app/stores";
 	import type { ApiService } from "$models/ApiService";
 
@@ -17,17 +17,21 @@
 
 		// Parse dates
 		const started = ZonedDateTime.parse(server.state.startedAt);
+		if (started.year() === 1) {
+			return;
+		}
+
 		const convertedDate = convert(started).toDate();
 
 		duration = Duration.between(started, ZonedDateTime.now());
-		formattedStartDate = convertedDate.toLocaleDateString("fr-FR", {
+		formattedStartDate = convertedDate.toLocaleDateString($locale as string, {
 			weekday: "long",
 			year: "numeric",
 			month: "long",
 			day: "numeric",
 		});
 
-		shortFormattedStartDate = convertedDate.toLocaleDateString("fr-FR", {
+		shortFormattedStartDate = convertedDate.toLocaleDateString($locale as string, {
 			year: "numeric",
 			month: "short",
 			day: "numeric",
@@ -80,7 +84,7 @@
 		<dt>{$t("server_bar.address")}</dt>
 		<dd class="m-0 text-xl-start">
 			{#if !$server.port}
-				{$t("server_status.stopped")}
+				{$t("server_bar.server_is_stopped")}
 			{:else if $server.product.id === Products.MinecraftServer}
 				{$page.url.hostname}:{$server.port}
 			{:else if $server.product.id === Products.ArkServer}
