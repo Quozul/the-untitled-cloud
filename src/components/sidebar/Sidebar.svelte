@@ -21,6 +21,7 @@
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants.js";
 	import { toggleSidebarCollapsed } from "$components/sidebar/helpers.js";
+	import { clickOutside } from "$shared/clickOutside";
 
 	// State
 	let endedServers: ApiPaginate<ApiService>;
@@ -48,11 +49,18 @@
 		$user = null;
 		await goto(`/${$locale}/`);
 	}
+
+	function hide() {
+		$sidebarCollapsed = true;
+	}
 </script>
+
+<div class="backdrop bg-dark d-lg-block" class:d-none={$sidebarCollapsed} />
 
 <div
 	class="d-flex flex-column flex-shrink-0 bg-light sidebar shadow-sm py-3 d-lg-flex"
 	class:d-none={$sidebarCollapsed}
+	use:clickOutside on:click_outside={hide}
 >
 	<div class="sidebar-header d-flex align-items-center gap-2 px-3">
 		<Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "d-none d-lg-inline"} />
@@ -195,5 +203,15 @@
 		.sidebar-item {
 			height: 38px;
 		}
+	}
+
+	.backdrop {
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0.2;
+		overflow: hidden;
+		width: 100vw;
+		height: 100vh;
 	}
 </style>

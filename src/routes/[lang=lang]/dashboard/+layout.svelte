@@ -24,7 +24,7 @@
 
 <Icons />
 
-<div class="d-flex vh-100">
+<div class="d-flex position-fixed h-100 w-100">
 	<Sidebar />
 
 	<div class="overflow-auto flex-grow-1 d-flex flex-column gap-lg-3">
