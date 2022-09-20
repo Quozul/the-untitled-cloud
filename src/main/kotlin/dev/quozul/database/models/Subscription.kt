@@ -52,6 +52,7 @@ class Subscription(id: EntityID<UUID>) : UUIDEntity(id) {
 			subscriptionProvider,
 			LocalDateTime.parse(creationDate.toString()),
 			deletionDate?.let { LocalDateTime.parse(it.toString()) },
+			subscriptionStatus === SubscriptionStatus.ACTIVE,
 		)
 	}
 

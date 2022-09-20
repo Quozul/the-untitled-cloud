@@ -19,6 +19,7 @@ data class ApiSubscription(
 	val provider: SubscriptionProvider,
 	val creationDate: LocalDateTime,
 	val deletionDate: LocalDateTime?,
+	val active: Boolean,
 ) {
 	companion object {
 		fun getDetails(subscription: Subscription) = try {
