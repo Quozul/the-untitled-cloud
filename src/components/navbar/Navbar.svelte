@@ -10,7 +10,6 @@
 	import { cartModalVisible } from "$store/store";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
-	import { onMount } from "svelte";
 
 	let selectedPage: string;
 	let navbarVisible = false;

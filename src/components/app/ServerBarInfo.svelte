@@ -13,7 +13,7 @@
 	let shortFormattedStartDate = "Jamais";
 
 	async function loadDates(server: ApiService) {
-		const { convert, Duration, ZonedDateTime } = (await import("@js-joda/core"));
+		const { convert, Duration, ZonedDateTime } = await import("@js-joda/core");
 
 		// Parse dates
 		const started = ZonedDateTime.parse(server.state.startedAt);
@@ -46,7 +46,8 @@
 		<dt>État</dt>
 		<dd class="m-0 text-xl-start">
 			{#if $server.state.created && $server.state.running}
-				{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration?.toMinutes() || 0}
+				{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration?.toMinutes() ||
+					0}
 				minutes)
 			{:else if $server.state.created}
 				{$t(`server_status.${$server.state.status.toLowerCase()}`)}

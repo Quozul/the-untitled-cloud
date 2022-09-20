@@ -5,7 +5,6 @@
 	import { formatPrice } from "$shared/helpers";
 	import { toggleInCart } from "$components/cart/helpers";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants";
 
 	export let product: ApiProduct;
 

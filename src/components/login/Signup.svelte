@@ -8,7 +8,6 @@
 	import { signUp } from "./helpers";
 	import Link from "$shared/Link.svelte";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();

@@ -15,10 +15,10 @@
 	let newPasswordModal = false;
 	let tooltipVisible = false;
 
-	let password: string = "";
+	let password = "";
 	let apiError: ApiError | null = null;
 	let email: string;
-	let ftpPassword: string = "";
+	let ftpPassword = "";
 
 	onMount(() => {
 		const jwt = jwtDecode($token);

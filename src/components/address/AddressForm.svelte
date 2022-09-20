@@ -9,7 +9,6 @@
 	import Button from "$shared/Button.svelte";
 	import Select from "$components/select/Select.svelte";
 	import { EmptyAddress, IsoCountries } from "./constants";
-	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();

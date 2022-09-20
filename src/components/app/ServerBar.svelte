@@ -42,7 +42,9 @@
 	}
 </script>
 
-<div class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between">
+<div
+	class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between"
+>
 	{#if $server}
 		<div class="sidebar-header d-flex align-items-center gap-2 overflow-hidden">
 			{#if $sidebarCollapsed}

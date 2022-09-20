@@ -6,7 +6,7 @@
 	import { onMount } from "svelte";
 	import jwtDecode from "jwt-decode";
 
-	let tokenIsExpired: boolean = false;
+	let tokenIsExpired = false;
 
 	onMount(() => {
 		const { exp } = jwtDecode($token);

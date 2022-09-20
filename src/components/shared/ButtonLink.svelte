@@ -3,7 +3,7 @@
 	import Icon from "$components/icons/Icon.svelte";
 	import { classNames } from "./helpers";
 
-	export let active: boolean = false;
+	export let active = false;
 	export let className = "";
 	export let disabled = false;
 	export let href: string;

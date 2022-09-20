@@ -36,11 +36,6 @@
 		await refreshSelectedServer();
 	}
 
-	async function recreateServer() {
-		await patchServer($server, "RECREATE");
-		await refreshSelectedServer();
-	}
-
 	async function restartServer() {
 		await patchServer($server, "RESTART");
 		await refreshSelectedServer();

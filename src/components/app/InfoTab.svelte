@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ServerInfo from "$components/app/tabs/info/ServerInfo.svelte";
-	import ServerFtp from "$components/app/tabs/info/ServerFtp.svelte";
 	import Pending from "$components/errors/Pending.svelte";
 	import NotFound from "$components/errors/NotFound.svelte";
 	import Suspended from "$components/errors/Suspended.svelte";
@@ -8,7 +7,6 @@
 	import InternalError from "$components/errors/InternalError.svelte";
 	import { refreshSelectedServer } from "./helpers";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
-	import Parameters from "$components/parameters/Parameters.svelte";
 
 	let isPending: boolean;
 	let isSuspended: boolean;

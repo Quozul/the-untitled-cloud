@@ -7,7 +7,6 @@ import type { ApiUser } from "$models/ApiUser";
 import type { CheckoutSteps } from "$components/checkout/constants";
 import type { Credentials } from "$components/login/models/Credentials";
 import type { PromoCode } from "$components/cart/models";
-import type { Token } from "$components/login/models/Token";
 import type { Writable } from "svelte/store";
 
 import { createStoreEntry } from "./helpers";

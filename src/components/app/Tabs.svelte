@@ -8,9 +8,7 @@
 	import Modal from "$components/modal/Modal.svelte";
 	import { getStripePortal } from "./helpers";
 	import { page } from "$app/stores";
-	import Icon from "$components/icons/Icon.svelte";
 	import ButtonLink from "$shared/ButtonLink.svelte";
-	import { Variant } from "$shared/constants.js";
 
 	let isPending: boolean;
 	let isEnded: boolean;

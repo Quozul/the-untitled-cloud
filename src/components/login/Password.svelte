@@ -9,7 +9,6 @@
 	import Icon from "$components/icons/Icon.svelte";
 	import Code from "$components/login/Code.svelte";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();

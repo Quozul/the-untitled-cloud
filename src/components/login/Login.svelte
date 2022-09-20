@@ -7,7 +7,6 @@
 	import { LoginMode } from "./models/LoginMode";
 	import { signIn } from "./helpers";
 	import { createEventDispatcher } from "svelte";
-	import { Variant } from "$shared/constants";
 
 	// Constants
 	const dispatch = createEventDispatcher();
