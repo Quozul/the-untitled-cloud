@@ -41,3 +41,32 @@
 		Lier mon compte Discord
 	</a>
 {/if}
+
+<style lang="scss">
+	.discord {
+		display: inline-flex;
+		align-items: center;
+
+		.avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 16px;
+		}
+
+		.name {
+			padding: 4px 0 4px 8px;
+			margin-right: 4px;
+			display: flex;
+			flex-direction: column;
+			font-size: 14px;
+
+			.username {
+				font-weight: 600;
+			}
+
+			.discriminator {
+				font-weight: 400;
+			}
+		}
+	}
+</style>

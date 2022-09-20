@@ -44,7 +44,7 @@
 </script>
 
 <div
-	class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between"
+	class="bg-light py-3 d-flex align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between"
 >
 	{#if $server}
 		<div class="sidebar-header d-flex align-items-center gap-3 overflow-hidden">

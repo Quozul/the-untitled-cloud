@@ -21,6 +21,7 @@
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
 	import { toggleSidebarCollapsed } from "$components/sidebar/helpers";
+	import Link from "$shared/Link.svelte";
 
 	// State
 	let endedServers: ApiPaginate<ApiService>;
@@ -61,19 +62,21 @@
 	class:d-none={$sidebarCollapsed}
 >
 	<div class="sidebar-header d-flex align-items-center gap-2 px-3">
-		<Icon
-			key="favicon"
-			width="42"
-			height="38"
-			className={!$sidebarCollapsed && "d-none d-lg-inline"}
-		/>
 		<Button
 			icon="x-lg"
 			onClick={toggleSidebarCollapsed}
 			variant={Variant.LIGHT}
 			className="d-inline d-lg-none"
 		/>
-		<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
+		<Link href="/" className="text-decoration-none d-flex align-items-center text-dark">
+			<Icon
+				key="favicon"
+				width="42"
+				height="38"
+				className={!$sidebarCollapsed && "d-none d-lg-inline"}
+			/>
+			<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
+		</Link>
 	</div>
 
 	<hr />

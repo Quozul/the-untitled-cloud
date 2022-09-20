@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onProfilePage, server } from "$store/store";
+	import { onProfilePage, server, sidebarCollapsed } from "$store/store";
 	import SidebarItem from "./SidebarItem.svelte";
 	import { refreshSelectedServer } from "$components/app/helpers";
 	import { goto } from "$app/navigation";
@@ -41,6 +41,7 @@
 			await goto(`/${$locale}/dashboard/`);
 		}
 		await refreshSelectedServer();
+		$sidebarCollapsed = true;
 	}
 </script>
 
