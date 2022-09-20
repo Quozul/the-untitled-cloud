@@ -50,16 +50,11 @@ export async function refreshAllServers(page = 0): Promise<void> {
 	}
 
 	fetchServersError.set(error);
-
 	fetchingServers.set(false);
 }
 
-/**
- * @deprecated Server does not always have an id anymore
- */
 export async function setDefaultSelectedServer(): Promise<void> {
 	const s = get(servers);
-
 	const contains = containsService(s, get(server)?.id);
 
 	if (!contains) {
@@ -99,9 +94,9 @@ export async function refreshSelectedServer(): Promise<void> {
 	fetchingServer.set(false);
 }
 
-export async function patchServer(service: ApiService, action: string): Promise<void> {
+export async function patchServer(service: ApiService, action: string): Promise<ApiResponse<void>> {
 	const request = api(`service/${service.id}`, getOptions("PATCH", { action }));
-	await handleRequest(request);
+	return await handleRequest(request);
 }
 
 export async function getSubscriptionProducts(

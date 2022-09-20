@@ -11,10 +11,11 @@
 
 	async function recreate() {
 		const {error, response} = await patchServer($server, "RECREATE");
+
 		if (response) {
 			await Promise.all([refreshAllServers(), refreshSelectedServer()]);
-
 		}
+
 		apiError = error;
 	}
 </script>

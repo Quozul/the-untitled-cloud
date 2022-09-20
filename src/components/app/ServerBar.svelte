@@ -47,7 +47,7 @@
 	class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between"
 >
 	{#if $server}
-		<div class="sidebar-header d-flex align-items-center gap-2 overflow-hidden">
+		<div class="sidebar-header d-flex align-items-center gap-3 overflow-hidden">
 			{#if $sidebarCollapsed}
 				<Button
 					icon="list"
@@ -80,10 +80,12 @@
 					{/if}
 				</span>
 			</Button>
-		</div>
 
-		<div class="collapse navbar-collapse d-xl-block" class:show={menu}>
-			<ServerBarInfo />
+			{#if $server.subscription.active}
+				<div class="d-none d-xl-block">
+					<ServerBarInfo />
+				</div>
+			{/if}
 		</div>
 	{:else}
 		<div class="sidebar-header d-flex align-items-center gap-2">
@@ -108,6 +110,7 @@
 			</Button>
 		</div>
 	{/if}
+
 	<Button icon="arrow-clockwise" variant={Variant.DARK} outline={true} onClick={fullRefresh} />
 </div>
 

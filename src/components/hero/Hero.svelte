@@ -17,7 +17,7 @@
 
 	{#if $token}
 		<Link href="/dashboard/" className="btn btn-outline-dark rounded-pill btn-lg px-4">
-			{$t("my_servers")}
+			{$t("common.my_servers")}
 		</Link>
 	{:else}
 		<Link

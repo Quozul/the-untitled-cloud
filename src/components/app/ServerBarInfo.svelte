@@ -41,7 +41,7 @@
 	}
 </script>
 
-<dl class="m-0 d-flex flex-column flex-xl-row gap-xl-3">
+<dl class="m-0 d-flex flex-column flex-xl-row gap-xl-3 text-nowrap">
 	<div class="separation separation-xl-none justify-content-between flex-xl-column">
 		<dt>{$t("server_bar.state")}</dt>
 		<dd class="m-0 text-xl-start">

@@ -8,4 +8,5 @@ export type ApiSubscription = {
 	creationDate: string;
 	deletionDate: string | null;
 	name: string | null;
+	active: boolean,
 };

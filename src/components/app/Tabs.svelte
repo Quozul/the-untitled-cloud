@@ -46,7 +46,7 @@
 	<ButtonLink
 		active={!$fetchingServer && $selectedTab === ServerTab.INFO}
 		className="justify-content-center w-100 border-0 py-3 p-lg-2"
-		disabled={$fetchingServer || isEnded}
+		disabled={$fetchingServer}
 		href="/{$locale}/dashboard/"
 		icon="info"
 		outline={true}
