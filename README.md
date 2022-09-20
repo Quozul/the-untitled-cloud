@@ -4,6 +4,7 @@
 VITE_STRIPE_PUBLIC_KEY=pk_test_ # Stripe's public key
 VITE_API_BASE_URL=http://localhost:8080/ # Base URL of the API
 VITE_API_WS_URL=ws://localhost:8080/ # Base Websocket URL
+VITE_SERVER_ADDRESS=127.0.0.1 # Public address of the server
 ```
 
 ## Developing

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Sidebar from "$components/sidebar/Sidebar.svelte";
-	import { token } from "$store/store";
+	import { selectedTab, server, token } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
 	import { refreshSelectedServer } from "$components/app/helpers";
@@ -8,6 +8,7 @@
 	import "$root/app.scss";
 	import { locale, t } from "svelte-intl-precompile";
 	import SessionExpiredModal from "$components/errors/SessionExpiredModal.svelte";
+	import { ServerTab } from "$components/app/constants";
 
 	onMount(async () => {
 		if (!$token) {
@@ -16,6 +17,10 @@
 			await refreshSelectedServer();
 		}
 	});
+
+	$: if ($server && !$server.subscription.active && $selectedTab !== ServerTab.INFO) {
+		goto(`/${$locale}/dashboard/`);
+	}
 </script>
 
 <svelte:head>
