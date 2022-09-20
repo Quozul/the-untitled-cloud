@@ -14,6 +14,7 @@ COPY . .
 ARG VITE_API_BASE_URL
 ARG VITE_API_WS_URL
 ARG VITE_STRIPE_PUBLIC_KEY
+ARG VITE_SERVER_ADDRESS
 RUN npm run build
 
 # Production image, copy all the files and run next
