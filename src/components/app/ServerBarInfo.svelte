@@ -3,30 +3,40 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { DockerStatus } from "$components/app/constants";
 	import { Products } from "$components/cart/constants";
-	import { DateTimeFormatter, Duration, ZonedDateTime } from "@js-joda/core";
-	import { Locale } from "@js-joda/locale_fr";
 	import { t } from "svelte-intl-precompile";
 	import { page } from "$app/stores";
+	import type { ApiService } from "$models/ApiService";
 
 	// State
-	let duration: Duration = Duration.ZERO;
+	let duration;
 	let formattedStartDate = "Jamais";
+	let shortFormattedStartDate = "Jamais";
 
-	// Constants
-	const formatter = DateTimeFormatter.ofPattern("eeee d MMMM yyyy").withLocale(Locale.FRANCE);
+	async function loadDates(server: ApiService) {
+		const { convert, Duration, ZonedDateTime } = (await import("@js-joda/core"));
+
+		// Parse dates
+		const started = ZonedDateTime.parse(server.state.startedAt);
+		const convertedDate = convert(started).toDate();
+
+		duration = Duration.between(started, ZonedDateTime.now());
+		formattedStartDate = convertedDate.toLocaleDateString("fr-FR", {
+			weekday: "long",
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		});
+
+		shortFormattedStartDate = convertedDate.toLocaleDateString("fr-FR", {
+			year: "numeric",
+			month: "short",
+			day: "numeric",
+		});
+	}
 
 	$: {
-		if ($server) {
-			if ($server.state.created) {
-				// Parse dates
-				const started = ZonedDateTime.parse($server.state.startedAt);
-				let stopped = ZonedDateTime.parse($server.state.finishedAt);
-				if (stopped.year() === 1) {
-					stopped = ZonedDateTime.now();
-				}
-				duration = Duration.between(started, stopped);
-				formattedStartDate = ZonedDateTime.parse($server.state.startedAt).format(formatter);
-			}
+		if ($server && $server.state.created) {
+			loadDates($server);
 		}
 	}
 </script>
@@ -34,9 +44,9 @@
 <dl class="m-0 d-flex flex-column flex-xl-row gap-xl-3">
 	<div class="separation separation-xl-none justify-content-between flex-xl-column">
 		<dt>État</dt>
-		<dd class="m-0">
+		<dd class="m-0 text-xl-start">
 			{#if $server.state.created && $server.state.running}
-				{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration.toMinutes()}
+				{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration?.toMinutes() || 0}
 				minutes)
 			{:else if $server.state.created}
 				{$t(`server_status.${$server.state.status.toLowerCase()}`)}
@@ -55,11 +65,12 @@
 	{#if $server?.state}
 		<div class="separation separation-xl-none justify-content-between flex-xl-column">
 			<dt>Dernier démarrage</dt>
-			<dd class="m-0">
+			<dd class="m-0 text-xl-start">
 				{#if $server.state?.status === DockerStatus.CREATED}
 					Jamais démarré
 				{:else}
-					{formattedStartDate}
+					<span class="d-inline d-xl-none d-xxl-inline">{formattedStartDate}</span>
+					<span class="d-none d-xl-inline d-xxl-none">{shortFormattedStartDate}</span>
 				{/if}
 			</dd>
 		</div>
@@ -67,7 +78,7 @@
 
 	<div class="separation separation-xl-none justify-content-between flex-xl-column">
 		<dt>Adresse de connexion</dt>
-		<dd class="m-0">
+		<dd class="m-0 text-xl-start">
 			{#if !$server.port}
 				Démarrez le serveur pour avoir une adresse de connexion.
 			{:else if $server.product.id === Products.MinecraftServer}

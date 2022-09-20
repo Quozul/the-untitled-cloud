@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { server, sidebarCollapsed } from "$store/store";
 	import Button from "$shared/Button.svelte";
-	import { patchServer, refreshSelectedServer } from "./helpers";
+	import { patchServer, refreshAllServers, refreshSelectedServer } from "./helpers";
 	import { Variant } from "$shared/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { toggleSidebarCollapsed } from "$components/sidebar/helpers";
@@ -36,11 +36,15 @@
 		}
 		await refreshSelectedServer();
 	}
+
+	async function fullRefresh() {
+		await Promise.all([refreshAllServers(), refreshSelectedServer()]);
+	}
 </script>
 
-{#if $server}
-	<div class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3">
-		<div class="sidebar-header d-flex align-items-center gap-2">
+<div class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 w-100 px-3 justify-content-between">
+	{#if $server}
+		<div class="sidebar-header d-flex align-items-center gap-2 overflow-hidden">
 			{#if $sidebarCollapsed}
 				<Button
 					icon="list"
@@ -59,7 +63,7 @@
 				{icon}
 				iconSize="28"
 			>
-				<span class="fw-bolder m-0 fs-5 text-nowrap">
+				<span class="fw-bolder m-0 fs-5 server-name">
 					{#if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
 						En attente
 					{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
@@ -78,11 +82,7 @@
 		<div class="collapse navbar-collapse d-xl-block" class:show={menu}>
 			<ServerBarInfo />
 		</div>
-	</div>
-{:else}
-	<div
-		class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 gap-lg-5 w-100 px-3"
-	>
+	{:else}
 		<div class="sidebar-header d-flex align-items-center gap-2">
 			{#if $sidebarCollapsed}
 				<Button
@@ -104,8 +104,9 @@
 				<span class="fw-bolder m-0 fs-5 text-nowrap"> Introuvable </span>
 			</Button>
 		</div>
-	</div>
-{/if}
+	{/if}
+	<Button icon="arrow-clockwise" variant={Variant.DARK} outline={true} onClick={fullRefresh} />
+</div>
 
 <style lang="scss">
 	.server-bar {
@@ -115,6 +116,17 @@
 	@include media-breakpoint-down(lg) {
 		.server-bar {
 			width: 100%;
+		}
+	}
+
+	.sidebar-header {
+		.icon {
+			flex: 1;
+		}
+
+		.server-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 </style>

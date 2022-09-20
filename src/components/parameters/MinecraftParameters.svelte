@@ -84,7 +84,9 @@
 					on:click={handleRandomName}
 				>
 					<Icon key="shuffle" />
+					<span class="d-none d-sm-inline">
 					Nom aléatoire
+						</span>
 				</button>
 			</div>
 		</div>

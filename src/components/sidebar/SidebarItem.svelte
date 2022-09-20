@@ -16,24 +16,26 @@
 			<Icon key={iconName} />
 		{/if}
 
-		<slot />
+		<span class="content">
+			<slot />
+		</span>
 	</Link>
 {:else}
 	<Button icon={iconName} className="sidebar-item {className}" {onClick} variant={Variant.NONE}>
-		<slot />
+		<span class="content">
+			<slot />
+		</span>
 	</Button>
 {/if}
 
 <style lang="scss" global>
 	.sidebar-item {
 		height: 38px;
-		overflow: hidden;
 		white-space: nowrap;
 
-		.icon {
-			width: 16px;
-			height: 16px;
-			flex: none;
+		.content {
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 </style>

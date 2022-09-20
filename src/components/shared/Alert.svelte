@@ -24,13 +24,3 @@
 		<slot />
 	{/if}
 </div>
-
-<style lang="scss" global>
-	.alert {
-		.icon {
-			width: 16px;
-			height: 16px;
-			flex: none;
-		}
-	}
-</style>
