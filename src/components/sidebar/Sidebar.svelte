@@ -17,10 +17,10 @@
 	import { mergePaginate } from "$shared/helpers";
 	import type { ApiService } from "$models/ApiService";
 	import type { ApiPaginate } from "$models/ApiPaginate";
-	import { locale } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import Button from "$shared/Button.svelte";
-	import { Variant } from "$shared/constants.js";
-	import { toggleSidebarCollapsed } from "$components/sidebar/helpers.js";
+	import { Variant } from "$shared/constants";
+	import { toggleSidebarCollapsed } from "$components/sidebar/helpers";
 
 	// State
 	let endedServers: ApiPaginate<ApiService>;
@@ -94,7 +94,7 @@
 					iconName="warning"
 					onClick={refreshAllServers}
 				>
-					Rafraichir la liste
+					{$t("sidebar.refresh_list")}
 				</SidebarItem>
 			</div>
 
@@ -105,7 +105,7 @@
 			<div class="d-flex flex-column gap-3">
 				<h6 class="px-2 py-1 m-0 fw-bold">
 					<Icon />
-					Mes services ({$servers.totalElements})
+					{$t("common.my_servers")} ({$servers.totalElements})
 				</h6>
 
 				{#each $servers.data as service}
@@ -118,7 +118,7 @@
 						iconName="plus"
 						onClick={loadMoreServers}
 					>
-						Charger plus
+						{$t("common.load_more")}
 					</SidebarItem>
 				{/if}
 			</div>
@@ -128,7 +128,7 @@
 
 		<div class="d-flex flex-column gap-3">
 			<SidebarItem href="/products/" iconName="plus" className="btn-outline-secondary">
-				Louer un serveur
+				{$t("common.rent_a_server")}
 			</SidebarItem>
 
 			{#if !endedServers}
@@ -137,7 +137,7 @@
 					iconName="more"
 					onClick={loadEndedServers}
 				>
-					Charger les ancien serveur
+					{$t("sidebar.load_old_servers")}
 				</SidebarItem>
 			{/if}
 		</div>
@@ -148,7 +148,7 @@
 			<div class="d-flex flex-column gap-3">
 				<h6 class="px-2 py-1 m-0 fw-bold">
 					<Icon />
-					Anciens serveurs ({endedServers.totalElements})
+					{$t("sidebar.old_servers")} ({endedServers.totalElements})
 				</h6>
 
 				{#each endedServers.data as server}
@@ -161,7 +161,7 @@
 						iconName="plus"
 						onClick={loadEndedServers}
 					>
-						Charger plus
+						{$t("common.load_more")}
 					</SidebarItem>
 				{/if}
 			</div>
@@ -170,7 +170,7 @@
 
 			<h6 class="px-2 py-1 m-0 fw-bold">
 				<Icon />
-				Aucun anciens serveur
+				{$t("sidebar.no_old_servers")}
 			</h6>
 		{/if}
 	</div>
@@ -183,15 +183,15 @@
 			iconName="person"
 			className="btn-outline-dark {$onProfilePage ? 'active' : ''}"
 		>
-			Mon profil
+			{$t("sidebar.my_profile")}
 		</SidebarItem>
 
 		<SidebarItem href="/" iconName="chevron-left" className="btn-outline-dark">
-			Accueil
+			{$t("common.home")}
 		</SidebarItem>
 
 		<SidebarItem iconName="box-arrow-left" className="btn-outline-dark" onClick={logout}>
-			Se déconnecter
+			{$t("authentication.to_logout")}
 		</SidebarItem>
 	</ul>
 </div>

@@ -6,7 +6,7 @@
 	import { refreshSelectedServer } from "$components/app/helpers";
 	import Icons from "$components/icons/Icons.svelte";
 	import "$root/app.scss";
-	import { locale } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import SessionExpiredModal from "$components/errors/SessionExpiredModal.svelte";
 
 	onMount(async () => {
@@ -19,7 +19,7 @@
 </script>
 
 <svelte:head>
-	<title>Mes serveurs</title>
+	<title>{$t("common.my_servers")}</title>
 </svelte:head>
 
 <Icons />

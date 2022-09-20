@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { server, token } from "$store/store";
 	import { onDestroy } from "svelte";
-	import Icon from "$components/icons/Icon.svelte";
 	import { parse } from "ansicolor";
+	import { t } from "svelte-intl-precompile";
 
 	let socket: WebSocket;
 	let logs = "";
@@ -17,11 +17,11 @@
 
 		socket = new WebSocket(`${import.meta.env.VITE_API_WS_URL}server/${$server.id}/console`);
 
-		socket.onopen = function () {
+		socket.onopen = function() {
 			socket.send(`Bearer ${$token}`); // Send authentication token
 		};
 
-		socket.onmessage = async function (event: MessageEvent) {
+		socket.onmessage = async function(event: MessageEvent) {
 			submitting = false;
 			const blob = event.data as Blob;
 			const text = await blob.text();
@@ -38,7 +38,7 @@
 			consoleElement.scrollTo(0, consoleElement.scrollHeight);
 		};
 
-		socket.onclose = function () {
+		socket.onclose = function() {
 			logs = "";
 			socket = null;
 			if (input) input.innerText = "";
@@ -63,14 +63,16 @@
 </script>
 
 {#if $server?.state?.starting}
-	<div class="alert alert-info">Votre serveur est en train de démarrer, veuillez patienter.</div>
+	<div class="alert alert-info">{$t("console.server_is_starting")}</div>
 {:else if !$server?.state?.running}
 	<div class="alert alert-info">
-		Votre serveur doit être démarré pour pouvoir accéder à la console.
+		{$t("console.server_must_be_started")}
 	</div>
 {:else if !socket}
 	<div class="d-flex justify-content-center align-items-center mt-2">
-		<button class="btn btn-secondary" on:click={connect}> Se connecter à la console </button>
+		<button class="btn btn-secondary" on:click={connect}>
+			{$t("console.connect_to_console")}
+		</button>
 	</div>
 {:else}
 	<div class="console-container bg-dark text-white p-3 flex-grow-1">
@@ -83,16 +85,6 @@
 				{/if}
 			</div>
 		</div>
-	</div>
-
-	<div class="alert alert-info d-none d-lg-block">
-		<h6 class="fw-bold d-flex align-items-center gap-2">
-			<Icon key="question" />
-			Pourquoi je ne vois pas les logs dans la console ?
-		</h6>
-		Il s'agit d'une console de contrôle à distance, elle permet simplement d'exécuter des commandes
-		sur le serveur.<br />
-		Si vous souhaitez voir les logs, je vous invite à utiliser le FTP pour lire les fichiers de logs.
 	</div>
 {/if}
 

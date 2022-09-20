@@ -17,6 +17,6 @@
 	</p>
 
 	<Link href="/products/" className="btn btn-dark rounded-pill px-4 me-md-2">
-		{$t("rent_a_server")}
+		{$t("common.rent_a_server")}
 	</Link>
 </div>

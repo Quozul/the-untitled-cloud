@@ -12,7 +12,7 @@
 
 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
 	<Link href="/products/" className="btn btn-dark rounded-pill btn-lg px-4 me-md-2">
-		{$t("rent_a_server")}
+		{$t("common.rent_a_server")}
 	</Link>
 
 	{#if $token}

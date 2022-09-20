@@ -22,6 +22,16 @@
 		"save": "Sauvegarder",
 		"status": "Statut",
 		"legal_mentions": "Mentions légales",
-		"my_servers": "Mes serveurs"
+		"my_servers": "Mes serveurs",
+		"load_more": "Charger plus",
+		"rent_a_server": "Louer un serveur",
+		"never": "Jamais",
+		"profile": "Profil",
+		"cancel": "Annuler",
+		"default": "Par défaut",
+		"apply": "Appliquer",
+		"product": "Produit",
+		"refresh": "Rafraichir",
+		"error": "Erreur"
 	}
 }

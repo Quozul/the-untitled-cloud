@@ -6,6 +6,7 @@
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { toggleSidebarCollapsed } from "$components/sidebar/helpers";
 	import ServerBarInfo from "$components/app/ServerBarInfo.svelte";
+	import { t } from "svelte-intl-precompile";
 
 	// State
 	let menu = false;
@@ -67,15 +68,15 @@
 			>
 				<span class="fw-bolder m-0 fs-5 server-name">
 					{#if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
-						En attente
+						{$t("server_status.pending")}
 					{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-						Suspendu
+						{$t("server_status.suspended")}
 					{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-						Terminé
+						{$t("server_status.cancelled")}
 					{:else if $server.state.created}
 						{$server.name ?? $server.product.name}
 					{:else}
-						Introuvable
+						{$t("server_status.not_found")}
 					{/if}
 				</span>
 			</Button>
@@ -103,7 +104,7 @@
 				{icon}
 				iconSize="28"
 			>
-				<span class="fw-bolder m-0 fs-5 text-nowrap"> Introuvable </span>
+				<span class="fw-bolder m-0 fs-5 text-nowrap">{$t("server_status.not_found")}</span>
 			</Button>
 		</div>
 	{/if}

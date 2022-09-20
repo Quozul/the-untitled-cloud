@@ -3,6 +3,7 @@
 	import { getStripePortal } from "$components/app/helpers";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
+	import { t } from "svelte-intl-precompile";
 
 	async function redirectToStripe() {
 		const redirect = $page.url.href;
@@ -12,16 +13,11 @@
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column align-items-start">
-	<h4>Suspendu</h4>
+	<h4>{$t("server_status.suspended")}</h4>
 
-	<p class="lead">
-		Votre serveur est suspendu.<br />
-		Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement.
-		<br />
-		Consultez l'onglet Abonnement pour plus d'informations.
-	</p>
+	<p class="lead">{$t("dashboard_errors.suspended.description")}</p>
 
 	<Button icon="box-arrow-up-right" onClick={redirectToStripe} variant={Variant.SECONDARY}>
-		Voir mon abonnement
+		{$t("dashboard_errors.suspended.cta")}
 	</Button>
 </div>

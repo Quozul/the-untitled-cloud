@@ -40,9 +40,9 @@
 			{#if isInCart}
 				{$t("cart.in_cart")}
 			{:else if !product.inStocks}
-				{$t("cart.out_of_stock")}
+				{$t("product.out_of_stock")}
 			{:else}
-				{$t("cart.add_to_cart")}
+				{$t("product.add_to_cart")}
 			{/if}
 		</Button>
 	</div>

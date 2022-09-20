@@ -2,7 +2,7 @@
 	import Modal from "$components/modal/Modal.svelte";
 	import { token } from "$store/store";
 	import { goto } from "$app/navigation";
-	import { locale } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import { onMount } from "svelte";
 	import jwtDecode from "jwt-decode";
 
@@ -22,10 +22,10 @@
 <Modal
 	visible={tokenIsExpired}
 	icon="warning"
-	title="Non connecté"
+	title={$t("authentication.disconnected")}
 	closeText={null}
-	okText="Se connecter"
+	okText={$t("authentication.to_login")}
 	onClick={redirectToLogin}
 >
-	<div class="p-3">Veuillez vous reconnecter pour utiliser l'application.</div>
+	<div class="p-3">{$t("authentication.please_login")}</div>
 </Modal>

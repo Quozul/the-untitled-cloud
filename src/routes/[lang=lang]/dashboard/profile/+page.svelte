@@ -5,6 +5,7 @@
 	import { onMount } from "svelte";
 	import { getUser } from "$components/app/helpers";
 	import DeleteAccount from "$components/profile/DeleteAccount.svelte";
+	import { t } from "svelte-intl-precompile";
 
 	$server = null;
 	$onProfilePage = true;
@@ -14,8 +15,8 @@
 	});
 </script>
 
-<div class="bg-light p-4 d-flex element flex-column">
-	<h4>Profil</h4>
+<div class="bg-light p-4 d-flex element flex-column m-lg-3">
+	<h4>{$t("common.profile")}</h4>
 	<p class="d-flex align-items-center gap-2 lead">
 		<Icon key="tools" />
 		Cette page est en cours de construction.

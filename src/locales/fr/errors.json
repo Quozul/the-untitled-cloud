@@ -15,5 +15,6 @@
 	"error.empty": "Vide",
 	"error.500": "Une erreur interne est survenue.",
 	"error.parsing_error": "Nous n'arrivons pas à communiquer avec notre serveur distant.",
-	"error.already_owns": "Vous possédez déjà un produit de votre panier."
+	"error.already_owns": "Vous possédez déjà un produit de votre panier.",
+	"error.server_address": "Impossible de déterminer l'adresse du serveur."
 }

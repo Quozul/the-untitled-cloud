@@ -1,4 +1,128 @@
 {
 	"latest_version": "Dernière",
-	"snapshot_version": "Snapshot"
+	"snapshot_version": "Snapshot",
+	"sidebar": {
+		"my_profile": "Mon profil",
+		"no_old_servers": "Aucun anciens serveur",
+		"old_servers": "Ancien serveurs",
+		"load_old_servers": "Charger les ancien serveur",
+		"refresh_list": "Rafraichir la liste"
+	},
+	"server_bar": {
+		"minutes": "minutes",
+		"state": "État",
+		"last_startup": "Dernier démarrage",
+		"address": "Adresse de connexion",
+		"steam_link": "Lien de connexion Steam"
+	},
+	"server_status": {
+		"restarting": "Redémarre",
+		"running": "En marche",
+		"unavailable": "Non disponible",
+		"starting": "Démarre",
+		"stopped": "Éteint",
+		"pending": "En attente",
+		"suspended": "Suspendu",
+		"cancelled": "Terminé",
+		"not_found": "Introuvable"
+	},
+	"tabs": {
+		"information": "Informations",
+		"parameters": "Paramètres",
+		"files": "Fichiers",
+		"console": "Console",
+		"subscription": "Abonnement",
+		"manage_subs": "Gérer mes abonnements",
+		"redirect_to_stripe": "Vous allez être redirigé vers notre partenaire pour gérer vos abonnements."
+	},
+	"server_info": {
+		"name": "Nom",
+		"description": "description",
+		"actions": "Actions"
+	},
+	"action": {
+		"start": "Démarrer",
+		"stop": "Arrêter",
+		"restart": "Redémarrer",
+		"refresh": "Rafraichir",
+		"reset": "Réinitialiser",
+		"to_reset": "Réinitialisation",
+		"reset.warn": "Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera tous les fichiers et ne seront pas récupérables.",
+		"proceed_question": "Êtes-vous sûr de vouloir continuer ?",
+		"recreate": "Recréer"
+	},
+	"files": {
+		"ftp": {
+			"ftp": "FTP",
+			"instruction": "Téléchargez un client FTP de votre choix puis utilisez les informations ci-dessous pour vous connecter.",
+			"address": "Adresse du serveur FTP",
+			"address_copied": "Adresse copiée dans le presse-papier !",
+			"username": "Identifiant",
+			"username_copied": "Identifiant copié dans le presse-papier !",
+			"password": "Mot de passe",
+			"password_alert": "Votre mot de passe est caché pour davantage de sécurité. En cas de perte du mot de passe, vous devrez le réinitialiser.",
+			"reset_password": "Réinitialiser le mot de passe",
+			"generate_password": "Générer un mot de passe"
+		},
+		"reset_password": {
+			"title": "Réinitialisation de mot de passe",
+			"ok": "Obtenir un nouveau mot de passe",
+			"warn": "Vous êtes sur le point de réinitialiser le mot de passe pour accéder au serveur FTP.",
+			"instruction": "Veuillez entrer le mot de passe de votre compte pour générer un nouveau mot de passe pour le serveur FTP."
+		},
+		"new_password": {
+			"title": "Mot de passe",
+			"warn": "Pensez à noter ou enregistrer le mot de passe.",
+			"generated_password_colon": "Mot de passe généré :",
+			"password_copied": "Mot de passe copié dans le presse-papier !"
+		}
+	},
+	"console": {
+		"server_is_starting": "Votre serveur est en train de démarrer, veuillez patienter.",
+		"server_must_be_started": "Votre serveur doit être démarré pour pouvoir accéder à la console.",
+		"connect_to_console": "Se connecter à la console"
+	},
+	"parameters": {
+		"server_name": "Nom du serveur",
+		"random_name": "Nom aléatoire",
+		"environment": "Environnement",
+		"server_type": "Type de serveur",
+		"search_type": "Chercher un type...",
+		"forge_version": "Version de Forge",
+		"fabric_launcher_version": "Version du lanceur de Fabric",
+		"fabric_version": "Version de Fabric",
+		"quilt_launcher_version": "Version du lanceur de Quilt",
+		"quilt_version": "Version de Quilt",
+		"ftb_modpack_id": "Identifiant Feed The Beast",
+		"ftb_modpack_version": "Version du modpack",
+		"minecraft_version": "Version de Minecraft",
+		"search_version": "Chercher une version...",
+		"use_the": "Utiliser les",
+		"aikar_flags": "flags d'Aikar",
+		"jvm_flags": "Flags JVM"
+	},
+	"dashboard_errors": {
+		"internal_error": {
+			"title": "Erreur interne",
+			"description": "Nous n'avons pas réussi à contacter notre serveur. Vérifiez votre connexion internet puis essayer de rafraichir la page."
+		},
+		"no_parameters": {
+			"title": "C'est vide",
+			"description": "Il n'y a aucun paramètres pour ce type de produit."
+		},
+		"no_server": {
+			"title": "Aucun paramètres",
+			"description": "Il semblerait que vous n'ayez pas encore de serveur. Commencez par louer un serveur ou en sélectionner un sur la gauche de l'écran si vous en avez déjà un."
+		},
+		"not_found": {
+			"description": "Nous n'avons pas réussi à trouver votre serveur. Essayez de le recréer."
+		},
+		"pending": {
+			"description": "Votre serveur est en cours de préparation. Rafraichissez la liste pour voir son nouvel état."
+		},
+		"suspended": {
+			"description": "Votre serveur est suspendu. Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement. Consultez l'onglet Abonnement pour plus d'informations.",
+			"cta": "Voir mon abonnement"
+		}
+	}
 }

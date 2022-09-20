@@ -8,6 +8,7 @@
 	import { Variant } from "$shared/constants";
 	import Modal from "$components/modal/Modal.svelte";
 	import ServerBarInfo from "$components/app/ServerBarInfo.svelte";
+	import { t } from "svelte-intl-precompile";
 
 	let started: ZonedDateTime = null;
 	let stopped: ZonedDateTime = null;
@@ -57,22 +58,22 @@
 
 <div class="bg-light p-4 d-flex flex-column element gap-3">
 	<div class="d-block d-xl-none">
-		<h4>État</h4>
+		<h4>{$t("server_bar.state")}</h4>
 		<ServerBarInfo />
 	</div>
 
 	<div>
-		<h4>Produit</h4>
+		<h4>{$t("common.product")}</h4>
 		<dl class="d-flex flex-column m-0 mb-3">
 			<div class="separation">
-				<dt>Nom</dt>
+				<dt>{$t("server_info.name")}</dt>
 				<dd>
 					{$server.product.name}
 				</dd>
 			</div>
 
 			<div class="separation">
-				<dt>Description</dt>
+				<dt>{$t("server_info.description")}</dt>
 				<dd>
 					{$server.product.description}
 				</dd>
@@ -81,7 +82,7 @@
 	</div>
 
 	<div>
-		<h4>Actions</h4>
+		<h4>{$t("server_info.actions")}</h4>
 		{#if $server?.state.created}
 			<div class="d-flex gap-3 flex-wrap">
 				{#if !$server.state.running}
@@ -91,7 +92,7 @@
 						icon="play"
 						onClick={startServer}
 					>
-						Démarrer
+						{$t("action.start")}
 					</Button>
 				{:else}
 					<Button
@@ -100,7 +101,7 @@
 						icon="stop"
 						onClick={stopServer}
 					>
-						Arrêter
+						{$t("action.stop")}
 					</Button>
 				{/if}
 
@@ -110,10 +111,10 @@
 					icon="arrow-clockwise"
 					onClick={restartServer}
 				>
-					Redémarrer
+					{$t("action.restart")}
 				</Button>
 
-				<Button onClick={refreshSelectedServer}>Rafraichir les informations</Button>
+				<Button onClick={refreshSelectedServer}>{$t("action.refresh")}</Button>
 
 				<Button
 					loading={$fetchingServer}
@@ -121,24 +122,21 @@
 					icon="trash"
 					onClick={openModal}
 				>
-					Réinitialiser
+					{$t("action.reset")}
 				</Button>
 
 				<Modal
 					bind:visible={modalVisible}
 					icon="trash"
 					onClick={reset}
-					title="Réinitialisation"
-					okText="Réinitialiser"
-					closeText="Annuler"
+					title={$t("action.to_reset")}
+					okText={$t("action.reset")}
+					closeText={$t("common.cancel")}
 					variant={Variant.DANGER}
 				>
 					<div class="p-3">
-						<p>
-							Vous êtes sur le point de réinitialiser votre serveur. Cette action
-							supprimera tous les fichiers et ne seront pas récupérables.
-						</p>
-						<p>Êtes-vous sûr de vouloir continuer ?</p>
+						<p>{$t("action.reset.warn")}</p>
+						<p>{$t("action.proceed_question")}</p>
 					</div>
 				</Modal>
 			</div>

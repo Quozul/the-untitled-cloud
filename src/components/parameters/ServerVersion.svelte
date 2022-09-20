@@ -3,10 +3,11 @@
 	import Select from "$components/select/Select.svelte";
 	import type { SelectItem } from "$components/select/SelectItem";
 	import { parameters } from "$store/store";
+	import { t } from "svelte-intl-precompile";
 
 	const items: SelectItem[] = [
-		{ label: "Dernière", value: "latest" },
-		{ label: "Snapshot", value: "snapshot" },
+		{ label: $t("latest_version"), value: "latest" },
+		{ label: $t("snapshot_version"), value: "snapshot" },
 	];
 
 	for (const version of Versions) {
@@ -26,13 +27,13 @@
 </script>
 
 <div>
-	<label class="form-label" for="minecraft-version">Version de Minecraft</label>
+	<label class="form-label" for="minecraft-version">{$t("parameters.minecraft_version")}</label>
 
 	<Select
 		{items}
 		{value}
 		id="minecraft-version"
-		placeholder="Chercher une version..."
+		placeholder={$t("parameters.search_version")}
 		allowCustom={true}
 		on:select={handleSelect}
 	/>

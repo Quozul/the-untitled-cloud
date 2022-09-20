@@ -1,7 +1,6 @@
 {
 	"cart": {
 		"add_a_product": "Commencez par ajouter un produit.",
-		"add_product": "Ajouter un produit",
 		"add_to_cart": "Ajouter au panier",
 		"cart_is_empty": "Panier vide",
 		"continue_shopping": "Continuer mes achats",
@@ -52,7 +51,15 @@
 		"resend_code": "Envoyer un nouveau code",
 		"signup": "Inscription",
 		"no_account_yet_question_mark": "Vous n'avez pas encore de compte ? S'inscrire.",
-		"please_enter_verification_code": "Veuillez entrer dans le champ ci-dessous le code de vérification qui vous a été envoyé par mail."
+		"please_enter_verification_code": "Veuillez entrer dans le champ ci-dessous le code de vérification qui vous a été envoyé par mail.",
+		"to_logout": "Se déconnecter",
+		"logout": "Déconnexion",
+		"disconnected": "Déconnecté",
+		"please_login": "Veuillez vous reconnecter pour utiliser l'application.",
+		"delete_account_warn": "Vous êtes sur le point de de supprimer votre compte. Cette action est réalisée dès l'envoi de ce formulaire et est irréversible.",
+		"all_subs_must_be_cancelled": "Tous vos abonnements doivent annulés pour procéder.",
+		"delete_account": "Supprimer mon compte",
+		"deleting_account": "Suppression du compte"
 	},
 	"product": {
 		"choose_product": "Choisir le produit",
@@ -60,7 +67,9 @@
 		"choose": "Choisir",
 		"of": "de",
 		"memory": "mémoire vive",
-		"cores": "coeurs"
+		"cores": "coeurs",
+		"out_of_stock": "Hors stock",
+		"add_product": "Ajouter un produit"
 	},
 	"hero": {
 		"lead": "Cum haec taliaque sollicitas eius aures everberarent expositas semper eius modi rumoribus et patentes, varia animo tum miscente consilia, tandem id ut optimum factu elegit.",
@@ -92,18 +101,9 @@
 	},
 	"i_acknowledge_and_accept": "J'ai pris connaissance et j'accepte les",
 	"month": "mois",
-	"out_of_stock": "Hors stock",
 	"payment_method.bank": "Compte bancaire",
 	"product.starter.description": "Serveur Minecraft",
 	"product.starter.name": "Starter",
-	"rent_a_server": "Louer un serveur",
-	"server_status": {
-		"restarting": "Redémarre",
-		"running": "En marche",
-		"starting": "Démarre",
-		"stopped": "Éteint",
-		"unavailable": "Non disponible"
-	},
 	"terms_of_sale": "conditions générales de vente",
 	"terms_of_service": "conditions générales d'utilisation",
 	"unit.gigabyte": "Go"

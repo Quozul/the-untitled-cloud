@@ -40,18 +40,15 @@
 <Modal
 	bind:visible={modalVisible}
 	onClick={handleSubmit}
-	title="Suppression du compte"
+	title={$t("authentication.deleting_account")}
 	icon="trash"
-	okText="Supprimer mon compte"
-	closeText="Annuler"
+	okText={$t("authentication.delete_account")}
+	closeText={$t("common.cancel")}
 	variant={Variant.DANGER}
 >
 	<div class="p-3">
-		<p>
-			Vous êtes sur le point de de supprimer votre compte. Cette action est réalisée dès
-			l'envoi de ce formulaire et est irréversible.
-		</p>
-		<p class="m-0">Tous vos abonnements doivent annulés pour procéder.</p>
+		<p>{$t("authentication.delete_account_warn")}</p>
+		<p class="m-0">{$t("authentication.all_subs_must_be_cancelled")}</p>
 	</div>
 
 	<hr class="m-0" />
@@ -86,4 +83,4 @@
 	</div>
 </Modal>
 
-<Button variant={Variant.DANGER} onClick={openModal}>Supprimer mon compte</Button>
+<Button variant={Variant.DANGER} onClick={openModal}>{$t("authentication.delete_account")}</Button>

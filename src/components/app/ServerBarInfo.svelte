@@ -9,8 +9,8 @@
 
 	// State
 	let duration;
-	let formattedStartDate = "Jamais";
-	let shortFormattedStartDate = "Jamais";
+	let formattedStartDate = $t("common.never");
+	let shortFormattedStartDate = $t("common.never");
 
 	async function loadDates(server: ApiService) {
 		const { convert, Duration, ZonedDateTime } = await import("@js-joda/core");
@@ -43,32 +43,31 @@
 
 <dl class="m-0 d-flex flex-column flex-xl-row gap-xl-3">
 	<div class="separation separation-xl-none justify-content-between flex-xl-column">
-		<dt>État</dt>
+		<dt>{$t("server_bar.state")}</dt>
 		<dd class="m-0 text-xl-start">
 			{#if $server.state.created && $server.state.running}
-				{$t(`server_status.${$server.state.status.toLowerCase()}`)} ({duration?.toMinutes() ||
-					0}
-				minutes)
+				{$t(`server_status.${$server.state.status.toLowerCase()}`)}
+				({duration?.toMinutes() || 0} {$t("server_bar.minutes")})
 			{:else if $server.state.created}
 				{$t(`server_status.${$server.state.status.toLowerCase()}`)}
 			{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}
-				En attente
+				{$t("server_status.pending")}
 			{:else if $server.subscription.status === ApiSubscriptionStatus.SUSPENDED}
-				Suspendu
+				{$t("server_status.suspended")}
 			{:else if $server.subscription.status === ApiSubscriptionStatus.CANCELLED}
-				Terminé
+				{$t("server_status.cancelled")}
 			{:else}
-				Introuvable
+				{$t("server_status.not_found")}
 			{/if}
 		</dd>
 	</div>
 
 	{#if $server?.state}
 		<div class="separation separation-xl-none justify-content-between flex-xl-column">
-			<dt>Dernier démarrage</dt>
+			<dt>{$t("server_bar.last_startup")}</dt>
 			<dd class="m-0 text-xl-start">
 				{#if $server.state?.status === DockerStatus.CREATED}
-					Jamais démarré
+					{$t("common.never")}
 				{:else}
 					<span class="d-inline d-xl-none d-xxl-inline">{formattedStartDate}</span>
 					<span class="d-none d-xl-inline d-xxl-none">{shortFormattedStartDate}</span>
@@ -78,18 +77,18 @@
 	{/if}
 
 	<div class="separation separation-xl-none justify-content-between flex-xl-column">
-		<dt>Adresse de connexion</dt>
+		<dt>{$t("server_bar.address")}</dt>
 		<dd class="m-0 text-xl-start">
 			{#if !$server.port}
-				Démarrez le serveur pour avoir une adresse de connexion.
+				{$t("server_status.stopped")}
 			{:else if $server.product.id === Products.MinecraftServer}
 				{$page.url.hostname}:{$server.port}
 			{:else if $server.product.id === Products.ArkServer}
 				<a href="steam://connect/theuntitledcloud.com:{$server.port}/">
-					Lien de connexion Steam
+					{$t("server_bar.steam_link")}
 				</a>
 			{:else}
-				Impossible de déterminer l'adresse de connexion.
+				{$t("errors.server_address")}
 			{/if}
 		</dd>
 	</div>

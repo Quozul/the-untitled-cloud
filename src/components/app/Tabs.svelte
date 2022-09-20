@@ -2,18 +2,22 @@
 	import { fetchingServer, selectedTab, server } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
-	import { locale } from "svelte-intl-precompile";
+	import { locale, t } from "svelte-intl-precompile";
 	import { Products } from "$components/cart/constants";
 	import Button from "$shared/Button.svelte";
 	import Modal from "$components/modal/Modal.svelte";
 	import { getStripePortal } from "./helpers";
 	import { page } from "$app/stores";
 	import ButtonLink from "$shared/ButtonLink.svelte";
+	import type { ApiError } from "$shared/models";
+	import Alert from "$shared/Alert.svelte";
+	import { Variant } from "$shared/constants.js";
 
 	let isPending: boolean;
 	let isEnded: boolean;
 	let isSuspended: boolean;
 	let modalVisible = false;
+	let apiError: ApiError | null = null;
 
 	$: {
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
@@ -27,9 +31,14 @@
 
 	async function redirectToStripe() {
 		const redirect = $page.url.href;
-		const { response } = await getStripePortal(redirect);
-		window.open(response.url);
-		modalVisible = false;
+		const { error, response } = await getStripePortal(redirect);
+
+		if (response) {
+			window.open(response.url);
+			modalVisible = false;
+		}
+
+		apiError = error;
 	}
 </script>
 
@@ -42,7 +51,7 @@
 		icon="info"
 		outline={true}
 	>
-		<span class="d-none d-lg-inline">Informations</span>
+		<span class="d-none d-lg-inline">{$t("tabs.information")}</span>
 	</ButtonLink>
 
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
@@ -54,7 +63,7 @@
 			icon="gear"
 			outline={true}
 		>
-			<span class="d-none d-lg-inline">Paramètres</span>
+			<span class="d-none d-lg-inline">{$t("tabs.parameters")}</span>
 		</ButtonLink>
 	{/if}
 
@@ -67,7 +76,7 @@
 			icon="directory"
 			outline={true}
 		>
-			<span class="d-none d-lg-inline">Fichiers</span>
+			<span class="d-none d-lg-inline">{$t("tabs.files")}</span>
 		</ButtonLink>
 	{/if}
 
@@ -80,7 +89,7 @@
 			icon="terminal"
 			outline={true}
 		>
-			<span class="d-none d-lg-inline">Console</span>
+			<span class="d-none d-lg-inline">{$t("tabs.console")}</span>
 		</ButtonLink>
 	{/if}
 
@@ -91,12 +100,18 @@
 		onClick={showModal}
 		outline={true}
 	>
-		<span class="d-none d-lg-inline">Abonnement</span>
+		<span class="d-none d-lg-inline">{$t("tabs.subscription")}</span>
 	</Button>
 </nav>
 
-<Modal bind:visible={modalVisible} okText="Gérer mes abonnements" onClick={redirectToStripe}>
+<Modal bind:visible={modalVisible} okText={$t("tabs.manage_subs")} onClick={redirectToStripe}>
 	<div class="p-3">
-		Vous allez être redirigé vers notre partenaire pour gérer vos abonnements.
+		{$t("tabs.redirect_to_stripe")}
+
+		{#if apiError}
+			<Alert variant={Variant.DANGER} className="mt-3 mb-0">
+				{apiError.translatedMessage || apiError.message}
+			</Alert>
+		{/if}
 	</div>
 </Modal>

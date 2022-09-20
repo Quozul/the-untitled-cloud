@@ -35,11 +35,11 @@
 <div class="d-flex flex-column gap-3 justify-content-start">
 	<div class="d-flex flex-column flex-lg-row gap-3 justify-content-start">
 		<div>
-			<label class="form-label" for="server-type">Type de serveur</label>
+			<label class="form-label" for="server-type">{$t("parameters.server_type")}</label>
 			<Select
 				{items}
 				{value}
-				placeholder="Chercher un type..."
+				placeholder={$t("parameters.search_type")}
 				on:select={handleSelect}
 				id="server-type"
 			/>
@@ -51,7 +51,7 @@
 	<div class="d-flex flex-column flex-lg-row gap-3 justify-content-start">
 		{#if $parameters.serverType === ServerType.FORGE}
 			<div>
-				<label for="forgeVersion" class="form-label">Version de Forge</label>
+				<label for="forgeVersion" class="form-label">{$t("parameters.forge_version")}</label>
 				<input
 					id="forgeVersion"
 					class="form-control"
@@ -62,7 +62,7 @@
 		{:else if $parameters.serverType === ServerType.FABRIC}
 			<div>
 				<label for="fabricLauncherVersion" class="form-label">
-					Version du lanceur de Fabric
+					{$t("parameters.fabric_launcher_version")}
 				</label>
 				<input
 					id="fabricLauncherVersion"
@@ -73,7 +73,7 @@
 			</div>
 
 			<div>
-				<label for="fabricLoaderVersion" class="form-label">Version de Fabric</label>
+				<label for="fabricLoaderVersion" class="form-label">{$t("parameters.fabric_version")}</label>
 				<input
 					id="fabricLoaderVersion"
 					class="form-control"
@@ -83,9 +83,9 @@
 			</div>
 		{:else if $parameters.serverType === ServerType.QUILT}
 			<div>
-				<label for="quiltLauncherVersion" class="form-label"
-					>Version du lanceur de Quilt</label
-				>
+				<label for="quiltLauncherVersion" class="form-label">
+					{$t("parameters.quilt_launcher_version")}
+				</label>
 				<input
 					id="quiltLauncherVersion"
 					class="form-control"
@@ -95,7 +95,7 @@
 			</div>
 
 			<div>
-				<label for="quiltLoaderVersion" class="form-label">Version de Quilt</label>
+				<label for="quiltLoaderVersion" class="form-label">{$t("parameters.quilt_version")}</label>
 				<input
 					id="quiltLoaderVersion"
 					class="form-control"
@@ -105,7 +105,7 @@
 			</div>
 		{:else if $parameters.serverType === ServerType.FTBA}
 			<div>
-				<label for="ftbModpackId" class="form-label">Id du modpack Feed The Beast</label>
+				<label for="ftbModpackId" class="form-label">{$t("parameters.ftb_modpack_id")}</label>
 				<input
 					id="ftbModpackId"
 					class="form-control"
@@ -115,7 +115,9 @@
 			</div>
 
 			<div>
-				<label for="ftpModpackVersionId" class="form-label">Version du modpack</label>
+				<label for="ftpModpackVersionId" class="form-label">
+					{$t("parameters.ftb_modpack_version")}
+				</label>
 				<input
 					id="ftpModpackVersionId"
 					class="form-control"

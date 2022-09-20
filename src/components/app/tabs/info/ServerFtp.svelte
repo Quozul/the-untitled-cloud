@@ -35,7 +35,7 @@
 	}
 
 	function copyAddress() {
-		navigator.clipboard.writeText("141.94.98.122");
+		navigator.clipboard.writeText(import.meta.env.VITE_SERVER_ADDRESS);
 	}
 
 	function copyPassword() {
@@ -51,26 +51,26 @@
 			newPasswordModal = true;
 		}
 
+		password = "";
 		apiError = error;
 	}
 </script>
 
 <div class="bg-light p-4 d-flex element flex-column">
-	<h4>FTP</h4>
+	<h4>{$t("files.ftp.ftp")}</h4>
 
 	<p class="text-muted">
-		Téléchargez un client FTP de votre choix puis utilisez les informations ci-dessous pour vous
-		connecter.
+		{$t("files.ftp.instruction")}
 	</p>
 
 	<dl class="d-flex flex-column m-0">
 		<div class="separation">
-			<dt>Adresse du serveur FTP</dt>
+			<dt>{$t("files.ftp.address")}</dt>
 			<dd>
-				<div class="user-select-all d-inline">141.94.98.122</div>
+				<div class="user-select-all d-inline">{import.meta.env.VITE_SERVER_ADDRESS}</div>
 
 				<Tooltip icon="clipboard" onClick={copyAddress}>
-					Adresse copiée dans le presse-papier !
+					{$t("files.ftp.address_copied")}
 				</Tooltip>
 			</dd>
 		</div>
@@ -81,14 +81,14 @@
 					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
-				<dt>Identifiant</dt>
+				<dt>{$t("files.ftp.username")}</dt>
 				<dd>
 					<div class="user-select-all d-inline">
 						{$server.id}
 					</div>
 
 					<Tooltip icon="clipboard" onClick={copyId}>
-						Identifiant copié dans le presse-papier !
+						{$t("files.ftp.username_copied")}
 					</Tooltip>
 				</dd>
 			{/if}
@@ -100,24 +100,24 @@
 					<span class="placeholder h-100 col-12" />
 				</p>
 			{:else}
-				<dt>Mot de passe</dt>
+				<dt>{$t("files.ftp.password")}</dt>
 				<dd>
 					{#if $server.hasFtpPassword}
 						●●●●●●●●●●●●●●●●
 						<Tooltip icon="question" bind:visible={tooltipVisible}>
-							Votre mot de passe est caché pour davantage de sécurité. En cas de perte
-							du mot de passe, vous devrez le réinitialiser.<br />
+							{$t("files.ftp.password_alert")}
+							<br />
 							<button
 								type="button"
 								on:click={showResetModal}
 								class="d-block btn btn-sm btn-link p-0 text-start"
 							>
-								Réinitialiser le mot de passe
+								{$t("files.ftp.reset_password")}
 							</button>
 						</Tooltip>
 					{:else}
 						<Button onClick={showResetModal} variant={Variant.LINK} className="btn-sm">
-							Générer un mot de passe
+							{$t("files.ftp.generate_password")}
 						</Button>
 					{/if}
 				</dd>
@@ -127,39 +127,38 @@
 </div>
 
 <Modal
-	title="Réinitialisation de mot de passe"
+	title={$t("files.reset_password.title")}
 	bind:visible={resetPasswordModal}
-	okText="Obtenir un nouveau mot de passe"
+	okText={$t("files.reset_password.ok")}
 	onClick={handleSubmit}
 	disabled={password.length === 0}
 >
 	<div class="p-3">
-		Vous êtes sur le point de réinitialiser le mot de passe pour accéder au serveur FTP.
+		{$t("files.reset_password.warn")}
 	</div>
 
 	<hr class="m-0" />
 
 	<div class="p-3">
 		<div class="mb-3">
-			Veuillez entrer le mot de passe de votre compte pour générer un nouveau mot de passe
-			pour le serveur FTP.
+			{$t("files.reset_password.instruction")}
 		</div>
 
 		<div class="mb-3">
-			{$t("logged_in_as")}
+			{$t("authentication.logged_in_as")}
 			<div class="text-muted d-inline">
 				{email}
 			</div>
 		</div>
 
 		<div class="mb-3">
-			<label for="password" class="form-label">{$t("password")}</label>
+			<label for="password" class="form-label">{$t("authentication.password")}</label>
 			<input
 				id="password"
 				type="password"
 				name="password"
 				class="form-control"
-				placeholder={$t("password")}
+				placeholder={$t("authentication.password")}
 				bind:value={password}
 			/>
 		</div>
@@ -172,11 +171,11 @@
 	</div>
 </Modal>
 
-<Modal visible={newPasswordModal} title="Mot de passe">
+<Modal bind:visible={newPasswordModal} title={$t("files.new_password.title")}>
 	<div class="p-3">
-		<p>Pensez à noter ou enregistrer le mot de passe.</p>
+		<p>{$t("files.new_password.warn")}</p>
 
-		<h6>Mot de passe généré :</h6>
+		<h6>{$t("files.new_password.generated_password")}</h6>
 
 		<div class="d-flex align-items-center">
 			<div class="user-select-all d-inline me-2">
@@ -184,7 +183,7 @@
 			</div>
 
 			<Tooltip icon="clipboard" onClick={copyPassword}>
-				Mot de passe copié dans le presse-papier !
+				{$t("files.new_password.password_copied")}
 			</Tooltip>
 		</div>
 	</div>
