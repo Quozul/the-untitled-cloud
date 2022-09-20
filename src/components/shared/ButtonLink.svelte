@@ -29,17 +29,12 @@
 			"gap-2": true,
 			[className]: !!className,
 			"btn-link": variant === Variant.LINK,
-			"active": active,
+			active: active,
 		});
 	}
 </script>
 
-<a
-	{type}
-	{href}
-	class={classes}
-	disabled={disabled}
->
+<a {type} {href} class={classes} {disabled}>
 	{#if icon}
 		<Icon key={icon} width={iconSize} height={iconSize} />
 	{/if}

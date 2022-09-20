@@ -34,7 +34,8 @@
 	onClick={reload}
 	okText="Reload"
 	closeText="Ignore"
-	title="Oops, an error has occured.">
+	title="Oops, an error has occured."
+>
 	<pre class="m-3">{error}</pre>
 </Modal>
 

@@ -5,7 +5,7 @@ export type ApiError = {
 	message?: string;
 	code: AuthenticationErrors;
 	translatedMessage?: string;
-	httpCode: number | null,
+	httpCode: number | null;
 };
 
 export type ClassNames = {

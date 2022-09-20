@@ -110,11 +110,7 @@
 							bind:value={codeInput}
 						/>
 
-						<Button
-							type="submit"
-							onClick={setPromoCode}
-							disabled={!codeInput?.length}
-						>
+						<Button type="submit" onClick={setPromoCode} disabled={!codeInput?.length}>
 							{$t("use")}
 						</Button>
 					</div>

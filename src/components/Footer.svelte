@@ -34,7 +34,10 @@
 					</Link>
 				</li>
 				<li class="nav-item mb-2">
-					<Link href="https://status.theuntitledcloud.com" className="nav-link p-0 text-muted">
+					<Link
+						href="https://status.theuntitledcloud.com"
+						className="nav-link p-0 text-muted"
+					>
 						{$t("status")}
 					</Link>
 				</li>

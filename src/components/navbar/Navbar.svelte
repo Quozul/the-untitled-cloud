@@ -95,7 +95,8 @@
 						onClick={toggleTheme}
 						className="text-dark"
 						variant={Variant.NONE}
-						icon={theme === "light" ? "sun" : "moon"} />
+						icon={theme === "light" ? "sun" : "moon"}
+					/>
 				</div>
 			</div>
 		</div>

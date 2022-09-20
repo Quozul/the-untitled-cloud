@@ -13,7 +13,10 @@
 
 	$: {
 		if ($server) {
-			if ($server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending) {
+			if (
+				$server.subscription.status === ApiSubscriptionStatus.PENDING ||
+				$server.state.pending
+			) {
 				icon = "hourglass";
 			} else if ($server.subscription.status === ApiSubscriptionStatus.SUSPENDED) {
 				icon = "pause";
@@ -77,7 +80,9 @@
 		</div>
 	</div>
 {:else}
-	<div class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 gap-lg-5 w-100 px-3">
+	<div
+		class="bg-light py-3 d-flex flex-row align-items-center gap-1 gap-lg-3 gap-lg-5 w-100 px-3"
+	>
 		<div class="sidebar-header d-flex align-items-center gap-2">
 			{#if $sidebarCollapsed}
 				<Button
@@ -96,9 +101,7 @@
 				{icon}
 				iconSize="28"
 			>
-				<span class="fw-bolder m-0 fs-5 text-nowrap">
-					Introuvable
-				</span>
+				<span class="fw-bolder m-0 fs-5 text-nowrap"> Introuvable </span>
 			</Button>
 		</div>
 	</div>

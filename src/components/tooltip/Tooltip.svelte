@@ -7,7 +7,7 @@
 	export let onClick: VoidFunction | null = null;
 
 	// State
-	let visible = false;
+	export let visible = false;
 	let element: HTMLElement;
 	let content: HTMLElement;
 
@@ -48,7 +48,7 @@
 
 	{#if visible}
 		<div bind:this={content} class="tooltip bs-tooltip-top show" role="tooltip">
-			<div class="tooltip-arrow" data-popper-arrow></div>
+			<div class="tooltip-arrow" data-popper-arrow />
 			<div class="tooltip-inner">
 				<slot />
 			</div>

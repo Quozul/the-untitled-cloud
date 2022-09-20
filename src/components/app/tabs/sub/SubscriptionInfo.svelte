@@ -163,10 +163,10 @@
 						>
 							<div class="p-3">
 								<p>
-									Vous êtes sur le point de d'annuler votre abonnement. Dès que nous
-									recevrons la confirmation de votre désabonnement, les fichiers de
-									votre serveur seront immédiatement supprimés et ne seront pas
-									récupérables.
+									Vous êtes sur le point de d'annuler votre abonnement. Dès que
+									nous recevrons la confirmation de votre désabonnement, les
+									fichiers de votre serveur seront immédiatement supprimés et ne
+									seront pas récupérables.
 								</p>
 								<p>Vous serez remboursé au prorata de votre consommation.</p>
 								<p>Êtes-vous sûr de vouloir continuer ?</p>

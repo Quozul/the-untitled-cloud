@@ -45,7 +45,7 @@
 
 		// Get payment intent
 		const response = await stripe.retrievePaymentIntent($clientSecret);
-		paymentIntent = response.paymentIntent
+		paymentIntent = response.paymentIntent;
 		totalPrice = paymentIntent.amount;
 	});
 
@@ -94,9 +94,7 @@
 <Alert>
 	<div>
 		Le service n'étant pas encore activé, je vous invite à utiliser une
-		<Link href="https://stripe.com/docs/testing#cards">
-			carte de test
-		</Link>
+		<Link href="https://stripe.com/docs/testing#cards">carte de test</Link>
 	</div>
 </Alert>
 
@@ -115,7 +113,7 @@
 			rules={{
 				".Input": {
 					border: "1px solid #ced4da",
-				}
+				},
 			}}
 		>
 			<PaymentElement />

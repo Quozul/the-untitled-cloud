@@ -21,7 +21,6 @@ export async function updatePaymentIntent(
 	return await handleRequest<ApiService>(request);
 }
 
-
 export async function cancelPaymentIntent(
 	paymentIntentId: string
 ): Promise<ApiResponse<ApiService>> {

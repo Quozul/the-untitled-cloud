@@ -7,7 +7,7 @@
 
 	export let visible = false;
 	export let icon = "";
-	export let title = "Confirmation";
+	export let title = "";
 	export let closeText = $t("close");
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
@@ -25,18 +25,20 @@
 
 		<div class="modal-dialog" use:clickOutside on:click_outside={hide}>
 			<div class="modal-content">
-				<div class="modal-header">
-					{#if icon}
-						<div class="d-flex align-items-center gap-2">
-							<Icon key={icon} />
+				{#if title}
+					<div class="modal-header">
+						{#if icon}
+							<div class="d-flex align-items-center gap-2">
+								<Icon key={icon} />
+								<h5 class="modal-title">{title}</h5>
+							</div>
+						{:else}
 							<h5 class="modal-title">{title}</h5>
-						</div>
-					{:else}
-						<h5 class="modal-title">{title}</h5>
-					{/if}
+						{/if}
 
-					<button type="button" class="btn-close" on:click|preventDefault={hide} />
-				</div>
+						<button type="button" class="btn-close" on:click|preventDefault={hide} />
+					</div>
+				{/if}
 
 				<div class="modal-body p-0">
 					<slot />
@@ -44,8 +46,7 @@
 
 				<div class="modal-footer">
 					{#if closeText !== null}
-						<Button outline={true} onClick={hide}>{closeText}</Button
-						>
+						<Button outline={true} onClick={hide}>{closeText}</Button>
 					{/if}
 
 					{#if okText !== null}
@@ -58,13 +59,7 @@
 {/if}
 
 <style>
-	.backdrop {
-		position: absolute;
-		top: 0;
-		left: 0;
-		opacity: 0.2;
-		overflow: hidden;
-		width: 100vw;
-		height: 100vh;
+	.modal-dialog {
+		z-index: 1000;
 	}
 </style>

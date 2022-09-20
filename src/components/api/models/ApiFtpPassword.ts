@@ -1,3 +1,3 @@
 export type ApiFtpPassword = {
-	ftpPassword: string,
-}
+	ftpPassword: string;
+};

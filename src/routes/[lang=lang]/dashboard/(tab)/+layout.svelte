@@ -13,7 +13,7 @@
 
 <div class="flex-grow-1 overflow-auto order-1 order-lg-2 px-lg-3">
 	{#if $server}
-		<slot/>
+		<slot />
 	{:else if $fetchServersError}
 		<InternalError refresh={refreshAllServers} />
 	{:else}

@@ -13,6 +13,7 @@
 
 	let resetPasswordModal = false;
 	let newPasswordModal = false;
+	let tooltipVisible = false;
 
 	let password: string = "";
 	let apiError: ApiError | null = null;
@@ -25,6 +26,7 @@
 	});
 
 	function showResetModal() {
+		tooltipVisible = false;
 		resetPasswordModal = true;
 	}
 
@@ -65,9 +67,7 @@
 		<div class="separation">
 			<dt>Adresse du serveur FTP</dt>
 			<dd>
-				<div class="user-select-all d-inline">
-					141.94.98.122
-				</div>
+				<div class="user-select-all d-inline">141.94.98.122</div>
 
 				<Tooltip icon="clipboard" onClick={copyAddress}>
 					Adresse copiée dans le presse-papier !
@@ -104,9 +104,9 @@
 				<dd>
 					{#if $server.hasFtpPassword}
 						●●●●●●●●●●●●●●●●
-						<Tooltip icon="question">
-							Votre mot de passe est caché pour davantage de sécurité. En cas de perte du mot de passe,
-							vous devrez le réinitialiser.<br />
+						<Tooltip icon="question" bind:visible={tooltipVisible}>
+							Votre mot de passe est caché pour davantage de sécurité. En cas de perte
+							du mot de passe, vous devrez le réinitialiser.<br />
 							<button
 								type="button"
 								on:click={showResetModal}
@@ -116,11 +116,7 @@
 							</button>
 						</Tooltip>
 					{:else}
-						<Button
-							onClick={showResetModal}
-							variant={Variant.LINK}
-							className="btn-sm"
-						>
+						<Button onClick={showResetModal} variant={Variant.LINK} className="btn-sm">
 							Générer un mot de passe
 						</Button>
 					{/if}
@@ -145,7 +141,8 @@
 
 	<div class="p-3">
 		<div class="mb-3">
-			Veuillez entrer le mot de passe de votre compte pour générer un nouveau mot de passe pour le serveur FTP.
+			Veuillez entrer le mot de passe de votre compte pour générer un nouveau mot de passe
+			pour le serveur FTP.
 		</div>
 
 		<div class="mb-3">
@@ -177,9 +174,7 @@
 
 <Modal visible={newPasswordModal} title="Mot de passe">
 	<div class="p-3">
-		<p>
-			Pensez à noter ou enregistrer le mot de passe.
-		</p>
+		<p>Pensez à noter ou enregistrer le mot de passe.</p>
 
 		<h6>Mot de passe généré :</h6>
 

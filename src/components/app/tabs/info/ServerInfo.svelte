@@ -140,8 +140,8 @@
 				>
 					<div class="p-3">
 						<p>
-							Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera
-							tous les fichiers et ne seront pas récupérables.
+							Vous êtes sur le point de réinitialiser votre serveur. Cette action
+							supprimera tous les fichiers et ne seront pas récupérables.
 						</p>
 						<p>Êtes-vous sûr de vouloir continuer ?</p>
 					</div>
@@ -152,7 +152,7 @@
 </div>
 
 <style>
-    .element {
-        flex: 1;
-    }
+	.element {
+		flex: 1;
+	}
 </style>

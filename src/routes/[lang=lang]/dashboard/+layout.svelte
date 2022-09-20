@@ -28,8 +28,8 @@
 	<Sidebar />
 
 	<div class="overflow-auto flex-grow-1 d-flex flex-column gap-lg-3">
-		<slot/>
+		<slot />
 	</div>
 </div>
 
-<SessionExpiredModal/>
+<SessionExpiredModal />

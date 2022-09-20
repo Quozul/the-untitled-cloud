@@ -11,7 +11,7 @@
 	};
 
 	onMount(async () => {
-		const {response} = await getStats();
+		const { response } = await getStats();
 		if (response) {
 			stats = response;
 		}
@@ -22,7 +22,7 @@
 	<div class="row">
 		<Number text="Serveurs loués" number="{stats.sold}+" />
 		<Number text="Joueurs" number="{stats.users}+" />
-		<Number text="Jeux disponibles" number="{stats.products}" />
+		<Number text="Jeux disponibles" number={stats.products} />
 	</div>
 </div>
 

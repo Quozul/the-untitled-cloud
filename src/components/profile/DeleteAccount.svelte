@@ -48,8 +48,8 @@
 >
 	<div class="p-3">
 		<p>
-			Vous êtes sur le point de de supprimer votre compte. Cette action est réalisée dès l'envoi
-			de ce formulaire et est irréversible.
+			Vous êtes sur le point de de supprimer votre compte. Cette action est réalisée dès
+			l'envoi de ce formulaire et est irréversible.
 		</p>
 		<p class="m-0">Tous vos abonnements doivent annulés pour procéder.</p>
 	</div>
@@ -76,7 +76,7 @@
 			/>
 		</div>
 
-		<Code email={email} bind:code />
+		<Code {email} bind:code />
 
 		{#if error}
 			<Alert variant={Variant.DANGER} icon="warning">

@@ -61,8 +61,18 @@
 	class:d-none={$sidebarCollapsed}
 >
 	<div class="sidebar-header d-flex align-items-center gap-2 px-3">
-		<Icon key="favicon" width="42" height="38" className={!$sidebarCollapsed && "d-none d-lg-inline"} />
-		<Button icon="x-lg" onClick={toggleSidebarCollapsed} variant={Variant.LIGHT} className="d-inline d-lg-none"/>
+		<Icon
+			key="favicon"
+			width="42"
+			height="38"
+			className={!$sidebarCollapsed && "d-none d-lg-inline"}
+		/>
+		<Button
+			icon="x-lg"
+			onClick={toggleSidebarCollapsed}
+			variant={Variant.LIGHT}
+			className="d-inline d-lg-none"
+		/>
 		<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
 	</div>
 
@@ -79,7 +89,11 @@
 
 		{#if $fetchServersError}
 			<div class="d-flex flex-column gap-3">
-				<SidebarItem className="btn-outline-danger" iconName="warning" onClick={refreshAllServers}>
+				<SidebarItem
+					className="btn-outline-danger"
+					iconName="warning"
+					onClick={refreshAllServers}
+				>
 					Rafraichir la liste
 				</SidebarItem>
 			</div>
@@ -201,16 +215,5 @@
 		.sidebar-item {
 			height: 38px;
 		}
-	}
-
-	.backdrop {
-		z-index: 950;
-		position: absolute;
-		top: 0;
-		left: 0;
-		opacity: 0.2;
-		overflow: hidden;
-		width: 100vw;
-		height: 100vh;
 	}
 </style>

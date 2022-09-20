@@ -6,8 +6,8 @@
 
 	async function redirectToStripe() {
 		const redirect = $page.url.href;
-		const url = await getStripePortal(redirect);
-		window.open(url.url);
+		const { response } = await getStripePortal(redirect);
+		window.open(response.url);
 	}
 </script>
 
@@ -16,7 +16,8 @@
 
 	<p class="lead">
 		Votre serveur est suspendu.<br />
-		Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement.<br />
+		Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement.
+		<br />
 		Consultez l'onglet Abonnement pour plus d'informations.
 	</p>
 

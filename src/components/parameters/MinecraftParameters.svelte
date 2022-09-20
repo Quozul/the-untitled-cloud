@@ -112,8 +112,6 @@
 	<div class="d-flex gap-3 mt-3">
 		<Button onClick={handleSave} disabled={!edited} icon="save">Sauvegarder</Button>
 
-		<Button onClick={handleApply} disabled={!edited} icon="arrow-clockwise">
-			Appliquer
-		</Button>
+		<Button onClick={handleApply} disabled={!edited} icon="arrow-clockwise">Appliquer</Button>
 	</div>
 </div>
