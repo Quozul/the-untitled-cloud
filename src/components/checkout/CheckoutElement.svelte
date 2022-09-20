@@ -5,7 +5,7 @@
 	let paymentMethod: string | null = null;
 </script>
 
-<h4 class="mb-3">{$t("checkout")}</h4>
+<h4 class="mb-3">{$t("common.checkout")}</h4>
 <div class="my-3">
 	<div class="form-check">
 		<input

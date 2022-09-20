@@ -48,33 +48,33 @@
 
 <form>
 	<div class="mb-3">
-		<label for="email" class="form-label">{$t("email_address")}</label>
+		<label for="email" class="form-label">{$t("common.email_address")}</label>
 		<input
 			id="email"
 			type="email"
 			name="email"
 			autocomplete="email"
 			class="form-control"
-			placeholder={$t("email_address")}
+			placeholder={$t("common.email_address")}
 			bind:value={email}
 		/>
 	</div>
 
 	<div>
-		<label for="password" class="form-label">{$t("password")}</label>
+		<label for="password" class="form-label">{$t("authentication.password")}</label>
 		<input
 			id="password"
 			type="password"
 			name="password"
 			autocomplete="current-password"
 			class="form-control"
-			placeholder={$t("password")}
+			placeholder={$t("authentication.password")}
 			bind:value={password}
 		/>
 	</div>
 
 	<button type="button" on:click={forgotPassword} class="d-block btn btn-sm btn-link p-0 mb-3">
-		{$t("password_lost_question_mark")}
+		{$t("authentication.password_lost_question_mark")}
 	</button>
 
 	<div class:visually-hidden={!loginError} class="text-danger mb-3">
@@ -82,6 +82,6 @@
 	</div>
 
 	<Button type="submit" onClick={submit} className="w-100">
-		{$t("to_login")}
+		{$t("authentication.to_login")}
 	</Button>
 </form>

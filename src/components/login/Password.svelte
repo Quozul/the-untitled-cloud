@@ -43,44 +43,44 @@
 <form>
 	<button type="button" on:click={back} class="d-block btn btn-sm btn-link p-0 mb-3">
 		<Icon key="chevron-left" height="12" width="12" className="me-1" />
-		{$t("back")}
+		{$t("common.back")}
 	</button>
 
 	<div class="mb-3">
-		<label for="email" class="form-label">{$t("email_address")}</label>
+		<label for="email" class="form-label">{$t("common.email_address")}</label>
 		<input
 			id="email"
 			type="email"
 			name="email"
 			autocomplete="email"
 			class="form-control"
-			placeholder={$t("email_address")}
+			placeholder={$t("common.email_address")}
 			bind:value={email}
 		/>
 	</div>
 
 	<div class="mb-3">
-		<label for="password" class="form-label">{$t("new_password")}</label>
+		<label for="password" class="form-label">{$t("authentication.new_password")}</label>
 		<input
 			id="password"
 			type="password"
 			name="password"
 			autocomplete="new-password"
 			class="form-control"
-			placeholder={$t("password")}
+			placeholder={$t("authentication.password")}
 			bind:value={password}
 		/>
 	</div>
 
 	<div class="mb-3">
-		<label for="confirm" class="form-label">{$t("new_confirm_password")}</label>
+		<label for="confirm" class="form-label">{$t("authentication.new_confirm_password")}</label>
 		<input
 			id="confirm"
 			type="password"
 			name="password"
 			autocomplete="new-password"
 			class="form-control"
-			placeholder={$t("confirm")}
+			placeholder={$t("common.confirm")}
 			bind:value={confirmPassword}
 		/>
 	</div>
@@ -92,6 +92,6 @@
 	</div>
 
 	<Button type="submit" onClick={submit} className="w-100">
-		{$t("update_password")}
+		{$t("authentication.update_password")}
 	</Button>
 </form>

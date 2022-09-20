@@ -61,11 +61,11 @@
 
 <form autocomplete="off">
 	<p class="text-muted">
-		{$t("please_enter_verification_code")}
+		{$t("authentication.please_enter_verification_code")}
 	</p>
 
 	<div class="mb-3">
-		<label for="code" class="form-label">{$t("verification_code")}</label>
+		<label for="code" class="form-label">{$t("authentication.verification_code")}</label>
 		<input
 			id="code"
 			type="text"
@@ -82,13 +82,13 @@
 		{verificationError?.translatedMessage}
 	</div>
 
-	<Button type="submit" onClick={submit} className="w-100">
-		{$t("to_login")}
+	<Button type="submit" onClick={submit} className="w-100 mb-3">
+		{$t("authentication.to_login")}
 	</Button>
 
 	{#if verificationError && (verificationError.code === AuthenticationErrors.EXPIRED_CODE || verificationError.code === AuthenticationErrors.INVALID_CODE)}
-		<Button variant={Variant.SECONDARY} onClick={resendCode}>
-			{$t("resend_code")}
+		<Button variant={Variant.SECONDARY} onClick={resendCode} className="w-100">
+			{$t("authentication.resend_code")}
 		</Button>
 	{/if}
 </form>

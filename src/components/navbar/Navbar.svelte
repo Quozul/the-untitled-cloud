@@ -61,7 +61,7 @@
 				<ul class="navbar-nav mb-2 mb-lg-0 gap-lg-3">
 					<li class="nav-item">
 						<Link href="/" className="nav-link {selectedPage === '/' ? 'active' : ''}">
-							{$t("home")}
+							{$t("common.home")}
 						</Link>
 					</li>
 					<li class="nav-item">
@@ -69,7 +69,7 @@
 							href="/products/"
 							className="nav-link {selectedPage === '/products/' ? 'active' : ''}"
 						>
-							{$t("products")}
+							{$t("common.products")}
 						</Link>
 					</li>
 				</ul>
@@ -77,14 +77,14 @@
 				<div class="order-lg-3 d-inline-block">
 					{#if $token}
 						<Link href="/dashboard/" className="btn btn-dark rounded-pill">
-							{$t("my_servers")}
+							{$t("common.my_servers")}
 						</Link>
 					{:else}
 						<Link
 							href="/login/?redirect=/{$locale}/dashboard/"
 							className="btn btn-dark rounded-pill"
 						>
-							{$t("to_login")}
+							{$t("authentication.to_login")}
 						</Link>
 					{/if}
 				</div>
@@ -105,9 +105,10 @@
 <Modal
 	bind:visible={$cartModalVisible}
 	onClick={redirectToCheckout}
-	okText={$cart?.length === 0 ? null : $t("checkout")}
-	title={$t("cart")}
-	closeText={$t("continue_shopping")}
+	okText={$cart?.length === 0 ? null : $t("common.checkout")}
+	title={$t("common.cart")}
+	closeText={$t("cart.continue_shopping")}
+	icon="bag"
 >
 	<Cart />
 </Modal>

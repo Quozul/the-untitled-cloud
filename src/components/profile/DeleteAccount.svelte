@@ -58,20 +58,20 @@
 
 	<div class="p-3">
 		<div class="mb-3">
-			{$t("logged_in_as")}
+			{$t("authentication.logged_in_as")}
 			<div class="text-muted d-inline">
 				{email}
 			</div>
 		</div>
 
 		<div class="mb-3">
-			<label for="password" class="form-label">{$t("password")}</label>
+			<label for="password" class="form-label">{$t("authentication.password")}</label>
 			<input
 				id="password"
 				type="password"
 				name="password"
 				class="form-control"
-				placeholder={$t("password")}
+				placeholder={$t("authentication.password")}
 				bind:value={password}
 			/>
 		</div>

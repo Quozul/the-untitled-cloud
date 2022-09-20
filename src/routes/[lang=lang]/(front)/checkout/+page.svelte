@@ -9,11 +9,11 @@
 </script>
 
 <svelte:head>
-	<title>{$t("checkout")}</title>
+	<title>{$t("common.checkout")}</title>
 </svelte:head>
 
 <h1 class="text-center fw-bolder mb-5">
-	{$t("checkout")}
+	{$t("common.checkout")}
 </h1>
 
 <div class="row g-3">

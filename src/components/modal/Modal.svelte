@@ -8,7 +8,7 @@
 	export let visible = false;
 	export let icon = "";
 	export let title = "";
-	export let closeText = $t("close");
+	export let closeText = $t("common.close");
 	export let okText: string = null;
 	export let onClick: VoidFunction = null;
 	export let variant: Variant = Variant.DARK;

@@ -4,11 +4,11 @@
 </script>
 
 <svelte:head>
-	<title>{$t("products")}</title>
+	<title>{$t("common.products")}</title>
 </svelte:head>
 
 <h1 class="text-center fw-bolder mb-5">
-	{$t("products")}
+	{$t("common.products")}
 </h1>
 
 <Products />

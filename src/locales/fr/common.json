@@ -1,0 +1,27 @@
+{
+	"common": {
+		"cart": "Panier",
+		"checkout": "Paiement",
+		"back": "Retour",
+		"close": "Fermer",
+		"confirm": "Confirmer",
+		"all_right_reserved": "Tous droits réservés.",
+		"general_terms": "Conditions générales",
+		"game_server_host": "Hébergeur de serveurs de jeux.",
+		"home": "Accueil",
+		"skip": "Passer",
+		"infos": "Infos",
+		"loading": "Chargement",
+		"next": "Suivant",
+		"optional": "Optionnel",
+		"pages": "Pages",
+		"products": "Produits",
+		"rent": "Louer",
+		"email_address": "Adresse e-mail",
+		"use": "Utiliser",
+		"save": "Sauvegarder",
+		"status": "Statut",
+		"legal_mentions": "Mentions légales",
+		"my_servers": "Mes serveurs"
+	}
+}

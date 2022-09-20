@@ -43,11 +43,11 @@
 		address.country = event.detail.value;
 	}
 
-	const items = IsoCountries.map((i) => ({ label: $t(`country.${i}`), value: i }));
+	const items = IsoCountries.map((i) => ({ label: $t(`address.country.${i}`), value: i }));
 </script>
 
 <div class="mb-3">
-	{$t("logged_in_as")}&nbsp;
+	{$t("authentication.logged_in_as")}&nbsp;
 	<div class="text-muted d-inline">
 		{email}
 	</div>
@@ -56,12 +56,12 @@
 <form>
 	<div class="row g-3">
 		<div class="col-sm-12">
-			<label for="firstName" class="form-label">{$t("full_name")}</label>
+			<label for="firstName" class="form-label">{$t("address.full_name")}</label>
 			<input
 				type="text"
 				class="form-control"
 				id="firstName"
-				placeholder={$t("full_name")}
+				placeholder={$t("address.full_name")}
 				required=""
 				bind:value={address.fullname}
 			/>
@@ -131,7 +131,7 @@
 
 		<div class="col-12">
 			<Button type="submit" className="w-100" onClick={submit}>
-				{$t("next")}
+				{$t("common.next")}
 			</Button>
 		</div>
 	</div>

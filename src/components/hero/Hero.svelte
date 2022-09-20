@@ -24,7 +24,7 @@
 			href="/login/?redirect=/{$locale}/dashboard/"
 			className="btn btn-outline-dark rounded-pill btn-lg px-4"
 		>
-			{$t("to_login")}
+			{$t("authentication.to_login")}
 		</Link>
 	{/if}
 </div>

@@ -5,13 +5,14 @@
 </script>
 
 <div class="rounded-3 bg-light p-lg-5 p-4 my-lg-5 my-3">
-	<h2 class="fw-bolder">Toujours pas convaincu ?</h2>
+	<h2 class="fw-bolder">{$t("hero.not_convinced.title")}</h2>
 
 	<p class="lead d-flex align-items-center gap-2">
 		<Icon key="percent" />
 		<span>
-			Utilisez le code “<strong>WELCOME</strong>” pour avoir 10% de réduction sur votre
-			premier achat !
+			{$t("hero.not_convinced.use_code")}
+			“<strong>WELCOME</strong>”
+			{$t("hero.not_convinced.to_get")}
 		</span>
 	</p>
 

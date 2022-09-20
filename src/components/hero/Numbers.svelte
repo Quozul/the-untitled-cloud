@@ -3,6 +3,7 @@
 	import type { Stats } from "$components/product/models";
 	import { onMount } from "svelte";
 	import { getStats } from "$components/product/helpers";
+	import { t } from "svelte-intl-precompile";
 
 	let stats: Stats = {
 		users: 0,
@@ -20,9 +21,9 @@
 
 <div class="container my-lg-5 my-3 d-none d-lg-block">
 	<div class="row">
-		<Number text="Serveurs loués" number="{stats.sold}+" />
-		<Number text="Joueurs" number="{stats.users}+" />
-		<Number text="Jeux disponibles" number={stats.products} />
+		<Number text={$t("hero.numbers.server_rented")} number="{stats.sold}+" />
+		<Number text={$t("hero.numbers.players")} number="{stats.users}+" />
+		<Number text={$t("hero.numbers.games_avalable")} number={stats.products} />
 	</div>
 </div>
 

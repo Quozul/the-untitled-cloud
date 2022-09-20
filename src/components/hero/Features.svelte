@@ -6,25 +6,21 @@
 
 <div class="row g-3 justify-content-between my-lg-5 my-3">
 	<div class="col-12 col-lg-6 d-flex gap-4 flex-column">
-		<Feature title="Click & play" icon="controller">
-			Quam exuviae dicere socio iuste angustias dicere Ptolomaeo Ptolomaeo ob quam nostri
-			nostri Catonem piget.
+		<Feature title={$t("feature.click_and_play.title")} icon="controller">
+			{$t("feature.click_and_play.description")}
 		</Feature>
 
-		<Feature title="Service client" icon="info">
-			Primum Parthicarum rerum captu specie pro minantium ut animo gentium quibus rerum
-			consilia captu gentium.
+		<Feature title={$t("feature.customer_service.title")} icon="info">
+			{$t("feature.customer_service.description")}
 		</Feature>
 	</div>
 
 	<div class="col-12 col-lg-6 d-flex flex-column align-items-start justify-content-between">
 		<div>
-			<h2 class="fw-bolder">Serveur disponible dans la minute</h2>
+			<h2 class="fw-bolder">{$t("hero.server_available_quick.title")}</h2>
 
 			<p>
-				Primi igitur omnium statuuntur Epigonus et Eusebius ob nominum gentilitatem
-				oppressi. praediximus enim Montium sub ipso vivendi termino his vocabulis appellatos
-				fabricarum culpasse tribunos ut adminicula futurae molitioni pollicitos.
+				{$t("hero.server_available_quick.description")}
 			</p>
 		</div>
 

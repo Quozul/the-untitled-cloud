@@ -28,7 +28,7 @@
 				{$page.error.message}
 			</p>
 
-			<Link href="/" className="btn btn-dark btn-lg">{$t("home")}</Link>
+			<Link href="/" className="btn btn-dark btn-lg">{$t("common.home")}</Link>
 		</div>
 	</section>
 

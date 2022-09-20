@@ -27,9 +27,8 @@ const config = {
 			enabled: true,
 			// This can be false if you're using a fallback (i.e. SPA mode)
 			crawl: true,
-			entries: ["/fr/"],
+			entries: ["/fr/", "/en/"],
 		},
-
 		alias: {
 			$components: "src/components",
 			$shared: "src/components/shared",

@@ -14,23 +14,23 @@
 				<Icon key="favicon" width="40" height="40" />
 				<h4 class="ms-2 mb-0 fw-bold">The Untitled Cloud</h4>
 			</Link>
-			<p class="lead">{$t("game_server_host")}</p>
+			<p class="lead">{$t("common.game_server_host")}</p>
 		</div>
 
 		<div class="col">
-			<h5>{$t("pages")}</h5>
+			<h5>{$t("common.pages")}</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
-					<Link href="/" className="nav-link p-0 text-muted">{$t("home")}</Link>
+					<Link href="/" className="nav-link p-0 text-muted">{$t("common.home")}</Link>
 				</li>
 				<li class="nav-item mb-2">
 					<Link href="/products/" className="nav-link p-0 text-muted">
-						{$t("products")}
+						{$t("common.products")}
 					</Link>
 				</li>
 				<li class="nav-item mb-2">
 					<Link href="/checkout/" className="nav-link p-0 text-muted">
-						{$t("checkout")}
+						{$t("common.checkout")}
 					</Link>
 				</li>
 				<li class="nav-item mb-2">
@@ -38,23 +38,23 @@
 						href="https://status.theuntitledcloud.com"
 						className="nav-link p-0 text-muted"
 					>
-						{$t("status")}
+						{$t("common.status")}
 					</Link>
 				</li>
 			</ul>
 		</div>
 
 		<div class="col">
-			<h5>{$t("infos")}</h5>
+			<h5>{$t("common.infos")}</h5>
 			<ul class="nav flex-column">
 				<li class="nav-item mb-2">
 					<Link href="/legal-mentions/" className="nav-link p-0 text-muted">
-						{$t("legal_mentions")}
+						{$t("common.legal_mentions")}
 					</Link>
 				</li>
 				<li class="nav-item mb-2">
 					<Link href="/terms-of-use/" className="nav-link p-0 text-muted">
-						{$t("general_terms")}
+						{$t("common.general_terms")}
 					</Link>
 				</li>
 			</ul>
@@ -62,7 +62,7 @@
 	</div>
 
 	<div class="d-flex flex-column flex-lg-row border-top pt-3 mt-3 justify-content-between">
-		<p class="text-muted">© 2022 The Untitled Cloud. {$t("all_right_reserved")}</p>
+		<p class="text-muted">© 2022 The Untitled Cloud. {$t("common.all_right_reserved")}</p>
 
 		<div class="d-flex gap-3">
 			<Link href="https://discord.gg/hbKkYVKeke" className="text-dark">

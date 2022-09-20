@@ -22,9 +22,10 @@
 	</p>
 	<p>
 		Pour toute demande en rapport avec la gestion de vos données (suppression, modification,
-		récupération, ...), veuillez entrer en contact par email à l'adresse <a
-			href="mailto:contact@theuntitledcloud.com">contact@theuntitledcloud.com</a
-		>.
+		récupération, ...), veuillez entrer en contact par email à l'adresse
+		<a href="mailto:contact@theuntitledcloud.com">
+			contact@theuntitledcloud.com
+		</a>
 	</p>
 
 	<div>

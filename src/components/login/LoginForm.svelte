@@ -45,16 +45,16 @@
 
 <div class:fixed-width={defaultStyle}>
 	{#if $loginMode === LoginMode.VERIFICATION}
-		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("verification")}</h4>
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("authentication.verification")}</h4>
 		<Verification on:submit={handleSubmit} {defaultStyle} />
 	{:else if $loginMode === LoginMode.SIGNUP}
-		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("signup")}</h4>
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("authentication.signup")}</h4>
 		<Signup on:submit={handleSubmit} {defaultStyle} />
 	{:else if $loginMode === LoginMode.CHANGE_PASSWORD}
-		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("password_change")}</h4>
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("authentication.password_change")}</h4>
 		<ForgotPassword on:submit={handleSubmit} {defaultStyle} />
 	{:else}
-		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("login")}</h4>
+		<h4 class="mb-0" class:d-none={!defaultStyle}>{$t("authentication.login")}</h4>
 		<Login on:submit={handleSubmit} {defaultStyle} />
 	{/if}
 
@@ -65,9 +65,9 @@
 			class="d-block btn btn-sm btn-link p-0 text-start"
 		>
 			{#if $loginMode === LoginMode.LOGIN}
-				{$t("no_account_yet_question_mark")}
+				{$t("authentication.no_account_yet_question_mark")}
 			{:else}
-				{$t("already_have_account_question_mark")}
+				{$t("authentication.already_have_account_question_mark")}
 			{/if}
 		</button>
 	{/if}

@@ -38,11 +38,11 @@
 			icon={isInCart ? "bag-check" : "bag-plus"}
 		>
 			{#if isInCart}
-				{$t("in_cart")}
+				{$t("cart.in_cart")}
 			{:else if !product.inStocks}
-				{$t("out_of_stock")}
+				{$t("cart.out_of_stock")}
 			{:else}
-				{$t("add_to_cart")}
+				{$t("cart.add_to_cart")}
 			{/if}
 		</Button>
 	</div>
@@ -50,11 +50,11 @@
 	<hr />
 
 	<div class="p-3">
-		<h6 class="fw-bold">{$t("configuration")}</h6>
+		<h6 class="fw-bold">{$t("product.configuration")}</h6>
 
 		<ul>
-			<li>{product.cpu} {$t("cpu_core")}</li>
-			<li>{product.memory} MB {$t("of")} {$t("memory")}</li>
+			<li>{product.cpu} {$t("product.cores")}</li>
+			<li>{product.memory} MB {$t("product.of")} {$t("product.memory")}</li>
 		</ul>
 	</div>
 </div>

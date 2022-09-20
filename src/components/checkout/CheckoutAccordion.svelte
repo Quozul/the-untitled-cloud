@@ -36,7 +36,7 @@
 
 <div class="accordion accordion-flush border-top border-bottom">
 	<AccordionItem
-		name={$t("login")}
+		name={$t("authentication.login")}
 		on:click={handleClick}
 		id={CheckoutSteps.LOGIN}
 		bind:opened={loginOpened}
@@ -45,7 +45,7 @@
 	</AccordionItem>
 
 	<AccordionItem
-		name={$t("billing_address")}
+		name={$t("address.billing_address")}
 		disabled={!$token}
 		on:click={handleClick}
 		id={CheckoutSteps.PROFILE}
@@ -56,7 +56,7 @@
 	</AccordionItem>
 
 	<AccordionItem
-		name={$t("checkout")}
+		name={$t("common.checkout")}
 		disabled={!$token || $cart.length === 0}
 		on:click={handleClick}
 		id={CheckoutSteps.CHECKOUT}

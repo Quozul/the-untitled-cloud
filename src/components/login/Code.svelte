@@ -20,7 +20,7 @@
 </script>
 
 <div class="mb-3">
-	<label for="code" class="form-label">{$t("verification_code")}</label>
+	<label for="code" class="form-label">{$t("authentication.verification_code")}</label>
 	<div class="input-group mb-3">
 		<input
 			id="code"
@@ -35,7 +35,7 @@
 		/>
 
 		<Button variant={Variant.SECONDARY} onClick={getCode} disabled={!email}
-			>{$t("get_code")}</Button
+			>{$t("authentication.get_code")}</Button
 		>
 	</div>
 </div>

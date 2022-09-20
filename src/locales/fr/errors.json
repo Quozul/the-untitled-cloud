@@ -1,0 +1,19 @@
+{
+	"error.verify_account": "Code envoyé, vérifiez votre boite mail.",
+	"error.invalid_credentials": "Identifiants invalides.",
+	"error.accept_tos": "Vous devez accepter les CGU.",
+	"error.invalid_code": "Code invalide.",
+	"error.expired_code": "Code expiré.",
+	"error.cancel_error": "Nous n'avons pas réussi à annuler votre abonnement.",
+	"error.stripe_error": "Une erreur est survenue lors du paiement.",
+	"error.fetch_failed": "Nous n'avons pas réussis à contacter notre serveur distant.",
+	"error.password_differ": "Les mots de passes doivent correspondrent.",
+	"error.already_exists": "Cette adresse email est déjà associée à un compte.",
+	"error.invalid_promo_code": "Code promotionnel invalide.",
+	"error.wait": "Un code vous a déjà été envoyé.",
+	"error.have_active_subscription": "Il vous reste des abonnements actifs, veuillez les annuler avant de supprimer votre compte.",
+	"error.empty": "Vide",
+	"error.500": "Une erreur interne est survenue.",
+	"error.parsing_error": "Nous n'arrivons pas à communiquer avec notre serveur distant.",
+	"error.already_owns": "Vous possédez déjà un produit de votre panier."
+}
