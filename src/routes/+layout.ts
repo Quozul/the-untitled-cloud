@@ -5,8 +5,8 @@ import { defaultLocale } from "$shared/constants";
 
 /** @type {import("./$types").LayoutLoad} */
 export async function load({ params }: any) {
-	addMessages("fr", fr);
 	addMessages("en", en);
+	addMessages("fr", fr);
 
 	init({
 		fallbackLocale: defaultLocale,

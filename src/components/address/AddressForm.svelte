@@ -43,7 +43,7 @@
 		address.country = event.detail.value;
 	}
 
-	const items = IsoCountries.map((i) => ({ label: $t(`address.country.${i}`), value: i }));
+	const items = IsoCountries.map((i) => ({ label: $t(`country.${i}`), value: i }));
 </script>
 
 <div class="mb-3">
@@ -100,7 +100,7 @@
 				{value}
 				className="w-100"
 				on:select={selectCountry}
-				placeholder={$t("search_country")}
+				placeholder={$t("address.search_country")}
 				id="search-country"
 			/>
 		</div>

@@ -14,7 +14,8 @@
 		"last_startup": "Last startup",
 		"address": "Connection address",
 		"steam_link": "Steam connection link",
-		"server_is_stopped": "Server is stopped"
+		"server_is_stopped": "Server is stopped",
+		"address_copied": "Address copied to clipboard!"
 	},
 	"server_status": {
 		"restarting": "Restarting",

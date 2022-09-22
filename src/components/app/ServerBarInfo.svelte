@@ -4,13 +4,14 @@
 	import { DockerStatus } from "$components/app/constants";
 	import { Products } from "$components/cart/constants";
 	import { locale, t } from "svelte-intl-precompile";
-	import { page } from "$app/stores";
 	import type { ApiService } from "$models/ApiService";
+	import Tooltip from "$components/tooltip/Tooltip.svelte";
 
 	// State
 	let duration;
 	let formattedStartDate = $t("common.never");
 	let shortFormattedStartDate = $t("common.never");
+	let serverAddress = "";
 
 	async function loadDates(server: ApiService) {
 		const { convert, Duration, ZonedDateTime } = await import("@js-joda/core");
@@ -38,10 +39,14 @@
 		});
 	}
 
-	$: {
-		if ($server && $server.state.created) {
+	$: if ($server && $server.state.created) {
 			loadDates($server);
 		}
+
+		$: serverAddress = `${import.meta.env.VITE_SERVER_ADDRESS}:${$server.port}`;
+
+	function copyAddress() {
+		navigator.clipboard.writeText(serverAddress);
 	}
 </script>
 
@@ -86,7 +91,11 @@
 			{#if !$server.port}
 				{$t("server_bar.server_is_stopped")}
 			{:else if $server.product.id === Products.MinecraftServer}
-				{$page.url.hostname}:{$server.port}
+				{serverAddress}
+
+				<Tooltip icon="clipboard" onClick={copyAddress}>
+					{$t("server_bar.address_copied")}
+				</Tooltip>
 			{:else if $server.product.id === Products.ArkServer}
 				<a href="steam://connect/theuntitledcloud.com:{$server.port}/">
 					{$t("server_bar.steam_link")}

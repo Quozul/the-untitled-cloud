@@ -86,7 +86,7 @@
 					<h6 class="my-0">{$t("cart.cart_is_empty")}</h6>
 					<p class="text-muted">{$t("cart.add_a_product")}</p>
 					<Link href="/products/" onClick={closeCartModal} className="btn btn-dark">
-						{$t("cart.add_product")}
+						{$t("product.add_product")}
 					</Link>
 				</div>
 			</li>

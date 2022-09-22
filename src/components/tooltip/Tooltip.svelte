@@ -47,7 +47,7 @@
 	</div>
 
 	{#if visible}
-		<div bind:this={content} class="tooltip bs-tooltip-top show" role="tooltip">
+		<div bind:this={content} class="tooltip bs-tooltip-auto show" role="tooltip">
 			<div class="tooltip-arrow" data-popper-arrow />
 			<div class="tooltip-inner">
 				<slot />

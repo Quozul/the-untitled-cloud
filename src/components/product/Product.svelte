@@ -42,7 +42,7 @@
 			{:else if !product.inStocks}
 				{$t("product.out_of_stock")}
 			{:else}
-				{$t("product.add_to_cart")}
+				{$t("cart.add_to_cart")}
 			{/if}
 		</Button>
 	</div>

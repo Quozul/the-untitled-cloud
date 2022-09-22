@@ -14,7 +14,8 @@
 		"last_startup": "Dernier démarrage",
 		"address": "Adresse de connexion",
 		"steam_link": "Lien de connexion Steam",
-		"server_is_stopped": "Le serveur est éteint"
+		"server_is_stopped": "Le serveur est éteint",
+		"address_copied": "Adresse copiée dans le presse papier!"
 	},
 	"server_status": {
 		"restarting": "Redémarre",
