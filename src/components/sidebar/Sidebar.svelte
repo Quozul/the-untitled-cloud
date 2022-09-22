@@ -73,7 +73,7 @@
 				key="favicon"
 				width="42"
 				height="38"
-				className={!$sidebarCollapsed ? "d-none d-lg-inline" : "d-none"}
+				className="d-none d-lg-inline"
 			/>
 			<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
 		</Link>
