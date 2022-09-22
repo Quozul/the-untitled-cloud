@@ -8,7 +8,7 @@
 	import Modal from "$components/modal/Modal.svelte";
 	import { getStripePortal } from "./helpers";
 	import { page } from "$app/stores";
-	import ButtonLink from "$shared/ButtonLink.svelte";
+	import TabLink from "./TabLink.svelte";
 	import type { ApiError } from "$shared/models";
 	import Alert from "$shared/Alert.svelte";
 	import { Variant } from "$shared/constants.js";
@@ -42,55 +42,57 @@
 	}
 </script>
 
+<hr class="d-block d-lg-none m-0"/>
+
 <nav class="d-flex gap-lg-2">
-	<ButtonLink
+	<TabLink
 		active={!$fetchingServer && $selectedTab === ServerTab.INFO}
 		className="justify-content-center w-100 border-0 py-3 p-lg-2"
 		disabled={$fetchingServer}
-		href="/{$locale}/dashboard/"
+		href="/"
 		icon="info"
 		outline={true}
 	>
 		<span class="d-none d-lg-inline">{$t("tabs.information")}</span>
-	</ButtonLink>
+	</TabLink>
 
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
-		<ButtonLink
+		<TabLink
 			active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
 			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/dashboard/parameters/"
+			href="/parameters/"
 			icon="gear"
 			outline={true}
 		>
 			<span class="d-none d-lg-inline">{$t("tabs.parameters")}</span>
-		</ButtonLink>
+		</TabLink>
 	{/if}
 
 	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
-		<ButtonLink
+		<TabLink
 			active={!$fetchingServer && $selectedTab === ServerTab.FILES}
 			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/dashboard/files/"
+			href="/files/"
 			icon="directory"
 			outline={true}
 		>
 			<span class="d-none d-lg-inline">{$t("tabs.files")}</span>
-		</ButtonLink>
+		</TabLink>
 	{/if}
 
 	{#if $server?.product.id === Products.MinecraftServer}
-		<ButtonLink
+		<TabLink
 			active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
 			className="justify-content-center w-100 border-0 py-3 p-lg-2"
 			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/{$locale}/dashboard/console/"
+			href="/console/"
 			icon="terminal"
 			outline={true}
 		>
 			<span class="d-none d-lg-inline">{$t("tabs.console")}</span>
-		</ButtonLink>
+		</TabLink>
 	{/if}
 
 	<Button

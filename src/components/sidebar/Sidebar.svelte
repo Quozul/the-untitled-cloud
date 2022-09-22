@@ -58,14 +58,14 @@
 <div class="backdrop bg-dark d-sm-none" class:d-none={$sidebarCollapsed} on:click={hide} />
 
 <div
-	class="d-flex flex-column flex-shrink-0 bg-light sidebar shadow-sm py-3 d-lg-flex"
+	class="d-flex flex-column flex-shrink-0 sidebar bg-white border-end py-3 d-lg-flex"
 	class:d-none={$sidebarCollapsed}
 >
-	<div class="sidebar-header d-flex align-items-center gap-2 px-3">
+	<div class="d-flex align-items-center gap-2 px-3">
 		<Button
 			icon="x-lg"
 			onClick={toggleSidebarCollapsed}
-			variant={Variant.LIGHT}
+			variant={Variant.NONE}
 			className="d-inline d-lg-none"
 		/>
 		<Link href="/" className="text-decoration-none d-flex align-items-center text-dark">

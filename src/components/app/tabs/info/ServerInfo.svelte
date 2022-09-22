@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { server } from "$store/store";
-	import "@js-joda/timezone";
 	import ServerBarInfo from "$components/app/ServerBarInfo.svelte";
 	import { t } from "svelte-intl-precompile";
 	import ServerActions from "$components/app/ServerActions.svelte";

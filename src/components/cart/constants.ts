@@ -7,6 +7,7 @@ export const EmptyPromoCode: PromoCode = {
 };
 
 export enum Products {
+	Unknown,
 	MinecraftServer = "MINECRAFT",
 	ArkServer = "ARK",
 }

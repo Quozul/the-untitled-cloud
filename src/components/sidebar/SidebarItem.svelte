@@ -11,7 +11,7 @@
 </script>
 
 {#if href}
-	<Link className="sidebar-item btn {className} d-flex align-items-center gap-2" {href}>
+	<Link className="sidebar-item btn {className} d-flex align-items-center gap-2" {href} {onClick}>
 		{#if iconName}
 			<Icon key={iconName} />
 		{/if}

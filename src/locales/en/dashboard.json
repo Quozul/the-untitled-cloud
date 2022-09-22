@@ -122,6 +122,9 @@
 		"pending": {
 			"description": "Your server is being prepared. Refresh the list to see its new status."
 		},
+		"fetching": {
+			"description": "Please wait while we retrieve information about your server."
+		},
 		"suspended": {
 			"description": "Your server is suspended. This may be due to a payment problem or because you have cancelled the subscription. See the Subscription tab for more information.",
 			"cta": "View my subscription"
@@ -130,5 +133,8 @@
 	"profile": {
 		"title": "This page is under construction.",
 		"description": "For any request related to the management of your data (deletion, modification, recovery, ...), please contact us by email at "
+	},
+	"dashboard": {
+		"welcome": "Welcome to your dashboard, it is a place where you can manage all your servers. Start by selecting a server on the left of the screen."
 	}
 }

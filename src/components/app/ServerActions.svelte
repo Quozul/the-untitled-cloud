@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { server, fetchingServer } from "$store/store";
-	import "@js-joda/timezone";
 	import Button from "$shared/Button.svelte";
 	import { patchServer, refreshSelectedServer } from "$components/app/helpers";
 	import { Variant } from "$shared/constants";
@@ -43,9 +42,9 @@
 </script>
 
 <h4>{$t("server_info.actions")}</h4>
-{#if $server.state.created}
+{#if !$server || $server.state.created}
 	<div class="d-flex gap-3 flex-wrap">
-		{#if !$server.state.running}
+		{#if !$server?.state?.running}
 			<Button
 				loading={$fetchingServer}
 				disabled={!$server}
@@ -74,8 +73,6 @@
 			{$t("action.restart")}
 		</Button>
 
-		<Button onClick={refreshSelectedServer}>{$t("action.refresh")}</Button>
-
 		<Button
 			loading={$fetchingServer}
 			disabled={!$server}
@@ -95,7 +92,7 @@
 			variant={Variant.DANGER}
 		>
 			<div class="p-3">
-				<p>{$t("action.reset.warn")}</p>
+				<p>{$t("action.warn")}</p>
 				<p>{$t("action.proceed_question")}</p>
 
 				{#if apiError}

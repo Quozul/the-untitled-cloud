@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { Variant } from "./constants";
+	import { Variant } from "$shared/constants";
 	import Icon from "$components/icons/Icon.svelte";
-	import { classNames } from "./helpers";
+	import { classNames } from "$shared/helpers";
+	import { locale } from "svelte-intl-precompile";
+	import { page } from "$app/stores";
 
 	export let active = false;
 	export let className = "";
@@ -34,7 +36,7 @@
 	}
 </script>
 
-<a {type} {href} class={classes} {disabled}>
+<a {type} href="/{$locale}/dashboard/{$page.params.id}{href}" class={classes} {disabled}>
 	{#if icon}
 		<Icon key={icon} width={iconSize} height={iconSize} />
 	{/if}

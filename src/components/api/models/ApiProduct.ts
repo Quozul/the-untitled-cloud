@@ -9,3 +9,9 @@ export type ApiProduct = {
 	cpu: number;
 	memory: number;
 };
+
+export type ApiProductInfo = {
+	id: Products;
+	name: string;
+	description: string;
+};

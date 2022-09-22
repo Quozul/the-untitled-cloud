@@ -9,6 +9,7 @@ import {
 } from "$store/store";
 import { api, containsService, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
+import { page } from "$app/stores";
 import { EmptyPaginate } from "./models";
 import type { ApiService } from "$models/ApiService";
 import type { ApiPaginate } from "$models/ApiPaginate";
@@ -65,25 +66,18 @@ export async function setDefaultSelectedServer(): Promise<void> {
 	}
 }
 
-export async function getServerInfo(service: ApiService): Promise<ApiResponse<ApiService>> {
-	if (!service.id) {
-		return { response: service, error: null };
-	}
-
-	const request = api(`service/${service.id}`, getOptions("GET"));
+export async function getServerInfo(id: string): Promise<ApiResponse<ApiService>> {
+	const request = api(`service/${id}`, getOptions("GET"));
 
 	return await handleRequest<ApiService>(request);
 }
 
-export async function refreshSelectedServer(): Promise<void> {
-	const ss = get(server);
-	server.set(null);
-	if (!ss) return;
-
+export async function refreshSelectedServer(id = get(page).params.id): Promise<void> {
 	fetchServerError.set(null);
 	fetchingServer.set(true);
+	server.set(null);
 
-	const { error, response } = await getServerInfo(ss);
+	const { error, response } = await getServerInfo(id);
 
 	if (response) {
 		server.set(response);

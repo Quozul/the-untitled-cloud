@@ -13,7 +13,7 @@ import { createStoreEntry } from "./helpers";
 import { browser } from "$app/environment";
 import { LoginMode } from "$components/login/models/LoginMode";
 import { ServerTab } from "$components/app/constants";
-import { EmptyPaginate } from "$components/app/models";
+import { EmptyPaginate, EmptyServer } from "$components/app/models";
 import { writable } from "svelte/store";
 import { EmptyPromoCode } from "$components/cart/constants";
 
@@ -52,13 +52,13 @@ export const servers: Writable<ApiPaginate<ApiService>> = createStoreEntry(
 	EmptyPaginate,
 	browser && sessionStorage
 );
-export const fetchingServers: Writable<boolean> = writable(false);
+export const fetchingServers: Writable<boolean> = writable(true);
 export const fetchServersError: Writable<ApiError | null> = writable(null);
 
 // App current selected server stores
 export const server: Writable<ApiService | null> = createStoreEntry(
 	"server",
-	null,
+	EmptyServer, // This might not be a good idea
 	browser && sessionStorage
 );
 export const fetchingServer: Writable<boolean> = writable(false);

@@ -49,7 +49,7 @@
 		"refresh": "Rafraichir",
 		"reset": "Réinitialiser",
 		"to_reset": "Réinitialisation",
-		"reset.warn": "Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera tous les fichiers et ne seront pas récupérables.",
+		"warn": "Vous êtes sur le point de réinitialiser votre serveur. Cette action supprimera tous les fichiers et ne seront pas récupérables.",
 		"proceed_question": "Êtes-vous sûr de vouloir continuer ?",
 		"recreate": "Recréer"
 	},
@@ -122,6 +122,9 @@
 		"pending": {
 			"description": "Votre serveur est en cours de préparation. Rafraichissez la liste pour voir son nouvel état."
 		},
+		"fetching": {
+			"description": "Veuillez patienter pendant que nous récupérons les informations de votre serveur."
+		},
 		"suspended": {
 			"description": "Votre serveur est suspendu. Ceci peut être dû à un problème de paiement ou bien parce que vous avez annulé l'abonnement. Consultez l'onglet Abonnement pour plus d'informations.",
 			"cta": "Voir mon abonnement"
@@ -130,5 +133,8 @@
 	"profile": {
 		"title": "Cette page est en cours de construction.",
 		"description": "Pour toute demande en rapport avec la gestion de vos données (suppression, modification, récupération, ...), veuillez entrer en contact par email à l'adresse"
+	},
+	"dashboard": {
+		"welcome": "Bienvenue sur votre tableau de bord, c'est ici que vous pourrez gérer tous vos serveurs. Commencez par sélectionner un serveur sur la gauche de l'écran."
 	}
 }

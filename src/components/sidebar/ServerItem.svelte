@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { onProfilePage, server, sidebarCollapsed } from "$store/store";
+	import { onProfilePage, sidebarCollapsed } from "$store/store";
 	import SidebarItem from "./SidebarItem.svelte";
-	import { refreshSelectedServer } from "$components/app/helpers";
-	import { goto } from "$app/navigation";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import type { ApiService } from "$models/ApiService";
 	import { ApiServiceStatus } from "$enums/ApiServiceStatus";
-	import { locale, t } from "svelte-intl-precompile";
+	import { t } from "svelte-intl-precompile";
+	import { page } from "$app/stores";
 
 	export let service: ApiService;
 	let iconName = "box";
@@ -32,19 +31,13 @@
 		className = "btn-outline-danger";
 	}
 
-	$: classes = className + (!$onProfilePage && $server?.id === service?.id ? " active" : "");
+	$: classes = className + (!$onProfilePage && $page?.params?.id === service.id ? " active" : "");
 
-	async function setServer() {
-		$server = service;
-		if ($onProfilePage) {
-			$onProfilePage = false;
-			await goto(`/${$locale}/dashboard/`);
-		}
-		await refreshSelectedServer();
+	function collapseSidebar() {
 		$sidebarCollapsed = true;
 	}
 </script>
 
-<SidebarItem {iconName} className={classes} onClick={setServer}>
+<SidebarItem {iconName} className={classes} href="/dashboard/{service.id}/" onClick={collapseSidebar}>
 	{text}
 </SidebarItem>
