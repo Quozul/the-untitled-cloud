@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onProfilePage, sidebarCollapsed } from "$store/store";
+	import { sidebarCollapsed } from "$store/store";
 	import SidebarItem from "./SidebarItem.svelte";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import type { ApiService } from "$models/ApiService";
@@ -31,7 +31,7 @@
 		className = "btn-outline-danger";
 	}
 
-	$: classes = className + (!$onProfilePage && $page?.params?.id === service.id ? " active" : "");
+	$: classes = className + ($page?.params?.id === service.id ? " active" : "");
 
 	function collapseSidebar() {
 		$sidebarCollapsed = true;

@@ -31,8 +31,8 @@ export enum ServerType {
 }
 
 export enum ServerTab {
-	INFO,
-	PARAMETERS,
-	FILES,
-	CONSOLE,
+	INFO = "[lang=lang]/dashboard/[id=uuid]",
+	PARAMETERS = "[lang=lang]/dashboard/[id=uuid]/parameters",
+	FILES = "[lang=lang]/dashboard/[id=uuid]/files",
+	CONSOLE = "[lang=lang]/dashboard/[id=uuid]/console",
 }

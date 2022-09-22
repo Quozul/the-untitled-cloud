@@ -58,8 +58,8 @@
 <div class="backdrop bg-dark d-sm-none" class:d-none={$sidebarCollapsed} on:click={hide} />
 
 <div
-	class="d-flex flex-column flex-shrink-0 sidebar bg-white border-end py-3 d-lg-flex"
-	class:d-none={$sidebarCollapsed}
+	class="flex-column flex-shrink-0 sidebar bg-white border-end py-3 d-lg-flex"
+	class:sidebar-collapsed={$sidebarCollapsed}
 >
 	<div class="d-flex align-items-center gap-2 px-3">
 		<Button
@@ -73,7 +73,7 @@
 				key="favicon"
 				width="42"
 				height="38"
-				className={!$sidebarCollapsed && "d-none d-lg-inline"}
+				className={!$sidebarCollapsed ? "d-none d-lg-inline" : "d-none"}
 			/>
 			<span class="fw-bolder m-0 fs-5">The Untitled Cloud</span>
 		</Link>
@@ -205,7 +205,17 @@
 			position: absolute;
 			left: 0;
 			top: 0;
-			height: 100%;
+			transition: transform .2s;
+
+			&.sidebar-collapsed {
+				transform: translateX(-300px);
+			}
+		}
+	}
+
+	@include media-breakpoint-up(sm) {
+		.sidebar.sidebar-collapsed {
+			display: none;
 		}
 	}
 
@@ -214,9 +224,6 @@
 		width: 300px;
 		height: 100%;
 		overflow-y: auto;
-
-		.sidebar-item {
-			height: 38px;
-		}
+		display: flex;
 	}
 </style>

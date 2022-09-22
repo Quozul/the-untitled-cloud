@@ -82,7 +82,6 @@ export const user: Writable<ApiUser | null> = createStoreEntry(
 export const credentials: Writable<Credentials | null> = writable(null);
 export const loginMode: Writable<LoginMode> = writable(LoginMode.LOGIN);
 export const checkoutStep: Writable<CheckoutSteps | null> = writable(null);
-export const selectedTab: Writable<ServerTab> = writable(ServerTab.INFO);
 export const onProfilePage: Writable<boolean> = writable(false);
 export const cartModalVisible: Writable<boolean> = writable(false);
 export const clientSecret: Writable<string | null> = writable(null);

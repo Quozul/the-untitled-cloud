@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fetchingServer, selectedTab, server } from "$store/store";
+	import { fetchingServer, server } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import { t } from "svelte-intl-precompile";
@@ -16,6 +16,7 @@
 	let isPending: boolean;
 	let isEnded: boolean;
 	let isSuspended: boolean;
+	let hasConsole: boolean;
 	let modalVisible = false;
 	let apiError: ApiError | null = null;
 
@@ -23,6 +24,7 @@
 		isPending = $server?.subscription.status === ApiSubscriptionStatus.PENDING;
 		isEnded = $server?.subscription.status === ApiSubscriptionStatus.CANCELLED;
 		isSuspended = $server?.subscription.status === ApiSubscriptionStatus.SUSPENDED;
+		hasConsole = $server?.product.id === Products.MinecraftServer;
 	}
 
 	function showModal() {
@@ -46,9 +48,8 @@
 
 <nav class="d-flex gap-lg-2">
 	<TabLink
-		active={!$fetchingServer && $selectedTab === ServerTab.INFO}
+		active={!$fetchingServer && $page.routeId === ServerTab.INFO}
 		className="justify-content-center w-100 border-0 py-3 p-lg-2"
-		disabled={$fetchingServer}
 		href="/"
 		icon="info"
 		outline={true}
@@ -56,44 +57,38 @@
 		<span class="d-none d-lg-inline">{$t("tabs.information")}</span>
 	</TabLink>
 
-	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
-		<TabLink
-			active={!$fetchingServer && $selectedTab === ServerTab.PARAMETERS}
-			className="justify-content-center w-100 border-0 py-3 p-lg-2"
-			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/parameters/"
-			icon="gear"
-			outline={true}
-		>
-			<span class="d-none d-lg-inline">{$t("tabs.parameters")}</span>
-		</TabLink>
-	{/if}
+	<TabLink
+		active={!$fetchingServer && $page.routeId === ServerTab.PARAMETERS}
+		className="justify-content-center w-100 border-0 py-3 p-lg-2"
+		disabled={$fetchingServer || isPending || isEnded || isSuspended}
+		href="/parameters/"
+		icon="gear"
+		outline={true}
+	>
+		<span class="d-none d-lg-inline">{$t("tabs.parameters")}</span>
+	</TabLink>
 
-	{#if $server?.product.id === Products.MinecraftServer || $server?.product.id === Products.ArkServer}
-		<TabLink
-			active={!$fetchingServer && $selectedTab === ServerTab.FILES}
-			className="justify-content-center w-100 border-0 py-3 p-lg-2"
-			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/files/"
-			icon="directory"
-			outline={true}
-		>
-			<span class="d-none d-lg-inline">{$t("tabs.files")}</span>
-		</TabLink>
-	{/if}
+	<TabLink
+		active={!$fetchingServer && $page.routeId === ServerTab.FILES}
+		className="justify-content-center w-100 border-0 py-3 p-lg-2"
+		disabled={$fetchingServer || isPending || isEnded || isSuspended}
+		href="/files/"
+		icon="directory"
+		outline={true}
+	>
+		<span class="d-none d-lg-inline">{$t("tabs.files")}</span>
+	</TabLink>
 
-	{#if $server?.product.id === Products.MinecraftServer}
-		<TabLink
-			active={!$fetchingServer && $selectedTab === ServerTab.CONSOLE}
-			className="justify-content-center w-100 border-0 py-3 p-lg-2"
-			disabled={$fetchingServer || isPending || isEnded || isSuspended}
-			href="/console/"
-			icon="terminal"
-			outline={true}
-		>
-			<span class="d-none d-lg-inline">{$t("tabs.console")}</span>
-		</TabLink>
-	{/if}
+	<TabLink
+		active={!$fetchingServer && $page.routeId === ServerTab.CONSOLE}
+		className="justify-content-center w-100 border-0 py-3 p-lg-2"
+		disabled={$fetchingServer || isPending || isEnded || isSuspended || !hasConsole}
+		href="/console/"
+		icon="terminal"
+		outline={true}
+	>
+		<span class="d-none d-lg-inline">{$t("tabs.console")}</span>
+	</TabLink>
 
 	<Button
 		className="justify-content-center w-100 border-0 py-3 p-lg-2"
