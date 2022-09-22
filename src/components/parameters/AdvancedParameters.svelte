@@ -14,7 +14,9 @@
 		/>
 		<label class="form-check-label" for="flexCheckChecked">
 			{$t("parameters.use_the")}
-			<Link href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">
+			<Link
+				href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/"
+			>
 				{$t("parameters.aikar_flags")}
 			</Link>
 		</label>

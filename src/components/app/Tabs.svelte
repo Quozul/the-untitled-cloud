@@ -2,7 +2,7 @@
 	import { fetchingServer, selectedTab, server } from "$store/store";
 	import { ServerTab } from "$components/app/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
-	import { locale, t } from "svelte-intl-precompile";
+	import { t } from "svelte-intl-precompile";
 	import { Products } from "$components/cart/constants";
 	import Button from "$shared/Button.svelte";
 	import Modal from "$components/modal/Modal.svelte";
@@ -42,7 +42,7 @@
 	}
 </script>
 
-<hr class="d-block d-lg-none m-0"/>
+<hr class="d-block d-lg-none m-0" />
 
 <nav class="d-flex gap-lg-2">
 	<TabLink

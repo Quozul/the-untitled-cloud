@@ -38,6 +38,11 @@
 	}
 </script>
 
-<SidebarItem {iconName} className={classes} href="/dashboard/{service.id}/" onClick={collapseSidebar}>
+<SidebarItem
+	{iconName}
+	className={classes}
+	href="/dashboard/{service.id}/"
+	onClick={collapseSidebar}
+>
 	{text}
 </SidebarItem>

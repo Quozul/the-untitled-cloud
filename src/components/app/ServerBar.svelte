@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { server } from "$store/store";
 	import Button from "$shared/Button.svelte";
-	import { patchServer, refreshAllServers, refreshSelectedServer } from "./helpers";
+	import { refreshAllServers, refreshSelectedServer } from "./helpers";
 	import { Variant } from "$shared/constants";
 	import { ApiSubscriptionStatus } from "$enums/ApiSubscriptionStatus";
 	import ServerBarInfo from "$components/app/ServerBarInfo.svelte";

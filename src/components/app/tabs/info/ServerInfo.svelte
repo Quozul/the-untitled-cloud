@@ -34,7 +34,7 @@
 
 	{#if $server.subscription.active}
 		<div>
-			<ServerActions/>
+			<ServerActions />
 		</div>
 	{/if}
 </div>

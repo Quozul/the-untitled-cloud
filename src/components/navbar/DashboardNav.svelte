@@ -15,7 +15,7 @@
 	<slot />
 </div>
 
-<hr class="d-block d-lg-none m-0"/>
+<hr class="d-block d-lg-none m-0" />
 
 <style lang="scss">
 	.server-bar {

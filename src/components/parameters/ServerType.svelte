@@ -51,7 +51,8 @@
 	<div class="d-flex flex-column flex-lg-row gap-3 justify-content-start">
 		{#if $parameters.serverType === ServerType.FORGE}
 			<div>
-				<label for="forgeVersion" class="form-label">{$t("parameters.forge_version")}</label>
+				<label for="forgeVersion" class="form-label">{$t("parameters.forge_version")}</label
+				>
 				<input
 					id="forgeVersion"
 					class="form-control"
@@ -73,7 +74,9 @@
 			</div>
 
 			<div>
-				<label for="fabricLoaderVersion" class="form-label">{$t("parameters.fabric_version")}</label>
+				<label for="fabricLoaderVersion" class="form-label"
+					>{$t("parameters.fabric_version")}</label
+				>
 				<input
 					id="fabricLoaderVersion"
 					class="form-control"
@@ -95,7 +98,9 @@
 			</div>
 
 			<div>
-				<label for="quiltLoaderVersion" class="form-label">{$t("parameters.quilt_version")}</label>
+				<label for="quiltLoaderVersion" class="form-label"
+					>{$t("parameters.quilt_version")}</label
+				>
 				<input
 					id="quiltLoaderVersion"
 					class="form-control"
@@ -105,7 +110,9 @@
 			</div>
 		{:else if $parameters.serverType === ServerType.FTBA}
 			<div>
-				<label for="ftbModpackId" class="form-label">{$t("parameters.ftb_modpack_id")}</label>
+				<label for="ftbModpackId" class="form-label"
+					>{$t("parameters.ftb_modpack_id")}</label
+				>
 				<input
 					id="ftbModpackId"
 					class="form-control"

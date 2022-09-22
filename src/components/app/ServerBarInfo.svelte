@@ -58,7 +58,8 @@
 			<dd class="m-0 text-xl-start">
 				{#if $server.state.created && $server.state.running}
 					{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-					({duration?.toMinutes() || 0} {$t("server_bar.minutes")})
+					({duration?.toMinutes() || 0}
+					{$t("server_bar.minutes")})
 				{:else if $server.state.created}
 					{$t(`server_status.${$server.state.status.toLowerCase()}`)}
 				{:else if $server.subscription.status === ApiSubscriptionStatus.PENDING || $server.state.pending}

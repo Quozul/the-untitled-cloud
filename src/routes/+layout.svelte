@@ -6,4 +6,4 @@
 	$locale = $page.params.lang || defaultLocale;
 </script>
 
-<slot/>
+<slot />

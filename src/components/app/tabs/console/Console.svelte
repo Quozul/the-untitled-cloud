@@ -17,11 +17,11 @@
 
 		socket = new WebSocket(`${import.meta.env.VITE_API_WS_URL}server/${$server.id}/console`);
 
-		socket.onopen = function() {
+		socket.onopen = function () {
 			socket.send(`Bearer ${$token}`); // Send authentication token
 		};
 
-		socket.onmessage = async function(event: MessageEvent) {
+		socket.onmessage = async function (event: MessageEvent) {
 			submitting = false;
 			const blob = event.data as Blob;
 			const text = await blob.text();
@@ -38,7 +38,7 @@
 			consoleElement.scrollTo(0, consoleElement.scrollHeight);
 		};
 
-		socket.onclose = function() {
+		socket.onclose = function () {
 			logs = "";
 			socket = null;
 			if (input) input.innerText = "";

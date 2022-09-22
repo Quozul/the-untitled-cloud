@@ -165,7 +165,9 @@
 				</div>
 				<small class="text-muted">
 					{$t("checkout.vat_not_applicable")}
-					<Link href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/">
+					<Link
+						href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042159618/"
+					>
 						art. 293 B du CGI
 					</Link>
 				</small>

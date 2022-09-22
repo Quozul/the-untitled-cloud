@@ -10,4 +10,4 @@ export default {
 	...errors,
 	...common,
 	...dashboard,
-}
+};

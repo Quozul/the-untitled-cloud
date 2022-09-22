@@ -45,21 +45,11 @@
 {#if !$server || $server.state.created}
 	<div class="d-flex gap-3 flex-wrap">
 		{#if !$server?.state?.running}
-			<Button
-				loading={$fetchingServer}
-				disabled={!$server}
-				icon="play"
-				onClick={startServer}
-			>
+			<Button loading={$fetchingServer} disabled={!$server} icon="play" onClick={startServer}>
 				{$t("action.start")}
 			</Button>
 		{:else}
-			<Button
-				loading={$fetchingServer}
-				disabled={!$server}
-				icon="stop"
-				onClick={stopServer}
-			>
+			<Button loading={$fetchingServer} disabled={!$server} icon="stop" onClick={stopServer}>
 				{$t("action.stop")}
 			</Button>
 		{/if}
@@ -73,12 +63,7 @@
 			{$t("action.restart")}
 		</Button>
 
-		<Button
-			loading={$fetchingServer}
-			disabled={!$server}
-			icon="trash"
-			onClick={openModal}
-		>
+		<Button loading={$fetchingServer} disabled={!$server} icon="trash" onClick={openModal}>
 			{$t("action.reset")}
 		</Button>
 

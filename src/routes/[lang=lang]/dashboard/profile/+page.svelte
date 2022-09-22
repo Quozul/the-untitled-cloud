@@ -16,7 +16,7 @@
 
 	onDestroy(() => {
 		$onProfilePage = false;
-	})
+	});
 </script>
 
 <div class="m-lg-3 d-flex flex-column gap-lg-3">
@@ -33,9 +33,7 @@
 		</p>
 		<p>
 			{$t("profile.description")}
-			<a href="mailto:contact@theuntitledcloud.com">
-				contact@theuntitledcloud.com
-			</a>
+			<a href="mailto:contact@theuntitledcloud.com"> contact@theuntitledcloud.com </a>
 		</p>
 
 		<div>

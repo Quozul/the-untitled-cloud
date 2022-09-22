@@ -7,5 +7,5 @@ export type ApiSubscription = {
 	provider: ApiSubscriptionProvider;
 	creationDate: string;
 	deletionDate: string | null;
-	active: boolean,
+	active: boolean;
 };
