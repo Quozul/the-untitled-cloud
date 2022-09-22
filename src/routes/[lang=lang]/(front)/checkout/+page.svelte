@@ -4,13 +4,12 @@
 	import { checkoutStep, token } from "$store/store";
 	import { t } from "svelte-intl-precompile";
 	import { CheckoutSteps } from "$components/checkout/constants";
+	import Meta from "$components/head/Meta.svelte";
 
 	$checkoutStep = $token ? CheckoutSteps.PROFILE : CheckoutSteps.LOGIN;
 </script>
 
-<svelte:head>
-	<title>{$t("common.checkout")}</title>
-</svelte:head>
+<Meta title={$t("common.checkout")} description={$t("common.checkout_description")}/>
 
 <h1 class="text-center fw-bolder mb-5">
 	{$t("common.checkout")}

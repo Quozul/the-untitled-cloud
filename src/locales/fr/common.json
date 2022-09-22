@@ -33,6 +33,9 @@
 		"product": "Produit",
 		"refresh": "Rafraichir",
 		"error": "Erreur",
-		"dashboard": "Tableau de bord"
+		"dashboard": "Tableau de bord",
+		"home_description": "The Untitled Cloud est un service indépendant d'hébergement de serveurs de jeux.",
+		"products_description": "Choisissez le serveur parfait pour vos besoins !",
+		"checkout_description": "Règlement du paiement"
 	}
 }

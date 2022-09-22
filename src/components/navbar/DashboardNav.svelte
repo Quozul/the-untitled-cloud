@@ -17,20 +17,3 @@
 
 <hr class="d-block d-lg-none m-0" />
 
-<style lang="scss">
-	.server-bar {
-		white-space: nowrap;
-	}
-
-	@include media-breakpoint-down(lg) {
-		.server-bar {
-			width: 100%;
-		}
-	}
-
-	@include media-breakpoint-up(xp) {
-		.server-bar {
-			height: 80px;
-		}
-	}
-</style>

@@ -33,6 +33,9 @@
 		"product": "Product",
 		"refresh": "Refresh",
 		"error": "Error",
-		"dashboard": "Dashboard"
+		"dashboard": "Dashboard",
+		"home_description": "The Untitled Cloud is an independent game server hosting service.",
+		"products_description": "Choose the perfect server for your needs!",
+		"checkout_description": "Payment checkout"
 	}
 }
