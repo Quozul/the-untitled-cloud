@@ -15,16 +15,16 @@
 	import ServerItem from "./ServerItem.svelte";
 	import { getAllServers, refreshAllServers } from "$components/app/helpers";
 	import { mergePaginate } from "$shared/helpers";
-	import type { ApiService } from "$models/ApiService";
-	import type { ApiPaginate } from "$models/ApiPaginate";
 	import { locale, t } from "svelte-intl-precompile";
 	import Button from "$shared/Button.svelte";
 	import { Variant } from "$shared/constants";
 	import { toggleSidebarCollapsed } from "$components/sidebar/helpers";
 	import Link from "$shared/Link.svelte";
+	import type { ApiPaginate } from "$models/ApiPaginate";
+	import type { ApiServiceInfo } from "$models/ApiService";
 
 	// State
-	let endedServers: ApiPaginate<ApiService>;
+	let endedServers: ApiPaginate<ApiServiceInfo>;
 
 	onMount(async () => {
 		await refreshAllServers();

@@ -25,6 +25,7 @@
 
 	onDestroy(() => {
 		unsubscribe?.();
+		$parameters = null;
 	});
 
 	function setEdited() {

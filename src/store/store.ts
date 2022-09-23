@@ -2,7 +2,7 @@ import type { ApiError } from "$components/shared/models";
 import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiProduct } from "$models/ApiProduct";
 import type { ApiServer } from "$models/ApiServer";
-import type { ApiService } from "$models/ApiService";
+import type { ApiService, ApiServiceInfo } from "$models/ApiService";
 import type { ApiUser } from "$models/ApiUser";
 import type { CheckoutSteps } from "$components/checkout/constants";
 import type { Credentials } from "$components/login/models/Credentials";
@@ -12,7 +12,6 @@ import type { Writable } from "svelte/store";
 import { createStoreEntry } from "./helpers";
 import { browser } from "$app/environment";
 import { LoginMode } from "$components/login/models/LoginMode";
-import { ServerTab } from "$components/app/constants";
 import { EmptyPaginate, EmptyServer } from "$components/app/models";
 import { writable } from "svelte/store";
 import { EmptyPromoCode } from "$components/cart/constants";
@@ -47,7 +46,7 @@ export const sidebarCollapsed: Writable<boolean> = createStoreEntry(
 );
 
 // App active servers stores
-export const servers: Writable<ApiPaginate<ApiService>> = createStoreEntry(
+export const servers: Writable<ApiPaginate<ApiServiceInfo>> = createStoreEntry(
 	"servers",
 	EmptyPaginate,
 	browser && sessionStorage

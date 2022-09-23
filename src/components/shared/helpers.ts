@@ -6,7 +6,6 @@ import { defaultLocale } from "./constants";
 import { AuthenticationErrors } from "$components/login/models/AuthenticationErrors";
 import { t } from "svelte-intl-precompile";
 import type { ApiPaginate } from "$models/ApiPaginate";
-import type { ApiService } from "$models/ApiService";
 
 /**
  * Build request's options
@@ -100,20 +99,6 @@ export async function handleRequest<T>(response: Promise<Response>): Promise<Api
 
 export function api(uri: string, options: RequestInit = getOptions("GET")): Promise<Response> {
 	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
-}
-
-export function containsService(
-	paginate: ApiPaginate<ApiService>,
-	id: string | null | undefined
-): ApiService | null {
-	if (!id) return null;
-
-	for (const element of paginate.data) {
-		if (element.id === id) {
-			return element;
-		}
-	}
-	return null;
 }
 
 /**

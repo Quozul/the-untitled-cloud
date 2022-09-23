@@ -3,15 +3,14 @@ import {
 	fetchingServers,
 	fetchServerError,
 	fetchServersError,
-	onProfilePage,
 	server,
 	servers,
 } from "$store/store";
-import { api, containsService, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
+import { api, getOptions, handleRequest, mergePaginate } from "$shared/helpers";
 import { get } from "svelte/store";
 import { page } from "$app/stores";
 import { EmptyPaginate } from "./models";
-import type { ApiService } from "$models/ApiService";
+import type { ApiService, ApiServiceInfo } from "$models/ApiService";
 import type { ApiPaginate } from "$models/ApiPaginate";
 import type { ApiSubscriptionDetails } from "$models/ApiSubscriptionDetails";
 import type { ApiProduct } from "$models/ApiProduct";
@@ -23,7 +22,7 @@ import type { ApiResponse } from "$shared/models";
 export async function getAllServers(
 	page = 0,
 	ended = false
-): Promise<ApiResponse<ApiPaginate<ApiService>>> {
+): Promise<ApiResponse<ApiPaginate<ApiServiceInfo>>> {
 	const params = new URLSearchParams();
 	params.set("page", page.toString());
 	if (ended) {
@@ -31,7 +30,7 @@ export async function getAllServers(
 	}
 
 	const request = api(`service?${params.toString()}`, getOptions("GET"));
-	return await handleRequest<ApiPaginate<ApiService>>(request);
+	return await handleRequest<ApiPaginate<ApiServiceInfo>>(request);
 }
 
 export async function refreshAllServers(page = 0): Promise<void> {
@@ -44,26 +43,10 @@ export async function refreshAllServers(page = 0): Promise<void> {
 	if (response) {
 		if (page === 0) servers.set(response);
 		else servers.set(mergePaginate(get(servers), response));
-
-		if (!get(onProfilePage)) {
-			await setDefaultSelectedServer();
-		}
 	}
 
 	fetchServersError.set(error);
 	fetchingServers.set(false);
-}
-
-export async function setDefaultSelectedServer(): Promise<void> {
-	const s = get(servers);
-	const contains = containsService(s, get(server)?.id);
-
-	if (!contains) {
-		server.set(s.data[0]);
-		await refreshSelectedServer();
-	} else {
-		server.set(contains);
-	}
 }
 
 export async function getServerInfo(id: string): Promise<ApiResponse<ApiService>> {

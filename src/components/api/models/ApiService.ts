@@ -12,3 +12,14 @@ export type ApiService = {
 	state: ApiServiceState;
 	subscription: ApiSubscription; // Subscription associated with the service
 };
+
+export type ApiServiceInfo = {
+	id: string;
+	name: string | null;
+	productName: string;
+	active: boolean;
+	pending: boolean;
+	cancelled: boolean;
+	suspended: boolean;
+	available: boolean;
+};

@@ -3,7 +3,6 @@
 	import { token } from "$store/store";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
-	import { refreshSelectedServer } from "$components/app/helpers";
 	import Icons from "$components/icons/Icons.svelte";
 	import "$root/app.scss";
 	import { locale, t } from "svelte-intl-precompile";
@@ -12,8 +11,6 @@
 	onMount(async () => {
 		if (!$token) {
 			await goto(`/${$locale}/login?redirect=/${$locale}/dashboard/`);
-		} else {
-			await refreshSelectedServer();
 		}
 	});
 </script>
