@@ -1,7 +1,9 @@
 mod claims;
 mod service;
+mod list;
 
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
 use crate::claims::jwt;
 use rocket_db_pools::{sqlx, Database};

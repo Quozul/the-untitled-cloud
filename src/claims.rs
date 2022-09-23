@@ -29,15 +29,17 @@ impl<'r> FromRequest<'r> for Claims {
         let token = request.headers().get_one("authorization");
         match token {
             Some(token) => {
-                // check validity
-                println!("{}", &token[7..]);
-                let decoded = decode::<Claims>(&token[7..], &DecodingKey::from_secret("secret".as_ref()), &Validation::default());
+                // Validate token
+                let decoded = decode::<Claims>(
+                    &token[7..], // Remove "Bearer "
+                    &DecodingKey::from_secret("secret".as_ref()), // TODO: Secret must be in env
+                    &Validation::default()
+                );
                 match decoded {
                     Ok(response) => {
                         Outcome::Success(response.claims)
                     }
                     Err(err) => {
-                        println!("{}", err.to_string());
                         Outcome::Failure((Status::Unauthorized, ApiTokenError::Invalid))
                     }
                 }
@@ -47,6 +49,7 @@ impl<'r> FromRequest<'r> for Claims {
     }
 }
 
+// Just an endpoint to test JWT validation
 #[get("/jwt")]
 pub fn jwt(token: Claims) -> String {
     format!("{}", token.id)

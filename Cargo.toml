@@ -9,13 +9,13 @@ edition = "2021"
 jsonwebtoken = "8"
 # If you do not need pem decoding, you can disable the default feature `use_pem` that way:
 # jsonwebtoken = {version = "8", default-features = false }
-serde = {version = "1.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
 uuid = { package = "uuid", version = "1", features = ["serde"] }
 
 [dependencies.rocket]
 git = "https://github.com/SergioBenitez/Rocket"
 rev = "6c3d35e"
-features = ["uuid"]
+features = ["uuid", "serde_json", "json"]
 
 [dependencies.rocket_db_pools]
 git = "https://github.com/SergioBenitez/Rocket"
