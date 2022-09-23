@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiContainer(
-	val id: String?,
+	val id: String,
 	val product: ApiProductInfo,
 	val tag: String?,
 	val name: String?,
@@ -17,4 +17,16 @@ data class ApiContainer(
 
 	// Expendable fields
 	val subscription: ApiSubscription,
+)
+
+@Serializable
+data class ApiContainerInfo(
+	val id: String,
+	val name: String?,
+	val productName: String,
+	val active: Boolean,
+	val pending: Boolean,
+	val cancelled: Boolean,
+	val suspended: Boolean,
+	val available: Boolean,
 )

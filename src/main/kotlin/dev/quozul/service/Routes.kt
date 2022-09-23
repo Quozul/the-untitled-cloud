@@ -6,8 +6,12 @@ import dev.quozul.authentication.hashString
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.authentication.models.PasswordCredentials
 import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.extensions.subscription.isCancelled
+import dev.quozul.database.extensions.subscription.isPending
+import dev.quozul.database.extensions.subscription.isSuspended
 import dev.quozul.database.extensions.subscriptionItem.*
 import dev.quozul.database.helpers.ApiContainer
+import dev.quozul.database.helpers.ApiContainerInfo
 import dev.quozul.database.helpers.ApiServer
 import dev.quozul.database.helpers.ApiServiceUpdate
 import dev.quozul.database.models.*
@@ -60,13 +64,8 @@ fun Route.configureServiceRoutes() {
 				.fullJoin(Containers)
 				.slice(
 					SubscriptionItems.id,
-					SubscriptionItems.ftpPassword,
-					Containers.id,
-					Products.id,
+					Products.name,
 					Subscriptions.id,
-					Subscriptions.subscriptionStatus,
-					Containers.containerTag,
-					Containers.containerId,
 					Containers.name,
 				).let {
 					status?.let { status ->
@@ -84,31 +83,17 @@ fun Route.configureServiceRoutes() {
 			val response = query.limit(size, offset).map { row ->
 				// This should never be null, but if it happens, I'm screwed
 				val item: SubscriptionItem = SubscriptionItem.findById(row[SubscriptionItems.id])!!
-				val product: Product = Product.findById(row[Products.id])!!
 				val subscription: Subscription = Subscription.findById(row[Subscriptions.id])!!
 
-				val container: Container? = row.getOrNull(Containers.id)?.let {
-					Container.findById(it)
-				}
-
-				val state: ServerState = ServerState.fromContainerState(
-					try {
-						container?.dockerContainer?.state
-					} catch (_: NotFoundException) {
-						null
-					},
-					container?.containerStatus
-				)
-
-				ApiContainer(
+				ApiContainerInfo(
 					id = row[SubscriptionItems.id].toString(),
-					product = product.toApiProductInfo(),
-					tag = row.getOrNull(Containers.containerTag),
 					name = row.getOrNull(Containers.name),
-					hasFtpPassword = row[SubscriptionItems.ftpPassword] != null,
-					port = item.port,
-					state = state,
-					subscription = subscription.toApiSubscription(),
+					productName = row[Products.name],
+					active = item.isActive,
+					pending = subscription.isPending,
+					cancelled = subscription.isCancelled,
+					available = item.isAvailable,
+					suspended = subscription.isSuspended,
 				)
 			}
 
