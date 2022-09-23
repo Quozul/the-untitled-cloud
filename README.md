@@ -17,8 +17,6 @@ STRIPE_WHOOK=whsec_...
 STRIPE_PK=pk_test_...
 
 # Docker configuration
-DOCKER_SOCK=~/.docker/desktop/docker.sock # Where the docker socket is on your computer
-DOCKER_HOST=unix:///var/run/docker.sock # Should never be modified
 CONTAINER_DIRECTORY=/home/mchost/servers/ # Where to store persistent data with a trailing slash
 
 # Database configuration
@@ -47,6 +45,11 @@ PEPPER=pepper
 
 # Environment
 PUBLIC_ADDRESS=127.0.0.1 # Public address of the host machine
+
+# Discord
+TOKEN=xxx
+CLIENT_SECRET=yyy
+CLIENT_ID=123
 ```
 
 ## Start

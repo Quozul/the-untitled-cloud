@@ -1,7 +1,7 @@
 version: "3"
 services:
   mc_host_api:
-    build: mc-host-api
+    build: api
     hostname: api
     expose:
       - 8080
@@ -49,7 +49,7 @@ services:
       internal:
 
   mc_host_ftp:
-    build: mc-host-ftp
+    build: ftp
     environment:
       DATABASE: ${DATABASE_NAME}
       TABLE: subscription_item
@@ -74,12 +74,13 @@ services:
 
   mc_host_front:
     build:
-      context: mc-host-front
+      context: front
       dockerfile: Dockerfile
       args:
         VITE_STRIPE_PUBLIC_KEY: ${STRIPE_PK}
         VITE_API_BASE_URL: ${API_ENDPOINT}
         VITE_API_WS_URL: ${WS_ENDPOINT}
+        VITe_FTP_BASE_URL: ${FTP_BASE_URL}
         VITE_SERVER_ADDRESS: ${PUBLIC_ADDRESS}
     hostname: front
     volumes:
@@ -90,6 +91,26 @@ services:
       mc_host_network:
     depends_on:
       - mc_host_api
+      - web-ftp
+
+  web-ftp:
+    build:
+      context: web-ftp
+      dockerfile: Dockerfile
+      args:
+        JWT_SECRET: ${JWT_SECRET}
+        DATA_FOLDER: "/data/"
+    hostname: webftp
+    expose:
+      - 8000
+    volumes:
+      - "/home/mchost/servers:/data"
+    environment:
+      ROCKET_DATABASES: '{theuntitledcloud={url="postgres://${DATABASE_USER}:${DATABASE_PASS}@database:5432/${DATABASE_NAME}"}}'
+    networks:
+      mc_host_network:
+    depends_on:
+      - mc_host_database
 
 networks:
   mc_host_network:
