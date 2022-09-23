@@ -2,25 +2,30 @@ use rocket::http::Status;
 use rocket::response::status::Custom;
 use crate::claims::Claims;
 use rocket::serde::uuid::Uuid;
-use rocket_db_pools::{Connection, sqlx};
+use rocket_db_pools::{Connection};
 use crate::TheUntitledCloud;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct SubscriptionItem {
-    test: String,
+    id: String,
+    subscription: String,
+    product: i32,
+    container: String,
+    ftpPassword: String,
 }
 
-#[get("/<id>")]
-pub async fn service(token: Claims, mut db: Connection<TheUntitledCloud>, id: Uuid) -> Result<String, Custom<String>> {
-    let row: Option<(i64, )> = sqlx::query_as("SELECT $1")
-        .bind(150_i64)
+#[get("/<service_id>")]
+pub async fn service(token: Claims, mut db: Connection<TheUntitledCloud>, service_id: Uuid) -> Result<String, Custom<String>> {
+    let row = rocket_db_pools::sqlx::query("select i.id from subscription_item i join subscription s on s.id = i.subscription where s.owner = $1 and i.id = $2;")
+        .bind(token.id)
+        .bind(service_id)
         .fetch_one(&mut *db).await
         .ok();
 
     match row {
         Some(t) => {
-            Ok(format!("{} {} {}", token.id, id, t.0))
+            Ok(format!("{}", "ok"))
         }
         None => {
             Err(Custom(Status::NotFound, String::from("Container not found")))

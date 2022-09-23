@@ -4,6 +4,7 @@ use rocket::http::{Status};
 use rocket::outcome::Outcome;
 use rocket::request::FromRequest;
 use serde::{Serialize, Deserialize};
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub enum ApiTokenError {
@@ -15,7 +16,7 @@ pub enum ApiTokenError {
 pub struct Claims {
     aud: String,
     iss: String,
-    pub id: String,
+    pub id: Uuid,
     exp: usize,
     email: String,
 }
