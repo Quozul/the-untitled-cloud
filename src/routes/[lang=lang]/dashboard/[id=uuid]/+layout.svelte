@@ -19,7 +19,7 @@
 	<ServerBar />
 </div>
 
-<div class="flex-grow-1 flex-lg-grow-0 overflow-auto order-1 order-lg-2 mb-lg-3 mx-lg-3">
+<div class="flex-grow-1 overflow-auto order-1 order-lg-2 mb-lg-3 mx-lg-3">
 	{#if $server}
 		<slot />
 	{:else if $fetchServersError}

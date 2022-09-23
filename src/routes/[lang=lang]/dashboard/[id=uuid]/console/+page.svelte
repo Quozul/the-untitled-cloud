@@ -3,6 +3,6 @@
 	import { ServerTab } from "$components/app/constants";
 </script>
 
-<div class="d-flex flex-column gap-2 h-100 pb-lg-3">
+<div class="d-flex flex-column gap-2 h-100 pb-lg-3 flex-grow-1">
 	<Console />
 </div>
