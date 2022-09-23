@@ -80,7 +80,7 @@ services:
         VITE_STRIPE_PUBLIC_KEY: ${STRIPE_PK}
         VITE_API_BASE_URL: ${API_ENDPOINT}
         VITE_API_WS_URL: ${WS_ENDPOINT}
-        VITe_FTP_BASE_URL: ${FTP_BASE_URL}
+        VITE_FTP_BASE_URL: ${FTP_BASE_URL}
         VITE_SERVER_ADDRESS: ${PUBLIC_ADDRESS}
     hostname: front
     volumes:
