@@ -2,18 +2,18 @@ use std::path::PathBuf;
 use std::time::UNIX_EPOCH;
 use serde::{Serialize};
 
-#[derive(Serialize)]
-enum FileType {
+#[derive(Serialize, PartialEq, Eq)]
+pub enum FileType {
     DIRECTORY,
     FILE,
 }
 
 #[derive(Serialize)]
 pub struct FileEntry {
-    size: Option<u64>,
+    size: usize,
     time: u64,
-    name: String,
-    file_type: FileType,
+    pub(crate) name: String,
+    pub(crate) file_type: FileType,
 }
 
 pub fn list(path: &PathBuf) -> Vec<FileEntry> {
@@ -22,21 +22,24 @@ pub fn list(path: &PathBuf) -> Vec<FileEntry> {
             .filter_map(Result::ok)
             .map(|e| {
                 let metadata = e.metadata().unwrap();
-                let size = metadata.len();
                 let time = metadata.modified().unwrap().duration_since(UNIX_EPOCH).unwrap().as_secs();
                 let name = e.file_name().to_string_lossy().into_owned();
                 let file_type = e.file_type().unwrap();
 
                 if file_type.is_dir() {
+                    let size = e.path().read_dir().unwrap().count();
+
                     FileEntry {
-                        size: None,
+                        size,
                         time,
                         name,
                         file_type: FileType::DIRECTORY,
                     }
                 } else {
+                    let size = metadata.len() as usize;
+
                     FileEntry {
-                        size: Some(size),
+                        size,
                         time,
                         name,
                         file_type: FileType::FILE,
