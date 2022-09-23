@@ -136,5 +136,9 @@
 	},
 	"dashboard": {
 		"welcome": "Welcome to your dashboard, it is a place where you can manage all your servers. Start by selecting a server on the left of the screen."
+	},
+	"webftp": {
+		"item": "item",
+		"items": "items"
 	}
 }

@@ -101,6 +101,10 @@ export function api(uri: string, options: RequestInit = getOptions("GET")): Prom
 	return fetch(import.meta.env.VITE_API_BASE_URL + uri, options);
 }
 
+export function ftp(uri: string, options: RequestInit = getOptions("GET")): Promise<Response> {
+	return fetch(import.meta.env.VITE_FTP_BASE_URL + uri, options);
+}
+
 /**
  * @deprecated Use <Link/> component instead.
  * @param link

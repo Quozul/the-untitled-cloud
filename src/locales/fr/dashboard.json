@@ -15,7 +15,7 @@
 		"address": "Adresse de connexion",
 		"steam_link": "Lien de connexion Steam",
 		"server_is_stopped": "Le serveur est éteint",
-		"address_copied": "Adresse copiée dans le presse papier!"
+		"address_copied": "Adresse copiée dans le presse papier !"
 	},
 	"server_status": {
 		"restarting": "Redémarre",
@@ -136,5 +136,10 @@
 	},
 	"dashboard": {
 		"welcome": "Bienvenue sur votre tableau de bord, c'est ici que vous pourrez gérer tous vos serveurs. Commencez par sélectionner un serveur sur la gauche de l'écran."
+	},
+	"webftp": {
+		"item": "élément",
+		"items": "éléments",
+		"instruction": "Le navigateur de fichier intégré."
 	}
 }

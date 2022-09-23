@@ -13,25 +13,19 @@
 	let serverAddress = "";
 
 	async function loadDates(server: ApiService) {
-		const { convert, Duration, ZonedDateTime } = await import("@js-joda/core");
+		// Parse date
+		const started = new Date(server.state.startedAt);
 
-		// Parse dates
-		const started = ZonedDateTime.parse(server.state.startedAt);
-		if (started.year() === 1) {
-			return;
-		}
+		duration = Math.floor((Date.now() - started.getTime()) / 60000);
 
-		const convertedDate = convert(started).toDate();
-
-		duration = Duration.between(started, ZonedDateTime.now());
-		formattedStartDate = convertedDate.toLocaleDateString($locale as string, {
+		formattedStartDate = started.toLocaleDateString($locale as string, {
 			weekday: "long",
 			year: "numeric",
 			month: "long",
 			day: "numeric",
 		});
 
-		shortFormattedStartDate = convertedDate.toLocaleDateString($locale as string, {
+		shortFormattedStartDate = started.toLocaleDateString($locale as string, {
 			year: "numeric",
 			month: "short",
 			day: "numeric",
@@ -58,7 +52,7 @@
 			<dd class="m-0 text-xl-start">
 				{#if $server.state.created && $server.state.running}
 					{$t(`server_status.${$server.state.status.toLowerCase()}`)}
-					({duration?.toMinutes() || 0}
+					({duration || 0}
 					{$t("server_bar.minutes")})
 				{:else if $server.state.created}
 					{$t(`server_status.${$server.state.status.toLowerCase()}`)}
