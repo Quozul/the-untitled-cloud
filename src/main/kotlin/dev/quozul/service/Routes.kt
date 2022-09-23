@@ -6,6 +6,7 @@ import dev.quozul.authentication.hashString
 import dev.quozul.authentication.models.AuthenticationErrors
 import dev.quozul.authentication.models.PasswordCredentials
 import dev.quozul.database.enums.SubscriptionStatus
+import dev.quozul.database.extensions.subscription.isActive
 import dev.quozul.database.extensions.subscription.isCancelled
 import dev.quozul.database.extensions.subscription.isPending
 import dev.quozul.database.extensions.subscription.isSuspended
@@ -89,10 +90,11 @@ fun Route.configureServiceRoutes() {
 					id = row[SubscriptionItems.id].toString(),
 					name = row.getOrNull(Containers.name),
 					productName = row[Products.name],
-					active = item.isActive,
+					available = item.isAvailable,
+					// Subscription info
+					active = subscription.isActive,
 					pending = subscription.isPending,
 					cancelled = subscription.isCancelled,
-					available = item.isAvailable,
 					suspended = subscription.isSuspended,
 				)
 			}
