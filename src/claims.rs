@@ -27,19 +27,21 @@ impl<'r> FromRequest<'r> for Claims {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let token = request.headers().get_one("authorization");
+        let secret = env!("JWT_SECRET");
+
         match token {
             Some(token) => {
                 // Validate token
                 let decoded = decode::<Claims>(
                     &token[7..], // Remove "Bearer "
-                    &DecodingKey::from_secret("secret".as_ref()), // TODO: Secret must be in env
+                    &DecodingKey::from_secret(secret.as_ref()),
                     &Validation::default()
                 );
                 match decoded {
                     Ok(response) => {
                         Outcome::Success(response.claims)
                     }
-                    Err(err) => {
+                    Err(_) => {
                         Outcome::Failure((Status::Unauthorized, ApiTokenError::Invalid))
                     }
                 }

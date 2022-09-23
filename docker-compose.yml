@@ -1,0 +1,24 @@
+version: "3"
+services:
+  web-ftp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ROCKET_DATABASES: ${ROCKET_DATABASES}
+        JWT_SECRET: ${JWT_SECRET}
+        DATA_FOLDER: "/data/"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "/home/mchost/servers:/data"
+    environment:
+      ROCKET_DATABASES: ${ROCKET_DATABASES}
+      JWT_SECRET: ${JWT_SECRET}
+      DATA_FOLDER: "/data/"
+    networks:
+      - the-untitled-cloud-api_dev-database
+
+networks:
+  the-untitled-cloud-api_dev-database:
+    external: true

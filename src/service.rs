@@ -18,8 +18,8 @@ pub async fn service(token: Claims, mut db: Connection<TheUntitledCloud>, servic
         .fetch_one(&mut *db).await
         .ok();
 
-    // TODO: Base path must be in env
-    let np = Path::new("/home/mchost/servers/").join(service_id.to_string()).join(path);
+    let data = env!("DATA_FOLDER");
+    let np = Path::new(data).join(service_id.to_string()).join(path);
 
     println!("{}", np.to_str().unwrap());
 
@@ -44,7 +44,7 @@ pub async fn service(token: Claims, mut db: Connection<TheUntitledCloud>, servic
     }
 }
 
-#[options("/<service_id>/<path..>")]
-pub async fn service_options(service_id: Uuid, path: PathBuf) -> Status {
+#[options("/<_service_id>/<_path..>")]
+pub async fn service_options(_service_id: Uuid, _path: PathBuf) -> Status {
     Status::Accepted
 }
