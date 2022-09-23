@@ -15,7 +15,7 @@ pub enum ApiTokenError {
 pub struct Claims {
     aud: String,
     iss: String,
-    id: String,
+    pub id: String,
     exp: usize,
     email: String,
 }

@@ -1,0 +1,2 @@
+[default.databases.theuntitledcloud]
+url = "postgres://postgres:postgrespw@localhost:55000/postgres"

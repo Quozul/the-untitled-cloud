@@ -1,8 +1,14 @@
 mod claims;
+mod service;
 
 #[macro_use] extern crate rocket;
 
 use crate::claims::jwt;
+use rocket_db_pools::{sqlx, Database};
+
+#[derive(Database)]
+#[database("theuntitledcloud")]
+pub struct TheUntitledCloud(sqlx::PgPool);
 
 #[get("/")]
 fn index() -> &'static str {
@@ -12,7 +18,8 @@ fn index() -> &'static str {
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let _rocket = rocket::build()
-        .mount("/", routes![index, jwt])
+        .attach(TheUntitledCloud::init())
+        .mount("/", routes![index, jwt, service::service])
         .launch()
         .await?;
 
