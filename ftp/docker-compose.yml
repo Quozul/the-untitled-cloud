@@ -1,0 +1,18 @@
+version: "3"
+services:
+  ftp:
+    build: .
+    ports:
+      - "20-21:20-21"
+      - "989-990:989-990"
+      - "1024-1048:1024-1048"
+    volumes:
+      - "/home/mchost/servers:/data"
+    env_file:
+      - .env
+    networks:
+      - the-untitled-cloud-api_dev-database
+
+networks:
+  the-untitled-cloud-api_dev-database:
+    external: true
