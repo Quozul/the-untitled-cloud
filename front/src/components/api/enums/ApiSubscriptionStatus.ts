@@ -1,0 +1,7 @@
+export enum ApiSubscriptionStatus {
+	REGISTERED = "REGISTERED",
+	PENDING = "PENDING",
+	ACTIVE = "ACTIVE",
+	SUSPENDED = "SUSPENDED",
+	CANCELLED = "CANCELLED",
+}

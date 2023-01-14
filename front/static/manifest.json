@@ -1,0 +1,46 @@
+{
+	"short_name": "TUC",
+	"name": "The Untitled Cloud",
+	"start_url": "/fr/dashboard/",
+	"icons": [
+		{
+			"src": "/logo_512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/logo_256.png",
+			"type": "image/png",
+			"sizes": "256x256"
+		},
+		{
+			"src": "/logo_192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/logo_128.png",
+			"type": "image/png",
+			"sizes": "128x128"
+		},
+		{
+			"src": "/logo_64.png",
+			"type": "image/png",
+			"sizes": "64x64"
+		}
+	],
+	"background_color": "#e9ecef",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#e9ecef",
+	"shortcuts": [
+		{
+			"name": "The Untitled Cloud's Dashboard",
+			"short_name": "Dashboard",
+			"description": "Dashboard of your servers.",
+			"url": "/fr/dashboard/",
+			"icons": [{ "src": "/logo_192.png", "sizes": "192x192" }]
+		}
+	],
+	"description": "Lofi to lofi beats, while using the scratchpad to list down tasks and thoughts"
+}
