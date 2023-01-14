@@ -1,0 +1,28 @@
+[package]
+name = "the-untitled-cloud-webftp"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+jsonwebtoken = "8"
+# If you do not need pem decoding, you can disable the default feature `use_pem` that way:
+# jsonwebtoken = {version = "8", default-features = false }
+serde = { version = "1.0", features = ["derive"] }
+uuid = { package = "uuid", version = "1", features = ["serde"] }
+
+[dependencies.rocket]
+git = "https://github.com/SergioBenitez/Rocket"
+rev = "6c3d35e"
+features = ["uuid", "serde_json", "json"]
+
+[dependencies.rocket_db_pools]
+git = "https://github.com/SergioBenitez/Rocket"
+rev = "6c3d35e"
+features = ["sqlx_postgres"]
+
+[dependencies.sqlx]
+version = "0.6"
+default-features = false
+features = ["runtime-tokio-rustls", "uuid", "postgres"]
